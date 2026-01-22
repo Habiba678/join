@@ -1,14 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signup</title>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../css/register.css">
+        <link rel="stylesheet" href="../css/style.css">
+        <title>Sing up</title>
+    </head>
 
-<body>
-
-</body>
+    <body>
+        <header>
+            <figure class="logo">
+                <img class="logo_page" src="../assets/icons/logo.svg" alt="Logo" />
+            </figure>
+        </header>
+        <main>
+            <form class="main-form">
+                <section class="form-header">
+                    <img src="../assets/icons/pfeil-links-blue.png">
+                    <h1>Sing up</h1>
+                </section>
+                <input type="text" name="namen" placeholder="Name">
+                <input type="mail" name="e-mail" placeholder="Email">
+                <input type="password" name="singup-password" id="singup-password" placeholder="Password">
+                <input type="password" name="confirm-password" id="confirm-password" placeholder="Confirm Password">
+                <section class="form-footer">
+                    <div class="form-check-content">
+                        <input type="checkbox" name="accept" id="accept-id">
+                        <a class="" href="#"><span>I acceept the</span> Privacy Politcy</a>
+                    </div>
+                    <button type="submit">Sing up</button>
+                </section>
+            </form>
+        </main>
+        <footer class="footer-content">
+            <section class="footer-links ">
+                <a class="links" href="#">Privacy Politcy</a><a class="links" href="#">Legal notice</a>
+            </section>
+        </footer>
+    </body>
 
 </html>

@@ -1,0 +1,100 @@
+.main-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    gap: 10%;
+    width: 589px;
+    height: 630px;
+}
+
+.form-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.form-header img{
+  margin-right: 25%;
+}
+
+.form-header h1 {
+    margin-right: 25%;
+}
+
+.form-header h1::after {
+    display: block;
+    content: "";
+    position: absolute;
+    height: 3px;
+    background-color: rgb(94, 192, 233);
+    width: 95px;   
+    margin-top: 5px;
+    margin-left: 10px;
+    
+}
+
+.main-form input {
+    height: 35px;
+    width: 80%;
+    border: unset;
+    border: 1px solid gray;
+    border-radius: 8px;
+}
+
+.main-form input[type="checkbox"] {
+    height: 16px;
+    width: 16px;
+}
+
+input[type=text] {
+    box-sizing: border-box;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-weight: 400;
+    background-color: white;
+    background-image: url('../assets/icons/person.png');
+    background-position: right;
+    background-repeat: no-repeat;
+    padding: 8px;
+}
+
+input[type=mail] {
+    box-sizing: border-box;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-weight: 400;
+    background-color: white;
+    background-image: url('../assets/icons/mail.png');
+    background-position: right;
+    background-repeat: no-repeat;
+    padding: 8px;
+}
+
+input[type=password] {
+    box-sizing: border-box;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-weight: 400;
+    background-color: white;
+    background-image: url('../assets/icons/lock.png');
+    background-position: right;
+    background-repeat: no-repeat;
+    padding: 8px;
+}
+
+.form-footer{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 15px;
+    margin-bottom: 15px;
+}

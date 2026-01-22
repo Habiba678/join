@@ -1,0 +1,61 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+header .logo_page {
+    width: 200px;
+    height: auto;
+}
+
+header .button-section {
+    margin-right: 15px;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 80px;
+    width: 100%;
+}
+
+.footer-links {
+    text-align: center;
+    width: 50%;
+}
+
+.links {
+    margin: 25px;
+    font-size: 21px;
+    text-decoration: none;
+}
+
+button {
+    height: 35px;
+    width: 95px;
+    font-size: large;
+    font-weight: bold;
+    border: unset;
+    color: white;
+    background-color: rgb(42, 54, 71);
+    border-radius: 8px;
+}
