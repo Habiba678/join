@@ -4,26 +4,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/start_page.css">
-    <link rel="stylesheet" href="./css/style.css">
+
     <title>Login</title>
+
+
+    <link rel="stylesheet" href="./css/start_page.css">
 </head>
+
 <body>
+
+
     <header>
         <figure class="logo">
-            <img class="logo_page" src="../assets/icons/logo.svg" alt="Logo" />
+            <img class="logo_page" src="../assets/icons/logo.svg" alt="Logo">
         </figure>
+
         <section class="button-section">
-           <a class="links" href="./subpages/regist.html">Not a Join User?</a> <button>Sing up</button>
+            <a class="links" href="./subpages/regist.html">Not a Join User?</a>
+            <button class="signup">Sign up</button>
         </section>
     </header>
+
+
     <main>
-        
+        <form class="login-form">
+            <h2>Login</h2>
+
+            <input type="email" placeholder="Email" required>
+            <input type="password" placeholder="Password" required>
+
+            <div class="button-group">
+                <button type="submit" class="login-btn">Log In</button>
+                <button type="button" class="guest-btn">Guest Log In</button>
+            </div>
+        </form>
+
     </main>
+
     <footer>
         <section class="footer-content">
-            <a class="links" href="#">Privacy Politcy</a><a class="links" href="#">Legal notice</a>
+            <a class="links" href="#">Privacy Policy</a>
+            <a class="links" href="#">Legal notice</a>
         </section>
     </footer>
+
+
+    <script src="./javascript/animation.js"></script>
 </body>
+
 </html>

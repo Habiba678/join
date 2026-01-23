@@ -1,2 +1,187 @@
+/*reset*/
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
+html,
+body {
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f9;
+  color: #2a3647;
+  overflow: hidden;
+}
 
+/*HEADER*/
+header {
+  height: 80px;
+  padding: 0 24px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+  z-index: 5;
+}
+
+/*LOGO ANIMATION*/
+.logo {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  transition: all 1.2s ease-in-out;
+  z-index: 10;
+}
+
+.logo_page {
+  width: 260px;
+  transition: width 1.2s ease-in-out;
+}
+
+/*AFTER LOAD*/
+body.loaded .logo {
+  top: 20px;
+  left: 24px;
+  transform: translate(0, 0);
+}
+/*SMALL LOGO*/
+body.loaded .logo_page {
+  width: 80px;
+}
+/*HEADER BUTTONS*/
+.button-section {
+  display: flex;
+  gap: 12px;
+}
+
+.links {
+  text-decoration: none;
+  color: #2a3647;
+  font-size: 16px;
+}
+
+.signup {
+  height: 36px;
+  padding: 0 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  background-color: #2a3647;
+  color: white;
+  cursor: pointer;
+}
+
+/*MAIN*/
+main {
+  height: calc(100vh - 160px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/*LOGIN FORM*/
+.login-form {
+  width: 340px;
+  background: white;
+  padding: 36px;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s ease;
+}
+
+/* FORM */
+body.loaded .login-form {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.login-form h2 {
+  text-align: center;
+}
+
+.login-form input {
+  height: 42px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.login-form button {
+  height: 42px;
+}
+
+/* ===== BUTTON GROUP INSIDE LOGIN ===== */
+.login-form .button-group {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.login-form .button-group button {
+  flex: 1;
+  height: 42px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+/* Log In */
+.login-form .button-group .login-btn {
+  background-color: #2a3647;
+  color: white;
+}
+
+/* Guest Log In */
+.login-form .button-group .guest-btn {
+  background-color: white;
+  color: #2a3647;
+  border: 1px solid #2a3647;
+}
+
+.login-form .button-group button:hover {
+  opacity: 0.9;
+}
+
+/*FOOTER*/
+footer {
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer-content {
+  display: flex;
+  gap: 40px;
+}
+
+/* responsive */
+@media (max-width: 600px) {
+  .logo_page {
+    width: 180px;
+  }
+
+  body.loaded .logo {
+    top: 16px;
+    left: 16px;
+    transform: scale(0.8);
+  }
+
+  .button-section {
+    display: none;
+  }
+
+  .login-form {
+    width: 90%;
+  }
+}
