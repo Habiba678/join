@@ -1,29 +1,4 @@
-/*reset*/
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 
-html,
-body {
-  height: 100%;
-  font-family: Arial, sans-serif;
-  background-color: #f4f6f9;
-  color: #2a3647;
-  overflow: hidden;
-}
-
-/*HEADER*/
-header {
-  height: 80px;
-  padding: 0 24px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  position: relative;
-  z-index: 5;
-}
 
 /*LOGO ANIMATION*/
 .logo {
@@ -54,6 +29,7 @@ body.loaded .logo_page {
 .button-section {
   display: flex;
   gap: 12px;
+  align-items: center;
 }
 
 .links {
@@ -63,6 +39,9 @@ body.loaded .logo_page {
 }
 
 .signup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 36px;
   padding: 0 18px;
   font-weight: bold;
@@ -71,26 +50,19 @@ body.loaded .logo_page {
   background-color: #2a3647;
   color: white;
   cursor: pointer;
-}
-
-/*MAIN*/
-main {
-  height: calc(100vh - 160px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  text-decoration: none;
 }
 
 /*LOGIN FORM*/
 .login-form {
-  width: 340px;
-  background: white;
-  padding: 36px;
-  border-radius: 12px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   gap: 16px;
+  width: 340px;
+  padding: 36px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
   opacity: 0;
   transform: translateY(40px);
   transition: all 0.8s ease;
@@ -104,6 +76,18 @@ body.loaded .login-form {
 
 .login-form h2 {
   text-align: center;
+}
+
+.form-header h2::after {
+  display: block;
+  content: "";
+  position: absolute;
+  height: 3px;
+  background-color: rgb(94, 192, 233);
+  width: 58px;
+  margin-top: 5px;
+  margin-left: 4px;
+
 }
 
 .login-form input {
@@ -176,7 +160,7 @@ body.loaded .login-form {
   pointer-events: none;
 }
 
-/*FOOTER*/
+/* FOOTER
 footer {
   height: 80px;
   display: flex;
@@ -187,7 +171,7 @@ footer {
 .footer-content {
   display: flex;
   gap: 40px;
-}
+} */
 
 /* responsive */
 @media (max-width: 600px) {
