@@ -3,16 +3,17 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    border-radius: 8px;
+    border-radius: 12px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    gap: 10%;
+    gap: 24px;
     width: 589px;
     height: 630px;
+    background: white;
 }
 
 .form-header {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     width: 100%;
 }
@@ -38,11 +39,12 @@
 }
 
 .main-form input {
-    height: 35px;
+    height: 42px;
     width: 80%;
     border: unset;
     border: 1px solid gray;
     border-radius: 8px;
+    border: 1px solid #ccc;
 }
 
 .main-form input[type="checkbox"] {
@@ -52,9 +54,6 @@
 
 input[type=text] {
     box-sizing: border-box;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    border: 2px solid #ccc;
-    border-radius: 4px;
     font-weight: 400;
     background-color: white;
     background-image: url('../assets/icons/person.png');
@@ -65,9 +64,6 @@ input[type=text] {
 
 input[type=mail] {
     box-sizing: border-box;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    border: 2px solid #ccc;
-    border-radius: 4px;
     font-weight: 400;
     background-color: white;
     background-image: url('../assets/icons/mail.png');
@@ -78,9 +74,6 @@ input[type=mail] {
 
 input[type=password] {
     box-sizing: border-box;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    border: 2px solid #ccc;
-    border-radius: 4px;
     font-weight: 400;
     background-color: white;
     background-image: url('../assets/icons/lock.png');

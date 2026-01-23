@@ -57,12 +57,12 @@ body.loaded .logo_page {
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  width: 340px;
-  padding: 36px;
+  gap: 24px;
+  width: 398px;
+  padding: 16px;
   background: white;
   border-radius: 12px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   opacity: 0;
   transform: translateY(40px);
   transition: all 0.8s ease;
