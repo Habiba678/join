@@ -18,12 +18,7 @@ body {
 }
 
 header .logo_page {
-<<<<<<< HEAD
-  height: 80px;
-
-=======
   height: auto;
->>>>>>> 4fc860bae99c7cba6ee88539c47a349eb2f70a3c
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -48,14 +43,6 @@ main {
   width: 100%;
 }
 
-<<<<<<< HEAD
-.footer-links {
-  text-align: center;
-  width: 50%;
-}
-
-=======
->>>>>>> 4fc860bae99c7cba6ee88539c47a349eb2f70a3c
 button {
   height: 35px;
   width: 95px;
@@ -65,8 +52,6 @@ button {
   color: white;
   background-color: rgb(42, 54, 71);
   border-radius: 8px;
-<<<<<<< HEAD
-=======
   cursor: pointer;
 }
 
@@ -74,5 +59,4 @@ button {
   text-decoration: none;
   color: #2a3647;
   font-size: 16px;
->>>>>>> 4fc860bae99c7cba6ee88539c47a349eb2f70a3c
 }
