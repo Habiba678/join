@@ -1,0 +1,67 @@
+.kpi-panel-task {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    padding: 35px;
+}
+
+.form_1 {
+    display: flex;
+    width: 50%;
+    justify-content: center;
+    align-items: center;
+}
+
+.form_2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 50%;
+    gap: 5%;
+}
+
+.form-details {
+    display: flex;
+    flex-direction: column;
+    height: 489px;
+    width: 100%;
+    gap: 6%;
+}
+
+.form-details input {
+    height: 42px;
+    width: 98%;
+    border: unset;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.form-details textarea {
+    width: 98%;
+    height: 25%;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.form-trenner {
+    width: 2px;
+    background-color: rgb(174, 174, 174);
+    margin-left: 2%;
+    border-radius: 16px;
+    opacity: 0.2;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    
+}
+
+.priority-section{
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.kpi-panel-task-footer{
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
