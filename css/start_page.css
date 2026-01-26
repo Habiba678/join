@@ -1,33 +1,3 @@
-<<<<<<< HEAD
-
-
-/*LOGO ANIMATION*/
-.logo {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(1);
-  transition: all 1.2s ease-in-out;
-  z-index: 10;
-  margin: 0;
-}
-
-.logo_page {
-  width: 260px;
-  transition: width 1.2s ease-in-out;
-}
-
-/*AFTER LOAD*/
-body.loaded .logo {
-  top: 20px;
-  left: 24px;
-  transform: translate(0, 0);
-}
-/*SMALL LOGO*/
-body.loaded .logo_page {
-  width: 80px;
-}
-=======
 /*reset*/
 * {
   margin: 0;
@@ -80,7 +50,6 @@ body.loaded .logo {
 body.loaded .logo_page {
   width: 80px;
 }
->>>>>>> 4fc860bae99c7cba6ee88539c47a349eb2f70a3c
 /*HEADER BUTTONS*/
 .button-section {
   display: flex;
@@ -95,75 +64,6 @@ body.loaded .logo_page {
 }
 
 .signup {
-<<<<<<< HEAD
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 36px;
-  padding: 0 18px;
-  font-weight: bold;
-  border: none;
-  border-radius: 8px;
-  background-color: #2a3647;
-  color: white;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-/*LOGIN FORM*/
-.login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  width: 398px;
-  padding: 16px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  opacity: 0;
-  transform: translateY(40px);
-  transition: all 0.8s ease;
-}
-
-/* FORM */
-body.loaded .login-form {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.login-form h2 {
-  text-align: center;
-}
-
-.form-header h2::after {
-  display: block;
-  content: "";
-  position: absolute;
-  height: 3px;
-  background-color: rgb(94, 192, 233);
-  width: 58px;
-  margin-top: 5px;
-  margin-left: 4px;
-
-}
-
-.login-form input {
-  height: 42px;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-
-.login-form button {
-  height: 42px;
-}
-
-/* ===== BUTTON GROUP INSIDE LOGIN ===== */
-.login-form .button-group {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-=======
   height: 36px;
   padding: 0 18px;
   font-weight: bold;
@@ -258,7 +158,6 @@ h1::after {
   display: flex;
   gap: 12px;
   justify-content: center;
->>>>>>> 4fc860bae99c7cba6ee88539c47a349eb2f70a3c
   margin-top: 12px;
 }
 
@@ -288,37 +187,8 @@ h1::after {
 .login-form .button-group button:hover {
   opacity: 0.9;
 }
-<<<<<<< HEAD
-/*INPUT GROUP*/
-.input-group {
-  position: relative;
-  width: 100%;
-}
-
-.input-group input {
-  width: 100%;
-  height: 42px;
-  padding: 10px 36px 10px 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 15px;
-}
-
-.input-group .input-icon {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
-  pointer-events: none;
-}
-
-/* FOOTER
-=======
 
 /*FOOTER*/
->>>>>>> 4fc860bae99c7cba6ee88539c47a349eb2f70a3c
 footer {
   height: 80px;
   display: flex;
@@ -329,11 +199,7 @@ footer {
 .footer-content {
   display: flex;
   gap: 40px;
-<<<<<<< HEAD
-} */
-=======
 }
->>>>>>> 4fc860bae99c7cba6ee88539c47a349eb2f70a3c
 
 /* responsive */
 @media (max-width: 600px) {
