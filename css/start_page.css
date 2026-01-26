@@ -96,6 +96,26 @@ main {
   transform: translateY(40px);
   transition: all 0.8s ease;
 }
+.input-wrapper {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding-right: 35px; /* место под иконку */
+  box-sizing: border-box;
+}
+
+.input-wrapper .input-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px; /* размер иконки */
+  height: 20px;
+  pointer-events: none; /* чтобы клики шли в input */
+}
 
 /* FORM */
 body.loaded .login-form {
