@@ -1,52 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        <title>Login</title>
-        <link rel="stylesheet" href="./css/forms.css">
-        <link rel="stylesheet" href="./css/style.css">
-        <link rel="stylesheet" href="./css/start_page.css">
-    </head>
-
-    <body>
-        <header class="login_page">
-            <figure class="logo">
-                <img class="logo_page" src="../assets/icons/logo.svg" alt="Logo">
-            </figure>
-
-            <section class="button-section">
-                <span class="links">Not a Join User?</span>
-                <a class="signup" href="./subpages/regist.html">Sign up</a>
-            </section>
-        </header>
-        <main>
-            <form class="login-form">
-                <section class="form-header">
-                    <h2>Login</h2>
-                </section>
-                <input class=""  id="mail" type="mail" placeholder="Email" autocomplete="email">
-                <input class="" id="password" type="password" placeholder="Password" autocomplete="off" >
-                <div class="button-group">
-                    <button onclick="validateLoginForm(); return false;" class="login-btn">Log In</button>
-                    <button type="button" class="guest-btn">Guest Log In</button>
-                </div>
-            </form>
-
-        </main>
-
-        <footer>
-            <section class="footer-content">
-                <a class="links" href="#">Privacy Policy</a>
-                <a class="links" href="#">Legal notice</a>
-            </section>
-        </footer>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-        <script src="./javascript/animation.js"></script>
-        <script src="./javascript/script.js"></script>
-    </body>
+    <title>Login</title>
+
+
+    <link rel="stylesheet" href="./css/start_page.css">
+</head>
+
+<body>
+
+
+    <header>
+        <figure class="logo">
+            <img class="logo_page" src="./assets/icons/logo.svg" alt="Logo">
+        </figure>
+
+        <section class="button-section">
+            <a class="links" href="./subpages/regist.html">Not a Join User?</a>
+            <button type="button" class="signup" onclick="goToSignup()">Sign up</button>
+        </section>
+    </header>
+
+
+    <main>
+        <form class="login-form">
+            <h1>Login</h1>
+
+
+            <input type="email" placeholder="Email" required>
+            <input type="password" placeholder="Password" required>
+
+            <div class="button-group">
+                <button type="submit" class="login-btn">Log In</button>
+                <button type="button" class="guest-btn">Guest Log In</button>
+            </div>
+        </form>
+
+    </main>
+
+    <footer>
+        <section class="footer-content">
+            <a class="links" href="#">Privacy Policy</a>
+            <a class="links" href="#">Legal notice</a>
+        </section>
+    </footer>
+
+
+    <script src="./javascript/animation.js"></script>
+</body>
 
 </html>
