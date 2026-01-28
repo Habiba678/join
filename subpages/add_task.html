@@ -1,90 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/summary.css">
-    <link rel="stylesheet" href="../css/add_task.css">
-    <title>Add Task</title>
-</head>
-<body>
-    <div class="layout">
-        <aside class="sidebar">
-            <div class="logo">
-                <img src="../assets/icons/logo-white.svg" alt="Join">
-            </div>
-    
-            <nav class="menu">
-                <ul>
-                    <li><a href="./summary.html"><img src="../assets/icons/summary-gray.svg" alt="">Summary</a></li>
-                    <li><a href="./add_task.html"><img src="../assets/icons/addTask-gray.svg" alt="">Add Task</a></li>
-                    <li><a href="./board.html"><img src="../assets/icons/board-gray.svg" alt="">Board</a></li>
-                    <li><a href="./contact.html"><img src="../assets/icons/contacts-gray.svg" alt="">Contacts</a></li>
-                </ul>
-            </nav>
-    
-            <div class="sidebar-footer">
-                <a href="#">Privacy Policy</a>
-                <a href="#">Legal notice</a>
-            </div>
-        </aside>
-        <div class="cantainer">
-            <div class="main">
-                <header class="header">
-                    <div class="header-title">Kanban Project Management Tool</div>
-                    <div class="header-right">
-                        <a class="header-help">?</a>
-                        <div class="header-user">SM</div>
-                    </div>
-                </header>
-    
-                <div class="summary-section">
-                    <div class="summary-headline">
-                        <h1 class="summary-title">Add Task</h1>
-                    </div>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../css/summary.css">
+        <link rel="stylesheet" href="../css/add_task.css">
+        <title>Add Task</title>
+    </head>
+
+    <body>
+        <div class="layout">
+            <aside class="sidebar">
+                <div class="logo">
+                    <img src="../assets/icons/logo-white.svg" alt="Join">
                 </div>
-                <div class="kpi-panel-task">
-    
-                    <div class="form_1">
-                            <form class="form-details">
-                                <label for="text">Titel</label>
-                                <input type="text" placeholder="Enter a Titel">
-                                <label for="description">Description</label>
-                                <textarea name="description" id="" placeholder="Enter a Description"></textarea>
-                                <input type="date">
-                            </form>
-                    </div>
-                    <span class="form-trenner"></span>
-                    <div class="form_2">
-                        <div class="priority-section">
-                            <button>Urgent <img src="" alt=""></button><button>Medium <img src="" alt=""></button><button>Low <img src="" alt=""></button>
+
+                <nav class="menu">
+                    <ul>
+                        <li><a href="./summary.html"><img src="../assets/icons/summary-gray.svg" alt="">Summary</a></li>
+                        <li><a href="./add_task.html"><img src="../assets/icons/addTask-gray.svg" alt="">Add Task</a>
+                        </li>
+                        <li><a href="./board.html"><img src="../assets/icons/board-gray.svg" alt="">Board</a></li>
+                        <li><a href="./contact.html"><img src="../assets/icons/contacts-gray.svg" alt="">Contacts</a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Legal notice</a>
+                </div>
+            </aside>
+            <div class="cantainer">
+                <div class="main">
+                    <header class="header">
+                        <div class="header-title">Kanban Project Management Tool</div>
+                        <div class="header-right">
+                            <a class="header-help">?</a>
+                            <div class="header-user">SM</div>
                         </div>
-                        <label for="">Assigned to</label>
-                        <select name="Select contacts to assign" id="" aria-placeholder="Select contacts to assign">
-                        <option value="">Select contacts to assign</option>
-                        <option value="saab">Saab</option>
-                        <option value="opel">Opel</option>
-                        <option value="audi">Audi</option>
-                    </select>
-                    <label for="">Category*</label>
-                    <select name="Select contacts to assign" id="" aria-placeholder="Select contacts to assign">
-                        <option value="">Select task category</option>
-                        <option value="saab">Saab</option>
-                        <option value="opel">Opel</option>
-                        <option value="audi">Audi</option>
-                    </select>
-                    <label for="subtasks"></label>
-                    <input type="text" name="subtasks" id="subtasks" placeholder="Add  new subtask">
+                    </header>
+
+                    <div class="summary-section">
+                        <div class="summary-headline">
+                            <h1 class="summary-title">Add Task</h1>
+                        </div>
                     </div>
-                </div>
-                
-                
-                <div class="kpi-panel-task-footer">
-                    <span>*This field is rehhquired</span> <div class="create-task-button">
-                        <button>Clear X</button> <button>Create Task <img src="../assets/icons/check.png" alt=""></button>
+                    <div class="kpi-panel-task">
+
+                        <div class="form_1">
+                            <form class="form-details">
+                                <label for="titel">Titel <span class="label-star">*</span></label>
+                                <input type="text"  id="titel" placeholder="Enter a Titel">
+                                <label for="description">Description</label>
+                                <textarea name="description" id="description" placeholder="Enter a Description"></textarea>
+                            <label for="date">Due date <span class="label-star" >*</span></label>
+                            <input type="date" id="date">
+                            </form>
+                        </div>
+                        <span class="form-separator"></span>
+                        <div class="form_2">
+                            <form  class="form-details">
+                            <label>Priority</label>
+                            <div class="priority-section">
+                                <button class="primary-btn --primary-btn-wite">Urgent<img class="btn-icon" src="../assets/icons/Prio alta.svg" alt=""></button>
+                                <button class="primary-btn --primary-btn-orange">Medium<img class="btn-icon" src="../assets/icons/Prio media.svg"alt=""></button>
+                                <button class="primary-btn --primary-btn-wite">Low<img class="btn-icon" src="../assets/icons/Prio baja.svg" alt=""></button>
+                            </div>
+                            <label for="Select contacts">Assigned to</label>
+                            <select name="Select contacts" id="Select contacts">
+                                <option value="">Select contacts to assign</option>
+                                <selectedcontent>
+                                    <option value="saab">Saab</option>
+                                    <option value="opel">Opel</option>
+                                    <option value="audi">Audi</option>
+
+                                </selectedcontent>
+                            </select>
+                            <label for="category">Category <span class="label-star">*</span></label>
+                            <select class="Select task category"  id="category">
+                                <option value="">Select task category</option>
+                                <selectedcontent>
+                                    <option value="saab">Saab</option>
+                                    <option value="opel">Opel</option>
+                                    <option value="audi">Audi</option>
+                                </selectedcontent>
+
+                            </select>
+                            <label for="subtasks">Subtasks <span class="label-star">*</span></label>
+                            <input type="text" name="subtasks" id="subtasks" placeholder="Add  new subtask">
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="kpi-panel-task-footer">
+                        <span>*This field is rehhquired</span>
+                        <div class="create-task-button">
+                            <button class="primary-btn --primary-btn-cancel"> Clear <img class="btn-icon" src="../assets/icons/iconoir_cancel.svg" alt=""></button> 
+                            <button class="primary-btn"> Create Task  <img class="btn-icon" src="../assets/icons/check.svg"alt=""></button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-</body>
+    </body>
+
 </html>

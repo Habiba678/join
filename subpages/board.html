@@ -11,11 +11,11 @@
 <body>
     <div class="layout">
 
+
         <aside class="sidebar">
             <div class="logo">
                 <img src="../assets/icons/logo-white.svg" alt="Join">
             </div>
-
             <nav class="menu">
                 <ul>
                     <li><a href="./summary.html"><img src="../assets/icons/summary-gray.svg" alt="">Summary</a></li>
@@ -24,15 +24,16 @@
                     <li><a href="./contact.html"><img src="../assets/icons/contacts-gray.svg" alt="">Contacts</a></li>
                 </ul>
             </nav>
-
             <div class="sidebar-footer">
                 <a href="#">Privacy Policy</a>
                 <a href="#">Legal notice</a>
             </div>
         </aside>
 
+
         <div class="cantainer">
             <div class="main">
+
 
                 <header class="header">
                     <div class="header-title">Kanban Project Management Tool</div>
@@ -43,7 +44,7 @@
                 </header>
 
                 <section class="board-section">
-                    <board-header class="board-header">
+                    <div class="board-header">
                         <h1 class="board-title">Board</h1>
                         <nav aria-label="Board Navigation" class="board-nav">
                             <div class="search-bar">
@@ -51,57 +52,149 @@
                                     class="search-input">
                                 <div class="separator"></div>
                                 <img src="../assets/icons/search.svg" alt="Search" class="search-icon">
-
                             </div>
-                            <button class="add-task-button">Add task +</button>
+                            <button class="add-task-button" type="button">Add task +</button>
                         </nav>
-                    </board-header>
-
+                    </div>
                 </section>
+
+
                 <section class="board">
 
-                    <!-- TODO -->
+
                     <div class="column" data-status="todo">
                         <header class="column-header">
                             <span>Todo</span>
-                            <img src="../assets/icons/plus button.svg" class="add-card-icon">
+                            <img src="../assets/icons/plus-button.svg" class="add-card-icon" alt="Add task">
                         </header>
                         <div class="cards"></div>
                         <div class="empty">No tasks To do</div>
                     </div>
 
-                    <!-- IN PROGRESS -->
+
                     <div class="column" data-status="progress">
                         <header class="column-header">
                             <span>In progress</span>
-                            <img src="../assets/icons/plus button.svg" class="add-card-icon">
+                            <img src="../assets/icons/plus-button.svg" class="add-card-icon" alt="Add task">
                         </header>
                         <div class="cards"></div>
                         <div class="empty">No tasks In progress</div>
                     </div>
 
-                    <!-- AWAIT FEEDBACK -->
+
                     <div class="column" data-status="feedback">
                         <header class="column-header">
                             <span>Await feedback</span>
-                            <img src="../assets/icons/plus button.svg" class="add-card-icon">
+                            <img src="../assets/icons/plus-button.svg" class="add-card-icon" alt="Add task">
                         </header>
                         <div class="cards"></div>
                         <div class="empty">No tasks Await feedback</div>
                     </div>
 
-                    <!-- DONE -->
                     <div class="column" data-status="done">
-                        <header class="column-header">Done</header>
+                        <header class="column-header">
+                            <span>Done</span>
+                        </header>
                         <div class="cards"></div>
                         <div class="empty">No tasks Done</div>
                     </div>
 
                 </section>
 
+            </div>
+        </div>
+
+    </div>
 
 
+    <div class="modal-backdrop" id="addTaskBackdrop" hidden>
+        <div class="addtask-modal" role="dialog" aria-modal="true" aria-labelledby="addTaskTitle">
+            <button class="addtask-close" id="addTaskClose" type="button" aria-label="Close">
+                ✕
+            </button>
 
+            <h2 class="addtask-h1" id="addTaskTitle">Add Task</h2>
+
+            <form class="addtask-form" id="addTaskForm">
+
+                <div class="addtask-left">
+                    <label class="field">
+                        <span class="field-label">Title</span>
+                        <input class="field-input" id="taskTitle" type="text" placeholder="Enter a title" required>
+                        <small class="field-error" data-error-for="taskTitle">This field is required</small>
+                    </label>
+
+                    <label class="field">
+                        <span class="field-label">Description</span>
+                        <textarea class="field-textarea" id="taskDesc" rows="5"
+                            placeholder="Enter a Description"></textarea>
+                    </label>
+
+                    <label class="field">
+                        <span class="field-label">Due date</span>
+                        <input class="field-input" id="taskDue" type="date">
+                        <small class="field-error" data-error-for="taskDue">This field is required</small>
+                    </label>
+                </div>
+
+                <div class="addtask-divider"></div>
+
+
+                <div class="addtask-right">
+                    <div class="field">
+                        <span class="field-label">Priority</span>
+                        <div class="prio-row" role="radiogroup" aria-label="Priority">
+                            <button class="prio-btn" type="button" data-prio="urgent">Urgent</button>
+                            <button class="prio-btn is-active" type="button" data-prio="medium">Medium</button>
+                            <button class="prio-btn" type="button" data-prio="low">Low</button>
+                        </div>
+                    </div>
+
+                    <label class="field">
+                        <span class="field-label">Assigned to</span>
+                        <select class="field-input" id="taskAssign">
+                            <option value="" selected>Select contacts to assign</option>
+                            <option>AM</option>
+                            <option>EM</option>
+                            <option>MB</option>
+                        </select>
+                    </label>
+
+                    <label class="field">
+                        <span class="field-label">Category</span>
+                        <select class="field-input" id="taskCategory" required>
+                            <option value="" selected>Select category</option>
+                            <option value="user">User Story</option>
+                            <option value="tech">Technical Task</option>
+                        </select>
+                        <small class="field-error" data-error-for="taskCategory">This field is required</small>
+                    </label>
+
+                    <label class="field">
+                        <span class="field-label">Subtasks</span>
+                        <div class="subtask-row">
+                            <input class="field-input" id="taskSubtask" type="text" placeholder="Add new subtask">
+                            <button class="subtask-add" type="button" id="subtaskAddBtn">+</button>
+                        </div>
+                        <ul class="subtask-list" id="subtaskList"></ul>
+                    </label>
+                </div>
+
+
+                <div class="addtask-footer">
+                    <div class="required-hint" id="requiredHint">*This field is required</div>
+
+                    <div class="footer-actions">
+                        <button class="btn-secondary" type="button" id="addTaskCancel">Cancel ✕</button>
+                        <button class="btn-primary" type="submit">Create Task ✓</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script src="../javascript/board.js"></script>
 </body>
 
 </html>

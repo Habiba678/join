@@ -7,7 +7,7 @@
 
 .form_1 {
     display: flex;
-    width: 50%;
+    width: 40%;
     justify-content: center;
     align-items: center;
 }
@@ -17,19 +17,34 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    width: 50%;
-    gap: 5%;
+    width: 40%;
 }
 
 .form-details {
     display: flex;
     flex-direction: column;
     height: 489px;
-    width: 100%;
-    gap: 6%;
+    width: 80%;
+    
 }
 
 .form-details input {
+    height: 42px;
+    width: 50%;
+    border: unset;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+input[type=text] {
+    height: 42px;
+    width: 98%;
+    border: unset;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+input[type=date] {
     height: 42px;
     width: 98%;
     border: unset;
@@ -44,24 +59,116 @@
     border: 1px solid #ccc;
 }
 
-.form-trenner {
+.form-separator {
     width: 2px;
     background-color: rgb(174, 174, 174);
     margin-left: 2%;
+    margin-right: 2%;
     border-radius: 16px;
     opacity: 0.2;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    
 }
 
-.priority-section{
+.priority-section {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    gap: 15px;
+}
+
+.kpi-panel-task-footer {
     display: flex;
     justify-content: space-around;
     width: 100%;
 }
 
-.kpi-panel-task-footer{
+select {
+    box-sizing: border-box;
+    height: 42px;
+    width: 98%;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    appearance: unset;
+    background-image: url('../assets/icons/arrow_drop_downaa.png');
+    background-position: right 8px center;
+    background-repeat: no-repeat;
+    background-size: 26px;
+    padding: 8px 32px 8px 8px;
+    transition: 0.4s;
+}
+
+label {
+    width: 98%;
+    text-align: left;
+    margin-top: 3%;
+    margin-bottom: 20px;
+}
+
+select:hover {
+    border-color: #999;
+}
+
+option {
+    color: #666;
+    border-radius: 8px;
+    background: #eeeeee00;
+    padding: 10px;
+    transition: 0.4s;
+}
+
+.create-task-button{
     display: flex;
-    justify-content: space-around;
-    width: 100%;
+    flex-direction: row;
+    gap: 35px;
+}
+
+.primary-btn {
+    display: flex;
+    height: 53px;
+    width: 135px;
+    font-size: large;
+    border: unset;
+    color: white;
+    background-color: rgb(42, 54, 71);
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.primary-btn .btn-icon {
+    margin: 0 auto;
+    height: 24px;
+    width: 24px;
+}
+
+.--primary-btn-wite {
+    width: 136px;
+    height: 56px;
+    border: unset;
+    background: white;
+    border-radius: 8px;
+    color: #000;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.--primary-btn-orange {
+    background-color: rgb(255, 168, 0) !important;
+}
+
+.primary-btn:focus {
+    border: 1px gray solid;
+}
+
+.--primary-btn-cancel{
+    width: auto;
+    background-color: #fffefe;
+    border: 1px solid grey;
+    color: black;
+}
+
+label .label-star{
+    color: red;
 }
