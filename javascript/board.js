@@ -1,11 +1,4 @@
-// ==========================
-// JOIN BOARD (clean version)
-// - redirect to add_task.html from plus icons + top button
-// - drag & drop cards between columns
-// - empty state toggle
-// ==========================
-
-const ADD_TASK_PAGE = "./add_task.html"; // поменяй путь если надо (например "../html/add_task.html")
+const ADD_TASK_PAGE = "./add_task.html";
 
 document.addEventListener("DOMContentLoaded", () => {
   initRedirects();
@@ -20,7 +13,7 @@ function initRedirects() {
     icon.addEventListener("click", () => {
       const col = icon.closest(".column");
       const status = col?.dataset?.status || "todo";
-      // передаём статус, чтобы на add_task.html ты мог сразу выставлять колонку
+
       window.location.href = `${ADD_TASK_PAGE}?status=${encodeURIComponent(
         status
       )}`;
@@ -38,7 +31,6 @@ function initRedirects() {
 
 // ---------- Drag & Drop ----------
 function initDragAndDrop() {
-  // 1) drag start / end (делегирование)
   document.addEventListener("dragstart", (e) => {
     const card = e.target.closest(".card");
     if (!card) return;
@@ -56,7 +48,6 @@ function initDragAndDrop() {
       .forEach((c) => c.classList.remove("drag-over"));
   });
 
-  // 2) drop zones
   document.querySelectorAll(".column .cards").forEach((zone) => {
     zone.addEventListener("dragover", (e) => {
       e.preventDefault();
@@ -81,11 +72,6 @@ function initDragAndDrop() {
 
       zone.appendChild(card);
       updateEmptyStates();
-
-      // (опционально) если у тебя есть массив tasks — тут обновляй статус
-      // const status = zone.closest(".column")?.dataset?.status;
-      // const task = tasks.find(t => String(t.id) === String(id));
-      // if (task) task.status = status;
     });
   });
 }
