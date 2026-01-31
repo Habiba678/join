@@ -390,6 +390,69 @@ body {
   word-break: break-word;
 }
 
+/* Card progress + footer */
+.card-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 6px;
+}
+
+.card-progress-bar {
+  flex: 1;
+  height: 8px;
+  background: #f4f4f4;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.card-progress-fill {
+  height: 100%;
+  background: #29abe2;
+  border-radius: 8px;
+}
+
+.card-progress-text {
+  font-size: 12px;
+  color: #a8a8a8;
+  min-width: 36px;
+  text-align: right;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.card-contacts {
+  display: flex;
+  align-items: center;
+}
+
+.card-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid #ffffff;
+  margin-left: -8px;
+}
+
+.card-avatar:first-child {
+  margin-left: 0;
+}
+
+.card-priority-icon.medium {
+  width: 20px;
+  opacity: 0.9;
+}
+
 /* ======================
    TASK OVERLAY 
 ====================== */

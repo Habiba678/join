@@ -111,6 +111,8 @@ function buildCardHtml(task) {
   html += '<div class="label ' + labelClass + '">' + labelText + "</div>";
   html += '<div class="title">' + escapeHtml(task.title || "") + "</div>";
   html += '<div class="desc">' + escapeHtml(task.description || "") + "</div>";
+  html += buildCardSubtaskProgressHtml(task);
+  html += buildCardFooterHtml(task);
   return html;
 }
 
@@ -120,6 +122,89 @@ function getLabelText(task) {
 
 function getLabelClass(task) {
   return task.category === "tech" ? "tech" : "user";
+}
+
+function buildCardSubtaskProgressHtml(task) {
+  const subs = Array.isArray(task.subtasks) ? task.subtasks : [];
+  const total = subs.length;
+  if (!total) return "";
+  const done = countDoneSubtasks(subs);
+  const percent = Math.round((done / total) * 100);
+  let html = "";
+  html += '<div class="card-progress">';
+  html += '<div class="card-progress-bar">';
+  html += '<div class="card-progress-fill" style="width:' + percent + '%"></div>';
+  html += "</div>";
+  html += '<div class="card-progress-text">' + done + "/" + total + "</div>";
+  html += "</div>";
+  return html;
+}
+
+function buildCardFooterHtml(task) {
+  const avatars = buildAssignedAvatarsHtml(task);
+  const prioIcon = getPriorityIcon(task);
+  let html = "";
+  html += '<div class="card-footer">';
+  html += '<div class="card-contacts">' + avatars + "</div>";
+  html += '<div class="card-priority">';
+  if (prioIcon) {
+    const prClass = getPriorityText(task);
+    html +=
+      '<img src="' +
+      prioIcon +
+      '" class="card-priority-icon ' +
+      escapeHtml(prClass) +
+      '" alt="Priority ' +
+      escapeHtml(prClass) +
+      '">';
+  }
+  html += "</div>";
+  html += "</div>";
+  return html;
+}
+
+function buildAssignedAvatarsHtml(task) {
+  const list = getAssignedListForCard(task);
+  if (!list.length) return "";
+  let html = "";
+  for (let i = 0; i < list.length; i++) {
+    const name = String(list[i]);
+    const initials = getInitials(name);
+    const color = getAvatarColor(initials);
+    html +=
+      '<span class="card-avatar" style="background:' +
+      color +
+      '">' +
+      escapeHtml(initials) +
+      "</span>";
+  }
+  return html;
+}
+
+function getAssignedListForCard(task) {
+  if (Array.isArray(task.assigned)) return task.assigned;
+  if (task.assigned) return [task.assigned];
+  return [];
+}
+
+function countDoneSubtasks(subs) {
+  let done = 0;
+  for (let i = 0; i < subs.length; i++) {
+    if (subs[i] && subs[i].done) done += 1;
+  }
+  return done;
+}
+
+function getPriorityText(task) {
+  return String(task.priority || task.prio || "").toLowerCase();
+}
+
+function getPriorityIcon(task) {
+  const pr = getPriorityText(task);
+  if (pr === "urgent") return "../assets/icons/urgent.svg";
+  if (pr === "medium") return "../assets/icons/medium.png";
+  if (pr === "low") return "../assets/icons/low.svg";
+  return "";
 }
 
 // ---------------- Overlay events ----------------
@@ -615,6 +700,13 @@ function getInitials(name) {
   const parts = name.trim().split(/\s+/);
   if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
   return (parts[0][0] + parts[1][0]).toUpperCase();
+}
+
+function getAvatarColor(seed) {
+  const colors = ["#00BEE8", "#6E52FF", "#FF7A00", "#FF5EB3", "#1FD7C1"];
+  let sum = 0;
+  for (let i = 0; i < seed.length; i++) sum += seed.charCodeAt(i);
+  return colors[sum % colors.length];
 }
 
 function capitalize(s) {

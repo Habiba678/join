@@ -26,6 +26,7 @@ function createTask() {
   const dueDate = document.getElementById("date").value;
   const category = document.getElementById("category").value;
   const subtaskInput = document.getElementById("subtasks").value.trim();
+  const assignedValue = document.getElementById("assigned").value;
 
   if (!title || !dueDate || !category) {
     alert("Please fill all required fields");
@@ -54,6 +55,7 @@ function createTask() {
     priority,
     status,
     subtasks,
+    assigned: assignedValue || "",
   };
 
   const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
