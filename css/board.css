@@ -16,6 +16,9 @@ body {
   min-height: 100vh;
 }
 
+/* ======================
+   SIDEBAR
+====================== */
 .sidebar {
   width: 232px;
   background-color: #2a3647;
@@ -71,29 +74,6 @@ body {
   color: white;
 }
 
-.menu a.active {
-  background-color: #091931;
-  color: white;
-}
-
-.menu a.active::before,
-.menu a.active::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 6px;
-  background-color: #29abe2;
-}
-
-.menu a.active::before {
-  left: -3px;
-}
-
-.menu a.active::after {
-  right: -3px;
-}
-
 .menu img {
   width: 24px;
   height: 24px;
@@ -113,7 +93,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  transition: transform 0.25s ease, color 0.25s ease;
 }
 
 .sidebar-footer a {
@@ -129,6 +108,9 @@ body {
   color: #29abe2;
 }
 
+/* ======================
+   MAIN / HEADER
+====================== */
 .cantainer,
 .container {
   flex: 1;
@@ -180,10 +162,6 @@ body {
   cursor: pointer;
 }
 
-.header-help:hover {
-  border-color: #a8a8a8;
-}
-
 .header-user {
   width: 56px;
   height: 56px;
@@ -197,10 +175,9 @@ body {
   cursor: pointer;
 }
 
-.header-user:hover {
-  background-color: #f0f0f0;
-}
-
+/* ======================
+   BOARD HEADER
+====================== */
 .board-section {
   padding-left: 48px;
   padding-right: 48px;
@@ -280,6 +257,9 @@ body {
   background: #243040;
 }
 
+/* ======================
+   BOARD / COLUMNS
+====================== */
 .board {
   display: flex;
   gap: 26px;
@@ -291,6 +271,7 @@ body {
 }
 
 .column {
+  width: 252px;
   min-width: 252px;
   flex-shrink: 0;
 }
@@ -325,9 +306,11 @@ body {
   gap: 16px;
   min-height: 100px;
   padding-bottom: 10px;
+  align-items: flex-start;
 }
 
 .empty {
+  width: 252px;
   padding: 12px;
   background: #e7e7e7;
   border: 1px dashed #a8a8a8;
@@ -336,13 +319,19 @@ body {
   color: #a8a8a8;
 }
 
+/* Drag over */
 .column.drag-over .cards {
   background: rgba(41, 171, 226, 0.08);
   border-radius: 12px;
   transition: background 0.2s ease;
 }
 
+/* ======================
+   CARD (fixed width)
+====================== */
 .card {
+  width: 252px;
+  max-width: 252px;
   background: #ffffff;
   border-radius: 24px;
   padding: 16px;
@@ -365,16 +354,23 @@ body {
 
 .label {
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
   padding: 4px 16px;
   border-radius: 8px;
   font-size: 14px;
+  font-weight: 400;
   color: #fff;
   margin-bottom: 10px;
+  white-space: nowrap;
 }
 
 .label.user {
   background: #0038ff;
 }
+
 .label.tech {
   background: #1fd7c1;
 }
@@ -384,85 +380,23 @@ body {
   font-size: 16px;
   color: #2a3647;
   margin-bottom: 6px;
+  word-break: break-word;
 }
 
 .desc {
   font-size: 16px;
   color: #a8a8a8;
   margin: 0 0 12px;
+  word-break: break-word;
 }
 
-.card-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 12px;
-}
+/* ======================
+   TASK OVERLAY 
+====================== */
 
-.users {
-  display: flex;
-  align-items: center;
+.task-overlay-backdrop[hidden] {
+  display: none !important;
 }
-
-.user {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: -8px;
-  border: 1px solid #fff;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.u1 {
-  background: #ff7a00;
-}
-.u2 {
-  background: #1fd7c1;
-}
-.u3 {
-  background: #462f8a;
-}
-
-.label.user {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
-  max-width: 100%;
-  padding: 4px 16px;
-  border-radius: 8px;
-  margin-left: 0;
-  border: none;
-  font-size: 14px;
-  font-weight: 400;
-}
-
-.card-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.card-btn {
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  font-size: 16px;
-  padding: 6px;
-  border-radius: 8px;
-  transition: background 0.15s ease, transform 0.15s ease;
-}
-
-.card-btn:hover {
-  background: rgba(41, 171, 226, 0.15);
-  transform: scale(1.05);
-}
-
-/* TASK OVERLAY */
 
 .task-overlay-backdrop {
   position: fixed;
@@ -475,49 +409,54 @@ body {
 }
 
 .task-overlay {
+  position: relative;
   width: 525px;
-  max-width: calc(100vw - 32px);
   height: 871px;
+  max-width: calc(100vw - 32px);
   max-height: calc(100vh - 32px);
+
   background: #ffffff;
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.16);
   border-radius: 30px;
+
   padding: 48px 40px;
   display: flex;
   flex-direction: column;
   gap: 24px;
   overflow: auto;
-  position: relative;
 }
 
-/* Top row: chip + close */
+/* top row */
 .task-overlay-top {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
   gap: 10px;
 }
 
-/* Category chip */
 .task-chip {
   display: inline-flex;
   align-items: center;
   padding: 4px 24px;
+  height: 36px;
   border-radius: 8px;
-  color: #fff;
+
   font-size: 23px;
+  font-weight: 400;
   line-height: 120%;
+  color: #fff;
+}
+
+.task-chip.tech {
   background: #1fd7c1;
 }
 
 .task-chip.user {
   background: #0038ff;
 }
-.task-chip.tech {
-  background: #1fd7c1;
-}
 
-/* Close button */
+/* close button (circle hover) */
 .task-overlay-close {
   width: 32px;
   height: 32px;
@@ -525,10 +464,12 @@ body {
   border-radius: 56px;
   background: transparent;
   cursor: pointer;
-  font-size: 18px;
-  color: #2a3647;
+
   display: grid;
   place-items: center;
+
+  font-size: 18px;
+  color: #2a3647;
   transition: background 0.15s ease, transform 0.15s ease;
 }
 
@@ -537,39 +478,46 @@ body {
   transform: scale(1.05);
 }
 
-/* Title */
+/* big title */
 .task-overlay-title {
+  width: 100%;
+  margin: 0;
   font-size: 61px;
+  font-weight: 700;
   line-height: 120%;
-  margin: 0;
   color: #000;
   word-break: break-word;
 }
 
-/* Description */
+/* description */
 .task-overlay-desc {
-  font-size: 20px;
-  line-height: 120%;
+  width: 100%;
   margin: 0;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 120%;
   color: #000;
   word-break: break-word;
 }
 
-/* Rows */
+/* due/priority rows */
 .task-overlay-row {
   display: flex;
-  gap: 25px;
+  flex-direction: row;
   align-items: center;
-  flex-wrap: wrap;
+  gap: 25px;
+  width: 100%;
 }
 
 .task-overlay-label {
   font-size: 20px;
+  font-weight: 400;
+  line-height: 120%;
   color: #42526e;
   min-width: 110px;
 }
 
-/* Priority pill */
+/* priority pill like join */
 .task-overlay-prio {
   display: inline-flex;
   align-items: center;
@@ -577,24 +525,30 @@ body {
   padding: 4px 18px;
   border-radius: 10px;
   font-size: 20px;
-  background: #eee;
+  font-weight: 400;
+  line-height: 120%;
+  color: #000;
+  background: #eeeeee;
 }
 
 .task-overlay-prio.urgent {
   background: #ff3d00;
   color: #fff;
 }
+
 .task-overlay-prio.medium {
   background: #ffa800;
   color: #fff;
 }
+
 .task-overlay-prio.low {
   background: #7ae229;
   color: #000;
 }
 
-/* Blocks */
+/* blocks */
 .task-overlay-block {
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -604,12 +558,15 @@ body {
 .task-overlay-assigned {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
+  width: 100%;
 }
 
 .task-overlay-person {
+  width: 100%;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 16px;
   padding: 7px 16px;
   border-radius: 10px;
@@ -623,6 +580,7 @@ body {
   place-items: center;
   color: #fff;
   font-size: 16px;
+  font-weight: 400;
   border: 2px solid #fff;
 }
 
@@ -630,7 +588,8 @@ body {
 .task-overlay-subtasks {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
+  width: 100%;
 }
 
 .task-overlay-subtask {
@@ -645,11 +604,13 @@ body {
   height: 18px;
 }
 
-/* Bottom actions */
+/* Bottom actions (Delete | Edit) */
 .task-overlay-actions {
   margin-top: auto;
+  width: 100%;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 12px;
 }
 
@@ -658,10 +619,11 @@ body {
   background: transparent;
   cursor: pointer;
   font-size: 16px;
+  font-weight: 400;
   color: #2a3647;
   display: inline-flex;
-  gap: 8px;
   align-items: center;
+  gap: 8px;
   padding: 6px 8px;
   border-radius: 8px;
   transition: background 0.15s ease, transform 0.15s ease;
@@ -678,29 +640,77 @@ body {
   background: #d1d1d1;
 }
 
-.task-overlay input,
-.task-overlay textarea,
-.task-overlay select {
-  width: 100%;
-  padding: 10px;
-  font-size: 18px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
+/* ======================
+   DELETE CONFIRM MODAL
+====================== */
 
-.task-overlay textarea {
-  resize: vertical;
-}
-.task-overlay-backdrop[hidden] {
+.confirm-backdrop[hidden] {
   display: none !important;
 }
-.task-overlay-actions {
-  justify-content: flex-end;
+
+.confirm-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+  display: grid;
+  place-items: center;
+  z-index: 10000;
+  padding: 16px;
 }
 
-/* 
-   RESPONSIVE
-*/
+.confirm-modal {
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.16);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.confirm-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #2a3647;
+}
+
+.confirm-text {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 400;
+  color: #2a3647;
+  word-break: break-word;
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.confirm-btn {
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.confirm-btn.cancel {
+  background: #f2f2f2;
+  color: #2a3647;
+}
+
+.confirm-btn.confirm {
+  background: #2a3647;
+  color: #fff;
+}
+
+/* RESPONSIVE*/
 @media (max-width: 900px) {
   .board-header {
     padding-left: 0;
@@ -710,18 +720,17 @@ body {
     padding-left: 24px;
   }
 
+  .board {
+    padding: 0 24px 24px;
+  }
+
   .task-overlay {
-    padding: 28px 22px;
     height: auto;
-    max-height: calc(100vh - 32px);
+    padding: 28px 22px;
   }
 
   .task-overlay-title {
     font-size: 38px;
-  }
-
-  .task-overlay-desc {
-    font-size: 18px;
   }
 
   .task-chip {

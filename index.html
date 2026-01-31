@@ -24,13 +24,14 @@
             <h1>Login</h1>
 
             <div class="input-wrapper">
-                <input type="email" placeholder="Email" required>
+                <input id="mail" onchange="validateEmail()" type="email" placeholder="Email" >
                 <img src="./assets/icons/mail.png" alt="email icon" class="input-icon">
             </div>
             <div class="input-wrapper">
-                <input type="password" placeholder="Password" required>
+                <input id="password" onchange="validatePassword()" type="password" placeholder="Password" >
                 <img src="./assets/icons/lock.png" alt="password icon" class="input-icon">
             </div>
+            <span class="info-password" id="info-password">Das Password muss mindestens 6 zeichen lang sein. </span>
 
             <div class="button-group">
                 <button type="submit" class="login-btn">Log In</button>
@@ -45,5 +46,6 @@
         </section>
     </footer>
     <script src="./javascript/animation.js"></script>
+    <script src="./javascript/validate.js"></script>
 </body>
 </html>

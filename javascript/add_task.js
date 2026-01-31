@@ -25,6 +25,7 @@ function createTask() {
   const description = document.getElementById("description").value.trim();
   const dueDate = document.getElementById("date").value;
   const category = document.getElementById("category").value;
+  const subtaskInput = document.getElementById("subtasks").value.trim();
 
   if (!title || !dueDate || !category) {
     alert("Please fill all required fields");
@@ -33,8 +34,13 @@ function createTask() {
 
   const priority = selectedPriority || "";
 
-  // If you want a default priority, set it here, e.g.:
-  // const priority = selectedPriority || "Medium";
+  const subtasks = subtaskInput
+    ? subtaskInput
+        .split(/[;,]/)
+        .map((s) => s.trim())
+        .filter(Boolean)
+        .map((title) => ({ title, done: false }))
+    : [];
 
   const params = new URLSearchParams(window.location.search);
   const status = params.get("status") || "todo";
@@ -47,6 +53,7 @@ function createTask() {
     category,
     priority,
     status,
+    subtasks,
   };
 
   const tasks = JSON.parse(localStorage.getItem("tasks")) || [];

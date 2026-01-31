@@ -3,33 +3,48 @@ const STORAGE_KEY = "tasks";
 
 let openedTaskId = null;
 let isDragging = false;
+let pendingDeleteId = null;
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function () {
   initRedirects();
   renderBoardFromStorage();
   initDragAndDrop();
   initOverlayEvents();
+  initDeleteConfirm();
   updateEmptyStates();
 });
 
 // ---------------- Redirects ----------------
 function initRedirects() {
-  document.querySelectorAll(".add-card-icon").forEach((icon) => {
-    icon.addEventListener("click", () => {
-      const col = icon.closest(".column");
-      const status = col?.dataset?.status || "todo";
-      window.location.href = `${ADD_TASK_PAGE}?status=${encodeURIComponent(
-        status
-      )}`;
-    });
-  });
+  bindAddCardIcons();
+  bindTopAddButton();
+}
 
-  const topBtn = document.querySelector(".add-task-button");
-  if (topBtn) {
-    topBtn.addEventListener("click", () => {
-      window.location.href = `${ADD_TASK_PAGE}?status=todo`;
+function bindAddCardIcons() {
+  const icons = document.querySelectorAll(".add-card-icon");
+  for (let i = 0; i < icons.length; i++) {
+    const icon = icons[i];
+    icon.addEventListener("click", function () {
+      goToAddTask(getColumnStatus(icon));
     });
   }
+}
+
+function bindTopAddButton() {
+  const topBtn = document.querySelector(".add-task-button");
+  if (!topBtn) return;
+  topBtn.addEventListener("click", function () {
+    goToAddTask("todo");
+  });
+}
+
+function getColumnStatus(icon) {
+  const col = icon.closest(".column");
+  return col && col.dataset ? col.dataset.status : "todo";
+}
+
+function goToAddTask(status) {
+  window.location.href = ADD_TASK_PAGE + "?status=" + encodeURIComponent(status);
 }
 
 // ---------------- Storage ----------------
@@ -49,199 +64,264 @@ function saveTasks(tasks) {
 
 // ---------------- Render board ----------------
 function renderBoardFromStorage() {
-  document
-    .querySelectorAll(".column .cards")
-    .forEach((c) => (c.innerHTML = ""));
-
-  const tasks = getTasks();
-  tasks.forEach(renderTaskCard);
-
+  clearAllCards();
+  renderAllTasks();
   updateEmptyStates();
 }
 
-function renderTaskCard(task) {
-  const cardsContainer = document.querySelector(
-    `.column[data-status="${task.status}"] .cards`
-  );
-  if (!cardsContainer) return;
+function clearAllCards() {
+  const cardsLists = document.querySelectorAll(".column .cards");
+  for (let i = 0; i < cardsLists.length; i++) {
+    cardsLists[i].innerHTML = "";
+  }
+}
 
+function renderAllTasks() {
+  const tasks = getTasks();
+  for (let i = 0; i < tasks.length; i++) {
+    renderTaskCard(tasks[i]);
+  }
+}
+
+function renderTaskCard(task) {
+  const cardsContainer = getCardsContainer(task.status);
+  if (!cardsContainer) return;
+  const card = createCardElement(task);
+  card.innerHTML = buildCardHtml(task);
+  cardsContainer.appendChild(card);
+}
+
+function getCardsContainer(status) {
+  const selector = '.column[data-status="' + status + '"] .cards';
+  return document.querySelector(selector);
+}
+
+function createCardElement(task) {
   const card = document.createElement("div");
   card.className = "card";
   card.draggable = true;
   card.dataset.id = String(task.id);
+  return card;
+}
 
-  const isTech = task.category === "tech";
-  const labelText = isTech ? "Technical Task" : "User Story";
-  const labelClass = isTech ? "tech" : "user";
+function buildCardHtml(task) {
+  const labelText = getLabelText(task);
+  const labelClass = getLabelClass(task);
+  let html = "";
+  html += '<div class="label ' + labelClass + '">' + labelText + "</div>";
+  html += '<div class="title">' + escapeHtml(task.title || "") + "</div>";
+  html += '<div class="desc">' + escapeHtml(task.description || "") + "</div>";
+  return html;
+}
 
-  card.innerHTML = `
-    <div class="label ${labelClass}">${labelText}</div>
-    <div class="title">${escapeHtml(task.title || "")}</div>
-    <div class="desc">${escapeHtml(task.description || "")}</div>
-  `;
+function getLabelText(task) {
+  return task.category === "tech" ? "Technical Task" : "User Story";
+}
 
-  cardsContainer.appendChild(card);
+function getLabelClass(task) {
+  return task.category === "tech" ? "tech" : "user";
 }
 
 // ---------------- Overlay events ----------------
 function initOverlayEvents() {
+  const els = getOverlayElements();
+  if (!els) return;
+  bindOverlayClose(els);
+  bindOverlayBackdrop(els);
+  bindOverlayEsc(els);
+  bindOverlayDelete(els);
+  bindOverlayEdit(els);
+  bindOverlayOpenByCard();
+}
+
+function getOverlayElements() {
   const backdrop = document.getElementById("taskOverlayBackdrop");
   const closeBtn = document.getElementById("taskOverlayClose");
   const delBtn = document.getElementById("taskOverlayDelete");
   const editBtn = document.getElementById("taskOverlayEdit");
-
   if (!backdrop || !closeBtn) {
-    console.warn(
-      "Overlay elements not found (taskOverlayBackdrop/taskOverlayClose)."
-    );
-    return;
+    console.warn("Overlay elements not found (taskOverlayBackdrop/taskOverlayClose).");
+    return null;
   }
+  return { backdrop: backdrop, closeBtn: closeBtn, delBtn: delBtn, editBtn: editBtn };
+}
 
-  // Close by X
-  closeBtn.addEventListener("click", (e) => {
+function bindOverlayClose(els) {
+  els.closeBtn.addEventListener("click", function (e) {
     e.preventDefault();
     e.stopPropagation();
     closeTaskOverlay();
   });
+}
 
-  // Close by click on backdrop
-  backdrop.addEventListener("click", (e) => {
-    if (e.target === backdrop) closeTaskOverlay();
+function bindOverlayBackdrop(els) {
+  els.backdrop.addEventListener("click", function (e) {
+    if (e.target === els.backdrop) closeTaskOverlay();
   });
+}
 
-  // Close by ESC
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !backdrop.hidden) closeTaskOverlay();
+function bindOverlayEsc(els) {
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !els.backdrop.hidden) closeTaskOverlay();
   });
+}
 
-  // Delete
-  if (delBtn) {
-    delBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (!openedTaskId) return;
-      deleteTask(openedTaskId);
-    });
-  }
+function bindOverlayDelete(els) {
+  if (!els.delBtn) return;
+  els.delBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!openedTaskId) return;
+    deleteTask(openedTaskId);
+  });
+}
 
-  // Edit (simple prompt)
-  if (editBtn) {
-    editBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (!openedTaskId) return;
-      editTaskPrompt(openedTaskId);
-    });
-  }
+function bindOverlayEdit(els) {
+  if (!els.editBtn) return;
+  els.editBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!openedTaskId) return;
+    editTaskPrompt(openedTaskId);
+  });
+}
 
-  // Open overlay by clicking card (event delegation)
-  document.addEventListener("click", (e) => {
+function bindOverlayOpenByCard() {
+  document.addEventListener("click", function (e) {
     if (isDragging) return;
-
-    // If click inside overlay -> ignore (overlay has its own buttons)
     if (e.target.closest(".task-overlay")) return;
-
     const card = e.target.closest(".card");
     if (!card) return;
-
     openTaskOverlay(card.dataset.id);
   });
 }
 
 // ---------------- Open / Close overlay ----------------
 function openTaskOverlay(id) {
-  const task = getTasks().find((t) => String(t.id) === String(id));
+  const task = findTaskById(id);
   if (!task) return;
-
   openedTaskId = String(id);
+  setOverlayCategory(task);
+  setOverlayTexts(task);
+  setOverlayPriority(task);
+  renderOverlayAssigned(task);
+  renderOverlaySubtasks(task);
+  showOverlay();
+}
 
-  // Category chip
-  const chip = document.getElementById("taskOverlayCategory");
-  if (chip) {
-    const isTech = task.category === "tech";
-    chip.textContent = isTech ? "Technical Task" : "User Story";
-    chip.classList.remove("user", "tech");
-    chip.classList.add(isTech ? "tech" : "user");
+function findTaskById(id) {
+  const tasks = getTasks();
+  for (let i = 0; i < tasks.length; i++) {
+    if (String(tasks[i].id) === String(id)) return tasks[i];
   }
+  return null;
+}
 
-  // Text fields
+function setOverlayCategory(task) {
+  const chip = document.getElementById("taskOverlayCategory");
+  if (!chip) return;
+  const isTech = task.category === "tech";
+  chip.textContent = isTech ? "Technical Task" : "User Story";
+  chip.classList.remove("user", "tech");
+  chip.classList.add(isTech ? "tech" : "user");
+}
+
+function setOverlayTexts(task) {
   setText("taskOverlayTitle", task.title || "");
   setText("taskOverlayDesc", task.description || "");
   setText("taskOverlayDue", formatDate(task.dueDate || task.due || ""));
+}
 
-  // Priority
+function setOverlayPriority(task) {
   const prioEl = document.getElementById("taskOverlayPrio");
-  if (prioEl) {
-    const pr = String(task.priority || task.prio || "medium").toLowerCase();
-    prioEl.textContent = capitalize(pr);
-    prioEl.classList.remove("urgent", "medium", "low");
-    prioEl.classList.add(pr);
-  }
+  if (!prioEl) return;
+  const pr = String(task.priority || task.prio || "medium").toLowerCase();
+  prioEl.textContent = capitalize(pr);
+  prioEl.classList.remove("urgent", "medium", "low");
+  prioEl.classList.add(pr);
+}
 
-  // Assigned
+function renderOverlayAssigned(task) {
   const assignedWrap = document.getElementById("taskOverlayAssigned");
-  if (assignedWrap) {
-    assignedWrap.innerHTML = "";
-
-    const assignedArr = Array.isArray(task.assigned)
-      ? task.assigned
-      : task.assigned
-      ? [task.assigned]
-      : [];
-
-    const list = assignedArr.length
-      ? assignedArr
-      : ["Oleg Olanovski (You)", "Mike Pankow", "Habiba"];
-
-    list.forEach((name, idx) => {
-      const row = document.createElement("div");
-      row.className = "task-overlay-person";
-
-      const badge = document.createElement("div");
-      badge.className = "task-overlay-badge";
-      badge.style.background = ["#00BEE8", "#6E52FF", "#FF7A00"][idx % 3];
-      badge.textContent = getInitials(String(name));
-
-      const text = document.createElement("div");
-      text.textContent = String(name);
-
-      row.appendChild(badge);
-      row.appendChild(text);
-      assignedWrap.appendChild(row);
-    });
+  if (!assignedWrap) return;
+  assignedWrap.innerHTML = "";
+  const list = getAssignedList(task);
+  for (let i = 0; i < list.length; i++) {
+    assignedWrap.appendChild(createPersonRow(list[i], i));
   }
+}
 
-  // Subtasks
+function getAssignedList(task) {
+  let assignedArr = [];
+  if (Array.isArray(task.assigned)) assignedArr = task.assigned;
+  else if (task.assigned) assignedArr = [task.assigned];
+  if (assignedArr.length) return assignedArr;
+  return ["Oleg Olanovski (You)", "Mike Pankow", "Habiba"];
+}
+
+function createPersonRow(name, index) {
+  const row = document.createElement("div");
+  row.className = "task-overlay-person";
+  row.appendChild(createPersonBadge(name, index));
+  row.appendChild(createPersonText(name));
+  return row;
+}
+
+function createPersonBadge(name, index) {
+  const badge = document.createElement("div");
+  badge.className = "task-overlay-badge";
+  const colors = ["#00BEE8", "#6E52FF", "#FF7A00"];
+  badge.style.background = colors[index % 3];
+  badge.textContent = getInitials(String(name));
+  return badge;
+}
+
+function createPersonText(name) {
+  const text = document.createElement("div");
+  text.textContent = String(name);
+  return text;
+}
+
+function renderOverlaySubtasks(task) {
   const subtasksWrap = document.getElementById("taskOverlaySubtasks");
-  if (subtasksWrap) {
-    subtasksWrap.innerHTML = "";
-    const subs = Array.isArray(task.subtasks) ? task.subtasks : [];
-
-    if (!subs.length) {
-      subtasksWrap.textContent = "No subtasks";
-    } else {
-      subs.forEach((s) => {
-        const row = document.createElement("div");
-        row.className = "task-overlay-subtask";
-
-        const box = document.createElement("input");
-        box.type = "checkbox";
-        box.checked = !!s.done;
-        box.disabled = true;
-
-        const label = document.createElement("span");
-        label.textContent = s.title || "";
-
-        row.appendChild(box);
-        row.appendChild(label);
-        subtasksWrap.appendChild(row);
-      });
-    }
+  if (!subtasksWrap) return;
+  subtasksWrap.innerHTML = "";
+  const subs = Array.isArray(task.subtasks) ? task.subtasks : [];
+  if (!subs.length) return showNoSubtasks(subtasksWrap);
+  for (let i = 0; i < subs.length; i++) {
+    subtasksWrap.appendChild(createSubtaskRow(subs[i]));
   }
+}
 
+function showNoSubtasks(wrap) {
+  wrap.textContent = "No subtasks";
+}
+
+function createSubtaskRow(subtask) {
+  const row = document.createElement("div");
+  row.className = "task-overlay-subtask";
+  row.appendChild(createSubtaskCheckbox(subtask));
+  row.appendChild(createSubtaskLabel(subtask));
+  return row;
+}
+
+function createSubtaskCheckbox(subtask) {
+  const box = document.createElement("input");
+  box.type = "checkbox";
+  box.checked = !!subtask.done;
+  box.disabled = true;
+  return box;
+}
+
+function createSubtaskLabel(subtask) {
+  const label = document.createElement("span");
+  label.textContent = subtask.title || "";
+  return label;
+}
+
+function showOverlay() {
   const backdrop = document.getElementById("taskOverlayBackdrop");
   if (!backdrop) return;
-
   backdrop.hidden = false;
   document.body.style.overflow = "hidden";
 }
@@ -249,126 +329,268 @@ function openTaskOverlay(id) {
 function closeTaskOverlay() {
   const backdrop = document.getElementById("taskOverlayBackdrop");
   if (!backdrop) return;
-
   backdrop.hidden = true;
   document.body.style.overflow = "";
   openedTaskId = null;
 }
 
-// ---------------- Delete / Edit ----------------
-function deleteTask(id) {
-  const tasks = getTasks();
-  const task = tasks.find((t) => String(t.id) === String(id));
+// ---------------- Delete confirm ----------------
+function initDeleteConfirm() {
+  const els = getDeleteConfirmEls();
+  if (!els) return;
+  bindDeleteConfirmOk(els);
+  bindDeleteConfirmCancel(els);
+  bindDeleteConfirmBackdrop(els);
+  bindDeleteConfirmEsc(els);
+}
+
+function getDeleteConfirmEls() {
+  const backdrop = document.getElementById("deleteConfirmBackdrop");
+  const okBtn = document.getElementById("deleteConfirmOk");
+  const cancelBtn = document.getElementById("deleteConfirmCancel");
+  const textEl = document.getElementById("deleteConfirmText");
+  if (!backdrop || !okBtn || !cancelBtn || !textEl) {
+    console.warn("Delete confirm elements not found.");
+    return null;
+  }
+  return { backdrop: backdrop, okBtn: okBtn, cancelBtn: cancelBtn, textEl: textEl };
+}
+
+function bindDeleteConfirmOk(els) {
+  els.okBtn.addEventListener("click", function () {
+    handleDeleteConfirmOk();
+  });
+}
+
+function bindDeleteConfirmCancel(els) {
+  els.cancelBtn.addEventListener("click", function () {
+    handleDeleteConfirmCancel();
+  });
+}
+
+function bindDeleteConfirmBackdrop(els) {
+  els.backdrop.addEventListener("click", function (e) {
+    if (e.target === els.backdrop) closeDeleteConfirm();
+  });
+}
+
+function bindDeleteConfirmEsc(els) {
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !els.backdrop.hidden) closeDeleteConfirm();
+  });
+}
+
+function openDeleteConfirm(id) {
+  const task = findTaskById(id);
   if (!task) return;
+  pendingDeleteId = String(id);
+  setDeleteConfirmText(task);
+  showDeleteConfirm();
+}
 
-  const ok = confirm(`Delete task "${task.title}"?`);
-  if (!ok) return;
+function setDeleteConfirmText(task) {
+  const el = document.getElementById("deleteConfirmText");
+  if (!el) return;
+  el.textContent = 'Delete task "' + task.title + '"?';
+}
 
-  const next = tasks.filter((t) => String(t.id) !== String(id));
-  saveTasks(next);
+function showDeleteConfirm() {
+  const backdrop = document.getElementById("deleteConfirmBackdrop");
+  if (!backdrop) return;
+  backdrop.hidden = false;
+}
 
+function closeDeleteConfirm() {
+  const backdrop = document.getElementById("deleteConfirmBackdrop");
+  if (!backdrop) return;
+  backdrop.hidden = true;
+  pendingDeleteId = null;
+}
+
+function handleDeleteConfirmOk() {
+  if (!pendingDeleteId) return closeDeleteConfirm();
+  removeTaskById(pendingDeleteId);
+  closeDeleteConfirm();
   closeTaskOverlay();
   renderBoardFromStorage();
 }
 
+function handleDeleteConfirmCancel() {
+  closeDeleteConfirm();
+}
+
+// ---------------- Delete / Edit ----------------
+function deleteTask(id) {
+  openDeleteConfirm(id);
+}
+
+function removeTaskById(id) {
+  const tasks = getTasks();
+  const next = [];
+  for (let i = 0; i < tasks.length; i++) {
+    if (String(tasks[i].id) !== String(id)) next.push(tasks[i]);
+  }
+  saveTasks(next);
+}
+
 function editTaskPrompt(id) {
   const tasks = getTasks();
-  const idx = tasks.findIndex((t) => String(t.id) === String(id));
+  const idx = findTaskIndexById(id, tasks);
   if (idx === -1) return;
-
   const t = tasks[idx];
-
-  const newTitle = prompt("Edit title:", t.title || "");
+  const newTitle = promptEditTitle(t);
   if (newTitle === null) return;
-
-  const newDesc = prompt("Edit description:", t.description || "");
+  const newDesc = promptEditDesc(t);
   if (newDesc === null) return;
-
-  tasks[idx] = {
-    ...t,
-    title: newTitle.trim(),
-    description: newDesc.trim(),
-  };
-
+  tasks[idx] = buildEditedTask(t, newTitle, newDesc);
   saveTasks(tasks);
-
   renderBoardFromStorage();
   openTaskOverlay(id);
 }
 
+function findTaskIndexById(id, tasks) {
+  for (let i = 0; i < tasks.length; i++) {
+    if (String(tasks[i].id) === String(id)) return i;
+  }
+  return -1;
+}
+
+function promptEditTitle(t) {
+  return prompt("Edit title:", t.title || "");
+}
+
+function promptEditDesc(t) {
+  return prompt("Edit description:", t.description || "");
+}
+
+function buildEditedTask(t, newTitle, newDesc) {
+  return {
+    title: newTitle.trim(),
+    description: newDesc.trim(),
+    id: t.id,
+    dueDate: t.dueDate,
+    category: t.category,
+    priority: t.priority,
+    status: t.status,
+    subtasks: t.subtasks,
+    assigned: t.assigned,
+  };
+}
+
 // ---------------- Drag & Drop (persist status) ----------------
 function initDragAndDrop() {
-  document.addEventListener("dragstart", (e) => {
+  bindDragStart();
+  bindDragEnd();
+  bindDropZones();
+}
+
+function bindDragStart() {
+  document.addEventListener("dragstart", function (e) {
     const card = e.target.closest(".card");
     if (!card) return;
-
     isDragging = true;
     card.classList.add("dragging");
     e.dataTransfer.effectAllowed = "move";
     e.dataTransfer.setData("text/plain", card.dataset.id || "");
   });
+}
 
-  document.addEventListener("dragend", (e) => {
+function bindDragEnd() {
+  document.addEventListener("dragend", function (e) {
     const card = e.target.closest(".card");
     if (card) card.classList.remove("dragging");
-
     isDragging = false;
-    document
-      .querySelectorAll(".column")
-      .forEach((c) => c.classList.remove("drag-over"));
+    clearDragOverClasses();
   });
+}
 
-  document.querySelectorAll(".column .cards").forEach((zone) => {
-    zone.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      zone.closest(".column")?.classList.add("drag-over");
-      e.dataTransfer.dropEffect = "move";
-    });
+function clearDragOverClasses() {
+  const columns = document.querySelectorAll(".column");
+  for (let i = 0; i < columns.length; i++) {
+    columns[i].classList.remove("drag-over");
+  }
+}
 
-    zone.addEventListener("dragleave", () => {
-      zone.closest(".column")?.classList.remove("drag-over");
-    });
+function bindDropZones() {
+  const zones = document.querySelectorAll(".column .cards");
+  for (let i = 0; i < zones.length; i++) {
+    attachZoneEvents(zones[i]);
+  }
+}
 
-    zone.addEventListener("drop", (e) => {
-      e.preventDefault();
-      zone.closest(".column")?.classList.remove("drag-over");
+function attachZoneEvents(zone) {
+  addDragOverHandler(zone);
+  addDragLeaveHandler(zone);
+  addDropHandler(zone);
+}
 
-      const id = e.dataTransfer.getData("text/plain");
-      const card = id
-        ? document.querySelector(`.card[data-id="${CSS.escape(String(id))}"]`)
-        : document.querySelector(".card.dragging");
-
-      if (!card) return;
-
-      zone.appendChild(card);
-
-      const col = zone.closest(".column");
-      const newStatus = col?.dataset?.status;
-      if (newStatus) updateTaskStatus(id, newStatus);
-
-      updateEmptyStates();
-    });
+function addDragOverHandler(zone) {
+  zone.addEventListener("dragover", function (e) {
+    e.preventDefault();
+    const col = zone.closest(".column");
+    if (col) col.classList.add("drag-over");
+    e.dataTransfer.dropEffect = "move";
   });
+}
+
+function addDragLeaveHandler(zone) {
+  zone.addEventListener("dragleave", function () {
+    const col = zone.closest(".column");
+    if (col) col.classList.remove("drag-over");
+  });
+}
+
+function addDropHandler(zone) {
+  zone.addEventListener("drop", function (e) {
+    handleDrop(zone, e);
+  });
+}
+
+function handleDrop(zone, e) {
+  e.preventDefault();
+  const col = zone.closest(".column");
+  if (col) col.classList.remove("drag-over");
+  const id = e.dataTransfer.getData("text/plain");
+  const card = getDraggedCard(id);
+  if (!card) return;
+  zone.appendChild(card);
+  updateStatusAfterDrop(col, id);
+  updateEmptyStates();
+}
+
+function getDraggedCard(id) {
+  if (id) {
+    return document.querySelector('.card[data-id="' + CSS.escape(String(id)) + '"]');
+  }
+  return document.querySelector(".card.dragging");
+}
+
+function updateStatusAfterDrop(col, id) {
+  const newStatus = col && col.dataset ? col.dataset.status : null;
+  if (newStatus) updateTaskStatus(id, newStatus);
 }
 
 function updateTaskStatus(id, status) {
   const tasks = getTasks();
-  const idx = tasks.findIndex((t) => String(t.id) === String(id));
+  const idx = findTaskIndexById(id, tasks);
   if (idx === -1) return;
-
   tasks[idx].status = status;
   saveTasks(tasks);
 }
 
 // ---------------- Empty placeholders ----------------
 function updateEmptyStates() {
-  document.querySelectorAll(".column").forEach((col) => {
-    const cards = col.querySelector(".cards");
-    const empty = col.querySelector(".empty");
-    if (!cards || !empty) return;
+  const columns = document.querySelectorAll(".column");
+  for (let i = 0; i < columns.length; i++) {
+    setEmptyStateForColumn(columns[i]);
+  }
+}
 
-    empty.style.display = cards.children.length ? "none" : "block";
-  });
+function setEmptyStateForColumn(col) {
+  const cards = col.querySelector(".cards");
+  const empty = col.querySelector(".empty");
+  if (!cards || !empty) return;
+  empty.style.display = cards.children.length ? "none" : "block";
 }
 
 // ---------------- Utils ----------------
@@ -380,8 +602,11 @@ function setText(id, value) {
 function formatDate(value) {
   if (!value) return "";
   if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    const [y, m, d] = value.split("-");
-    return `${d}/${m}/${y}`;
+    const parts = value.split("-");
+    const y = parts[0];
+    const m = parts[1];
+    const d = parts[2];
+    return d + "/" + m + "/" + y;
   }
   return value;
 }

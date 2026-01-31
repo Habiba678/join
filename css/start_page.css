@@ -188,6 +188,21 @@ h1::after {
   opacity: 0.9;
 }
 
+/* Email validate */
+.isValidate {
+  border: 1px solid greenyellow !important;
+}
+
+.isInvaled {
+  border: 1px solid rgb(255, 47, 47) !important;
+}
+
+/* Validate Password */
+.info-password {
+  display: none;
+  color: tomato;
+}
+
 /*FOOTER*/
 footer {
   height: 80px;

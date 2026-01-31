@@ -15,8 +15,6 @@
     align-items: center;
     position: relative;
     z-index: 5;
-<<<<<<< HEAD
-=======
 }
 
 .info-password {
@@ -35,5 +33,4 @@
 
 .accept-police{
     display: none;
->>>>>>> 4fc860bae99c7cba6ee88539c47a349eb2f70a3c
 }

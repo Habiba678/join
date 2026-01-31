@@ -147,12 +147,32 @@
             </div>
 
             <div class="task-overlay-actions">
-                <button class="task-overlay-action" id="taskOverlayDelete" type="button">🗑 Delete</button>
+                <button class="task-overlay-action" id="taskOverlayDelete" type="button">
+                    <img src="../assets/icons/delete.svg" alt="Delete">
+                    Delete
+                </button>
+
                 <div class="task-overlay-sep"></div>
-                <button class="task-overlay-action" id="taskOverlayEdit" type="button">✏️ Edit</button>
-                <button class="task-overlay-action" id="taskOverlaySave" type="button" hidden>💾 Save</button>
+
+                <button class="task-overlay-action" id="taskOverlayEdit" type="button">
+                    <img src="../assets/icons/edit.svg" alt="Edit">
+                    Edit
+                </button>
             </div>
 
+
+        </div>
+    </div>
+
+    <!-- DELETE CONFIRM BACKDROP -->
+    <div class="confirm-backdrop" id="deleteConfirmBackdrop" hidden>
+        <div class="confirm-modal" role="dialog" aria-modal="true" aria-label="Delete Task">
+            <h3 class="confirm-title">Delete</h3>
+            <p class="confirm-text" id="deleteConfirmText">Delete this task?</p>
+            <div class="confirm-actions">
+                <button class="confirm-btn cancel" id="deleteConfirmCancel" type="button">Cancel</button>
+                <button class="confirm-btn confirm" id="deleteConfirmOk" type="button">Yes, delete</button>
+            </div>
         </div>
     </div>
 

@@ -8,19 +8,6 @@ let isAccept = document.getElementById("accept-id");
 let isAcceptPolice = document.getElementById("accept-police");
 let singupButton = document.getElementById("singup-button");
 
-function validateLoginFormEmail() {
-  // Email prüfen
-  switch (true) {
-    case email.value.includes("@") && email.value.length > 0:
-      email.classList.add("isValidate");
-      email.classList.remove("isInvaled");
-      break;
-    default:
-      email.classList.add("isInvaled");
-      email.classList.remove("isValidate");
-  }
-}
-
 function validateFullname() {
   // Name prüfen
   switch (true) {
@@ -34,16 +21,22 @@ function validateFullname() {
   }
 }
 
+function validateEmailRegEx(emailInput) {
+  // Akzeptiert ein Input-Element oder einen String und gibt true/false zurück
+  const value = typeof emailInput === 'string' ? emailInput : (emailInput && emailInput.value) || '';
+  const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return pattern.test(String(value).toLowerCase());
+}
+
 function validateEmail() {
   // Email prüfen
-  switch (true) {
-    case email.value.includes("@") && email.value.length > 0:
-      email.classList.add("isValidate");
-      email.classList.remove("isInvaled");
-      break;
-    default:
-      email.classList.add("isInvaled");
-      email.classList.remove("isValidate");
+  const isValid = validateEmailRegEx(email);
+  if (isValid) {
+    email.classList.add("isValidate");
+    email.classList.remove("isInvaled");
+  } else {
+    email.classList.add("isInvaled");
+    email.classList.remove("isValidate");
   }
 }
 
