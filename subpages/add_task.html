@@ -75,13 +75,13 @@
 
                             <label>Priority</label>
                             <div class="priority-section">
-                                <li  class="primary-btn --primary-btn-wite">
+                                <li class="priority-btn urgent">
                                     Urgent <img class="btn-icon" src="../assets/icons/Prio alta.svg">
                                 </li>
-                                <li  class="primary-btn --primary-btn-orange">
+                                <li class="priority-btn medium">
                                     Medium <img class="btn-icon" src="../assets/icons/Prio media.svg">
                                 </li>
-                                <li  class="primary-btn --primary-btn-wite">
+                                <li class="priority-btn low">
                                     Low <img class="btn-icon" src="../assets/icons/Prio baja.svg">
                                 </li>
                             </div>
@@ -128,6 +128,21 @@
                     </div>
                 </div>
 
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="validationModal" aria-hidden="true">
+            <div class="modal-card" role="dialog" aria-labelledby="validationTitle" aria-modal="true">
+                <div class="modal-header">
+                    <span class="modal-title" id="validationTitle">Missing required fields</span>
+                    <button type="button" class="modal-close" id="validationClose" aria-label="Close">×</button>
+                </div>
+                <div class="modal-body">
+                    Please fill all required fields.
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="primary-btn modal-ok" id="validationOk">OK</button>
+                </div>
             </div>
         </div>
 

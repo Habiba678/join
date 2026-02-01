@@ -10,9 +10,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const subtaskInput = document.getElementById("subtasks");
   const addSubtaskBtn = document.getElementById("addSubtaskBtn");
   const subtaskList = document.getElementById("subtasksList");
+  const modal = document.getElementById("validationModal");
+  const modalOk = document.getElementById("validationOk");
+  const modalClose = document.getElementById("validationClose");
 
   // Priority buttons: read value on click
-  const priorityBtns = document.querySelectorAll(".priority-section li");
+  const priorityBtns = document.querySelectorAll(".priority-section .priority-btn");
   priorityBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
       priorityBtns.forEach((b) => b.classList.remove("--selected"));
@@ -21,6 +24,11 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("Priority selected:", selectedPriority);
     });
   });
+  const defaultBtn = document.querySelector(".priority-section .priority-btn.medium");
+  if (defaultBtn) {
+    defaultBtn.classList.add("--selected");
+    selectedPriority = defaultBtn.textContent.trim();
+  }
 
   if (addSubtaskBtn && subtaskInput) {
     addSubtaskBtn.addEventListener("click", addSubtasksFromInput);
@@ -48,6 +56,18 @@ document.addEventListener("DOMContentLoaded", () => {
   createBtn.addEventListener("click", createTask);
   if (clearBtn) {
     clearBtn.addEventListener("click", clearForm);
+  }
+
+  if (modalOk) {
+    modalOk.addEventListener("click", closeValidationModal);
+  }
+  if (modalClose) {
+    modalClose.addEventListener("click", closeValidationModal);
+  }
+  if (modal) {
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) closeValidationModal();
+    });
   }
 });
 
@@ -106,7 +126,7 @@ function createTask() {
   const assignedValue = document.getElementById("assigned").value;
 
   if (!title || !dueDate || !category) {
-    alert("Please fill all required fields");
+    openValidationModal();
     return;
   }
 
@@ -135,6 +155,20 @@ function createTask() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 
   window.location.href = "./board.html";
+}
+
+function openValidationModal() {
+  const modal = document.getElementById("validationModal");
+  if (!modal) return;
+  modal.classList.add("is-open");
+  modal.setAttribute("aria-hidden", "false");
+}
+
+function closeValidationModal() {
+  const modal = document.getElementById("validationModal");
+  if (!modal) return;
+  modal.classList.remove("is-open");
+  modal.setAttribute("aria-hidden", "true");
 }
 
 function clearForm() {
