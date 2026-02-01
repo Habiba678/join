@@ -23,7 +23,7 @@
 .form-details {
     display: flex;
     flex-direction: column;
-    height: 489px;
+    height: auto;
     width: 80%;
     
 }
@@ -50,6 +50,68 @@ input[type=date] {
     border: unset;
     border-radius: 8px;
     border: 1px solid #ccc;
+}
+
+.subtasks-input {
+    position: relative;
+    width: 98%;
+}
+
+.subtasks-input input {
+    width: 100%;
+    padding-right: 44px;
+}
+
+.subtasks-add-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.subtasks-add-btn img {
+    width: 20px;
+    height: 20px;
+    filter: brightness(0) saturate(100%);
+}
+
+.subtasks-list {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0;
+    width: 98%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.subtasks-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f6f7f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 14px;
+}
+
+.subtasks-remove {
+    background: transparent;
+    border: none;
+    color: #666;
+    font-size: 16px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 2px;
 }
 
 .form-details textarea {
@@ -80,6 +142,7 @@ input[type=date] {
     display: flex;
     justify-content: space-around;
     width: 100%;
+    margin-top: 16px;
 }
 
 select {

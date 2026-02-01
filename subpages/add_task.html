@@ -102,7 +102,13 @@
                             </select>
 
                             <label for="subtasks">Subtasks</label>
-                            <input type="text" id="subtasks" placeholder="Add new subtask">
+                            <div class="subtasks-input">
+                                <input type="text" id="subtasks" placeholder="Add new subtask">
+                                <button type="button" id="addSubtaskBtn" class="subtasks-add-btn" aria-label="Add subtask">
+                                    <img src="../assets/icons/check.svg" alt="">
+                                </button>
+                            </div>
+                            <ul id="subtasksList" class="subtasks-list"></ul>
                         </form>
                     </div>
                 </div>
