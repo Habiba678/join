@@ -59,32 +59,33 @@ body {
   min-height: calc(100vh + 68px);
 }
 
+/* Button: Text + Icon sauber in einer Reihe */
 .contacts-add-btn {
   width: 100%;
+  height: 40px;
   background: #2a3647;
   color: white;
   border: none;
   border-radius: 8px;
-  padding: 12px;
+  padding: 6px 16px;              
   font-weight: 600;
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 10px;
+  justify-content: center;         
+  gap: 12px;                      
   cursor: pointer;
   margin-bottom: 24px;
+  text-align: center;
 }
 
+
 .contacts-add-icon {
-  background: white;
-  color: #2a3647;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
+  width: 24px;
+  height: 24px;
+  display: block;
+  flex: 0 0 auto;                 
+  background: transparent;
+  filter: brightness(0) invert(1);
 }
 
 .contacts-list {
@@ -132,7 +133,7 @@ body {
 }
 
 .contact-mail {
-  font-size: 13px;
+  font-size: 16px;
   color: #007cee;
 }
 
@@ -168,9 +169,8 @@ body {
   margin-top: 40px;
 }
 
-
 .d-none {
-  display: none;
+  display: none !important;
 }
 
 .modal-backdrop {
@@ -189,7 +189,6 @@ body {
   display: flex;
   background: transparent;
   transform: scale(0.92);
-  
   transform-origin: center;
   
 }
@@ -210,6 +209,7 @@ body {
 .modal-left h2 {
   margin: 0;
   font-size: 40px;
+ 
 }
 
 .modal-left p {
@@ -231,7 +231,11 @@ body {
   position: relative;
   background: #f6f7f8;
   border-radius: 0 30px 30px 0;
+  
+  
+ 
 }
+
 
 .modal-close {
   position: absolute;
@@ -241,6 +245,7 @@ body {
   border: none;
   font-size: 22px;
   cursor: pointer;
+  
 }
 
 
@@ -356,10 +361,274 @@ input::placeholder {
 .btn-cancel img {
   width: 15px;
   
- 
 }
 
 .btn-cancel:hover img {
   filter: invert(49%) sepia(77%) saturate(517%) 
   hue-rotate(165deg) brightness(95%) contrast(90%);
 }
+
+.contact-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.contact-action {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 14px;
+  color: #2a3647;
+  cursor: pointer;
+}
+
+.contact-action img {
+  width: 14px;
+  height: 14px;
+}
+
+
+.contact-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin-bottom: 28px;
+}
+
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.avatar.big {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.contact-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.contact-detail-header h2 {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 700;
+  color: #2A3647;
+}
+
+.contact-actions {
+  display: flex;
+  gap: 20px;
+  margin-top: 8px;
+}
+
+.contact-action {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 16px;
+  color: #2A3647;
+}
+
+.contact-action img {
+  width: 18px;
+  height: 18px;
+}
+
+.contact-info {
+  margin-top: 32px;
+}
+
+.contact-info h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2A3647;
+  margin-bottom: 20px;
+}
+
+.contact-info p {
+  margin-bottom: 20px;
+  color: #2A3647;
+}
+
+.contact-info p strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.contact-info p:first-of-type {
+  color: #007CEE;
+}
+
+.avatar-color-0{background:#FF7A00;}
+.avatar-color-1{background:#FF5EB3;}
+.avatar-color-2{background:#6E52FF;}
+.avatar-color-3{background:#9327FF;}
+.avatar-color-4{background:#00BEE8;}
+.avatar-color-5{background:#1FD7C1;}
+.avatar-color-6{background:#FFBB2B;}
+.avatar-color-7{background:#FF4646;}
+.avatar-color-8{background:#FC71FF;}
+.avatar-color-9{background:#0038FF;}
+.avatar-color-10{background:#C3FF2B;}
+.avatar-color-11{background:#FFE62B;}
+
+
+
+.contacts-list .avatar {
+  width: 42px;
+  height: 42px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.contact-details {
+  padding: 32px 40px;
+  position: relative;
+  right: 50px;
+}
+
+.contact-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.contact-detail-header .avatar.big {
+  width: 120px;
+  height: 120px;
+  font-size: 47px;
+  font-weight: 700;
+  line-height: 1;
+  border-radius: 50%;
+  border: 3px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.contact-detail-header h2 {
+  margin: 0;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: black;
+}
+
+.contact-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 10px;
+  position: relative;
+  right: 2px;
+}
+
+.contact-action {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 400;
+  color: #2A3647;
+  padding: 0 0 4px;
+ 
+
+  
+}
+
+.contact-action:hover {
+  color: #29ABE2;
+  transform: translateX(1px);
+}
+
+.contact-action img {
+  width: 18px;
+  height: 18px;
+  display: block;
+
+}
+
+.contact-action:hover img {
+  transform: translateY(1px);
+  filter: invert(49%) sepia(77%) saturate(517%)
+          hue-rotate(165deg) brightness(95%) contrast(90%);
+          
+}
+
+
+.contact-info h3 {
+  margin: 0 0 18px 0;
+  font-size: 18px;
+  color: black;
+}
+
+.contact-info p {
+  margin: 0 0 18px 0;
+  font-size: 16px;
+  color: black;
+  line-height: 1.35;
+}
+
+.contact-info p strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 16px;
+  color: black;
+}
+
+.contact-info p:nth-of-type(1) {
+  color: #007CEE;
+}
+
+.contact-info p:nth-of-type(1) strong {
+  color: black;
+}
+
+
+.modal-initials {
+  font-size: 40px;      
+  font-weight: 700;
+  color: #ffffff;       
+  line-height: 1;
+}
+

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/summary.css">
-    <link rel="stylesheet" href="../css/contact.css">
-    <title>Contact</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../css/summary.css" />
+  <link rel="stylesheet" href="../css/contact.css" />
+  <title>Contact</title>
 </head>
 
 <body>
@@ -13,7 +13,7 @@
 
     <aside class="sidebar">
       <div class="logo">
-        <img src="../assets/icons/logo-white.svg" alt="Join">
+        <img src="../assets/icons/logo-white.svg" alt="Join" />
       </div>
 
       <nav class="menu">
@@ -22,7 +22,6 @@
           <li><a href="./add_task.html"><img src="../assets/icons/addTask-gray.svg" alt="">Add Task</a></li>
           <li><a href="./board.html"><img src="../assets/icons/board-gray.svg" alt="">Board</a></li>
           <li><a href="./contact.html"><img src="../assets/icons/contacts-gray.svg" alt="">Contacts</a></li>
-          
         </ul>
       </nav>
 
@@ -35,122 +34,92 @@
     <div class="cantainer">
       <div class="main">
 
-
         <header class="header">
           <div class="header-left">
-            <img src="../assets/icons/logo.svg" class="header-logo">
+            <img src="../assets/icons/logo.svg" class="header-logo" alt="" />
             <span class="header-title">Kanban Project Management Tool</span>
           </div>
-  
+
           <div class="header-right">
             <div class="header-help">?</div>
             <div class="header-guest">SM</div>
           </div>
         </header>
 
-      <div class="contacts-page">
-      <aside class="contacts-sidebar">
-        <button class="contacts-add-btn">
-          Add new contact
-          <img src="../assets/icons/personAdd-white.svg" class="contacts-add-icon" alt="">
-         </button>
-        
+        <div class="contacts-page">
+          <aside class="contacts-sidebar">
+            <button class="contacts-add-btn" id="openAddContact" type="button">
+              Add new contact
+              <img src="../assets/icons/personAdd-white.svg" class="contacts-add-icon" alt="">
+            </button>
 
-        <div class="contacts-list">
-          <div class="letter-group"></div>
+            <div class="contacts-list" id="contactsList"></div>
+          </aside>
 
-          <div class="contact-item">
-            <div class="avatar"></div>
-            <div>
-              <div class="contact-name"></div>
-              <div class="contact-mail"></div>
+          <main class="contacts-main">
+            <div class="contacts-header">
+              <h1>Contacts</h1>
+              <div class="header-line"></div>
+              <span>Better with a team</span>
             </div>
-          </div>
 
-          <div class="contact-item">
-            <div class="avatar"></div>
-            <div>
-              <div class="contact-name"></div>
-              <div class="contact-mail"></div>
-            </div>
-          </div>
-
-          <div class="letter-group"></div>
-
-          <div class="contact-item">
-            <div class="avatar"></div>
-            <div>
-              <div class="contact-name"></div>
-              <div class="contact-mail"></div>
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      <main class="contacts-main">
-        <div class="contacts-header">
-          <h1>Contacts</h1>
-          <div class="header-line"></div>
-          <span>Better with a team</span>
+            <div class="contact-details" id="contactDetails"></div>
+          </main>
         </div>
 
-        <div class="contact-details"></div>
-      </main>
+      </div>
     </div>
   </div>
 
-  <!-- ADD CONTACT MODAL -->
   <div class="modal-backdrop d-none" id="addContactModal">
     <div class="modal">
-
       <div class="modal-left">
-        <img src="../assets/icons/logo-white.svg" class="modal-logo">
+        <img src="../assets/icons/logo-white.svg" class="modal-logo" alt="">
         <h2>Add contact</h2>
         <p>Tasks are better with a team!</p>
         <div class="modal-line"></div>
       </div>
 
       <div class="modal-right">
-        <button class="modal-close" id="closeAddContact">×</button>
+        <button class="modal-close" id="closeAddContact" type="button">×</button>
 
         <div class="modal-person">
-          <img src="../assets/icons/person.png">
+          <img src="../assets/icons/person.png" alt="">
         </div>
 
         <form id="addContactForm">
-
           <div class="input-wrapper">
-            <input type="text" placeholder="Name" required>
-            <img src="../assets/icons/person.png" class="input-icon">
+            <input id="contactName" type="text" placeholder="Name" required>
+            <img src="../assets/icons/person.png" class="input-icon" alt="">
           </div>
 
           <div class="input-wrapper">
-            <input type="email" placeholder="Email" required>
-            <img src="../assets/icons/mail.png" class="input-icon">
+            <input id="contactEmail" type="email" placeholder="Email" required>
+            <img src="../assets/icons/mail.png" class="input-icon" alt="">
           </div>
 
           <div class="input-wrapper">
-            <input type="text" placeholder="Phone">
-            <img src="../assets/icons/call.svg" class="input-icon">
+            <input id="contactPhone" type="text" placeholder="Phone">
+            <img src="../assets/icons/call.svg" class="input-icon" alt="">
           </div>
 
           <div class="modal-actions">
             <button type="button" class="btn-cancel" id="cancelAddContact">
               Cancel
-              <img src="../assets/icons/iconoir_cancel.svg">
+              <img src="../assets/icons/iconoir_cancel.svg" alt="">
             </button>
 
             <button type="submit" class="btn-create">
               Create contact
-              <img src="../assets/icons/check-white.svg">
+              <img src="../assets/icons/check-white.svg" alt="">
             </button>
           </div>
-
         </form>
       </div>
     </div>
   </div>
 
-  <script src="../javascript/contact.js"></script>
+  <script src="../javascript/contact.js" defer></script>
+  <script src="../templates/contact_template.js" defer></script>
 </body>
 </html>
