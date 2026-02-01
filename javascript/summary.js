@@ -1,20 +1,23 @@
-const greeting = document.getElementById("greeting-text");
-const hour = new Date().getHours();
-
-if (hour < 12) {
-  greeting.textContent = "Good morning!";
-} else if (hour < 18) {
-  greeting.textContent = "Good afternoon!";
-} else {
-  greeting.textContent = "Good evening!";
-}
-
 function init() {
+  greetingText();
   getTasksTotal();
-  getTasksDone(); 
+  getTasksDone();
   getTasksProgress();
   getAwaitFeedback();
   getUrgrentTodo();
+}
+
+function greetingText() {
+  const greeting = document.getElementById("greeting-text");
+  const hour = new Date().getHours();
+
+  if (hour < 12) {
+    greeting.textContent = "Good morning!";
+  } else if (hour < 18) {
+    greeting.textContent = "Good afternoon!";
+  } else {
+    greeting.textContent = "Good evening!";
+  }
 }
 
 function getTasksTotal() {
@@ -27,13 +30,13 @@ function getTasksTotal() {
 
 function getTasksDone() {
   let done_tasks = document.getElementById("todos-done");
-  let Todos_Done = []
+  let Todos_Done = [];
   const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-  
+
   for (let i = 0; i < tasks.length; i++) {
     const element = tasks[i];
     let status = element.status;
-    
+
     if (status == "done") {
       Todos_Done.push(status);
     }
@@ -83,7 +86,7 @@ function getUrgrentTodo() {
     const urgent = tasks[i];
     let priority = urgent.priority;
     let dueDate = urgent.dueDate;
-    
+
     if (priority == "urgent") {
       Todos_urgent.push(priority);
       due_date.innerText = dueDate;
@@ -96,4 +99,4 @@ function getUrgrentTodo() {
 // let newDueDate = new Date(dueDate);
 // console.log(newDueDate);
 // console.log(newDueDate.getDay());
-// console.log(newDueDate.getFullYear());  
+// console.log(newDueDate.getFullYear());
