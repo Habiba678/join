@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const modal = document.getElementById("validationModal");
   const modalOk = document.getElementById("validationOk");
   const modalClose = document.getElementById("validationClose");
+  populateAssignedContacts();
 
   // Priority buttons: read value on click
   const priorityBtns = document.querySelectorAll(".priority-section .priority-btn");
@@ -70,6 +71,35 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+function populateAssignedContacts() {
+  const assigned = document.getElementById("assigned");
+  if (!assigned) return;
+  const contacts = loadContactsFromStorage();
+  assigned.innerHTML = "";
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.textContent = "Select contacts to assign";
+  assigned.appendChild(placeholder);
+  for (let i = 0; i < contacts.length; i++) {
+    const c = contacts[i];
+    if (!c || !c.id || !c.name) continue;
+    const opt = document.createElement("option");
+    opt.value = String(c.id);
+    opt.textContent = c.name;
+    assigned.appendChild(opt);
+  }
+}
+
+function loadContactsFromStorage() {
+  try {
+    const raw = localStorage.getItem("join_contacts_v1");
+    const list = raw ? JSON.parse(raw) : [];
+    return Array.isArray(list) ? list : [];
+  } catch {
+    return [];
+  }
+}
 
 function addSubtasksFromInput() {
   const input = document.getElementById("subtasks");

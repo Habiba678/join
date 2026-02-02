@@ -1,5 +1,6 @@
 const ADD_TASK_PAGE = "./add_task.html";
 const STORAGE_KEY = "tasks";
+const CONTACTS_STORAGE_KEY = "join_contacts_v1";
 
 let openedTaskId = null;
 let isDragging = false;
@@ -61,6 +62,43 @@ function getTasks() {
 
 function saveTasks(tasks) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+}
+
+function loadContacts() {
+  try {
+    const raw = localStorage.getItem(CONTACTS_STORAGE_KEY);
+    const list = raw ? JSON.parse(raw) : [];
+    return Array.isArray(list) ? list : [];
+  } catch (e) {
+    console.error("Contacts parse error:", e);
+    return [];
+  }
+}
+
+function buildContactsById(contacts) {
+  const map = new Map();
+  for (let i = 0; i < contacts.length; i++) {
+    const c = contacts[i];
+    if (c && c.id) map.set(String(c.id), c);
+  }
+  return map;
+}
+
+function resolveAssignedList(task) {
+  let assignedArr = [];
+  if (Array.isArray(task.assigned)) assignedArr = task.assigned;
+  else if (task.assigned) assignedArr = [task.assigned];
+  if (!assignedArr.length) return [];
+  const contactsById = buildContactsById(loadContacts());
+  const result = [];
+  for (let i = 0; i < assignedArr.length; i++) {
+    const value = assignedArr[i];
+    const key = String(value || "");
+    if (!key) continue;
+    const contact = contactsById.get(key);
+    result.push(contact && contact.name ? contact.name : key);
+  }
+  return result;
 }
 
 // ---------------- Render board ----------------
@@ -187,9 +225,7 @@ function buildAssignedAvatarsHtml(task) {
 }
 
 function getAssignedListForCard(task) {
-  if (Array.isArray(task.assigned)) return task.assigned;
-  if (task.assigned) return [task.assigned];
-  return [];
+  return resolveAssignedList(task);
 }
 
 function countDoneSubtasks(subs) {
@@ -400,11 +436,7 @@ function renderOverlayAssigned(task) {
 }
 
 function getAssignedList(task) {
-  let assignedArr = [];
-  if (Array.isArray(task.assigned)) assignedArr = task.assigned;
-  else if (task.assigned) assignedArr = [task.assigned];
-  if (assignedArr.length) return assignedArr;
-  return ["Oleg Olanovski (You)", "Maik Pankow", "Habiba"];
+  return resolveAssignedList(task);
 }
 
 function createPersonRow(name, index) {
@@ -666,7 +698,7 @@ function fillOverlayEditForm(task) {
   setInputValue("taskEditDue", task.dueDate || task.due || "");
   const pr = String(task.priority || task.prio || "medium").toLowerCase();
   setInputValue("taskEditPrio", pr);
-  const assigned = Array.isArray(task.assigned) ? task.assigned : task.assigned ? [task.assigned] : [];
+  const assigned = resolveAssignedList(task);
   setInputValue("taskEditAssigned", assigned.join(", "));
   const subtaskTitles = Array.isArray(task.subtasks) ? task.subtasks.map((s) => s.title) : [];
   setInputValue("taskEditSubtasks", subtaskTitles.join(", "));
