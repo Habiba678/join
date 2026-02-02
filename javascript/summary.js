@@ -83,7 +83,20 @@ function getUrgrentTodo() {
   let urgent_tasks_year = document.getElementById("year");
   let Todos_urgent = [];
   let nearestUrgentDate = null;
-  const months = ["January","February","March","April","May","June","July","August","September","October","November","December",];
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
   const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
   for (let i = 0; i < tasks.length; i++) {
     const urgent = tasks[i];
@@ -107,4 +120,3 @@ function getUrgrentTodo() {
     urgent_tasks_year.innerText = nearestUrgentDate.getFullYear();
   }
 }
-
