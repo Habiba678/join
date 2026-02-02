@@ -82,22 +82,29 @@ function getUrgrentTodo() {
   let urgent_tasks_day = document.getElementById("day");
   let urgent_tasks_year = document.getElementById("year");
   let Todos_urgent = [];
+  let nearestUrgentDate = null;
   const months = ["January","February","March","April","May","June","July","August","September","October","November","December",];
   const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
   for (let i = 0; i < tasks.length; i++) {
     const urgent = tasks[i];
-    let priority = urgent.priority;
-    let dueDate = urgent.dueDate;
-    let newDueDate = new Date(dueDate);
+    let priority = String(urgent.priority || "").toLowerCase();
+    let dueDate = urgent.dueDate || urgent.due || "";
+    let newDueDate = dueDate ? new Date(dueDate) : null;
 
-    if (priority == "urgent") {
+    if (priority === "urgent") {
       Todos_urgent.push(priority);
-      urgent_tasks_months.innerText = months[newDueDate.getMonth()];
-      urgent_tasks_day.innerText = newDueDate.getDay();
-      urgent_tasks_year.innerText = newDueDate.getFullYear();
+      if (newDueDate && !isNaN(newDueDate)) {
+        if (!nearestUrgentDate || newDueDate < nearestUrgentDate) {
+          nearestUrgentDate = newDueDate;
+        }
+      }
     }
     urgent_tasks.innerText = Todos_urgent.length;
   }
+  if (nearestUrgentDate) {
+    urgent_tasks_months.innerText = months[nearestUrgentDate.getMonth()];
+    urgent_tasks_day.innerText = nearestUrgentDate.getDate();
+    urgent_tasks_year.innerText = nearestUrgentDate.getFullYear();
+  }
 }
-
 
