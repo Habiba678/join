@@ -102,7 +102,7 @@ body {
   margin-top: 16px;
 }
 
-/* Contact Item */
+
 .contact-item {
   display: flex;
   align-items: center;
@@ -136,11 +136,15 @@ body {
   display: flex;
   align-items: center;
   gap: 16px;
+  margin-top: 60px;
+  position: relative;
+  right: 20px;
 }
 
 .contacts-header h1 {
   font-size: 48px;
   margin: 0;
+  
 }
 
 .header-line {
@@ -161,12 +165,11 @@ body {
   right: 50px;
 }
 
-/* Utils */
+
 .d-none {
   display: none !important;
 }
 
-/* Avatar (nur einmal, sauber) */
 .avatar {
   width: 42px;
   height: 42px;
@@ -193,7 +196,6 @@ body {
   justify-content: center;
 }
 
-/* Details Header */
 .contact-detail-header {
   display: flex;
   align-items: center;
@@ -209,7 +211,6 @@ body {
   color: black;
 }
 
-/* Actions (nur einmal) */
 .contact-actions {
   display: flex;
   align-items: center;
@@ -250,7 +251,7 @@ body {
           hue-rotate(165deg) brightness(95%) contrast(90%);
 }
 
-/* Contact Info */
+
 .contact-info h3 {
   margin: 0 0 18px 0;
   font-size: 18px;
@@ -294,8 +295,6 @@ body {
 .avatar-color-11 { background:#FFE62B; }
 
 
-/* ============ MODAL ============ */
-
 #addContactModal {
   position: fixed;
   inset: 0;
@@ -306,7 +305,6 @@ body {
   pointer-events: none;
 }
 
-/* Backdrop getrennt – beeinflusst NICHT die Modal-Farbe */
 #addContactModal::before {
   content: "";
   position: absolute;
@@ -322,7 +320,7 @@ body {
 
 #addContactModal.is-open::before {
   opacity: 1;
-  transition-duration: 1800ms; /* KOMMEN etwas schneller */
+  transition-duration: 1800ms; 
 }
 
 #addContactModal.is-closing {
@@ -331,37 +329,36 @@ body {
 
 #addContactModal.is-closing::before {
   opacity: 0;
-  transition-duration: 3000ms; /* GEHEN bleibt langsam */
+  transition-duration: 3000ms; 
 }
 
-/* Modal Box */
+
 .modal {
-  width: 880px;
-  height: 400px;
+  width: 940px;
+  height: 440px;
   display: flex;
+  margin-top: 130px;
   background: transparent;
-
   position: relative;
+  right: 8px;
   z-index: 1;
-
   transform: translate3d(130%, 18px, 0) scale(0.97);
   will-change: transform;
-  transition: transform 3000ms cubic-bezier(.2,.85,.2,1);
+  transition: transform 2000ms cubic-bezier(.2,.85,.2,1);
 }
 
-/* KOMMEN – etwas schneller */
 #addContactModal.is-open .modal {
   transform: translate3d(0, 0, 0) scale(0.97);
-  transition-duration: 900ms;
+  transition-duration: 700ms;
 }
 
-/* GEHEN – bleibt langsam */
+
 #addContactModal.is-closing .modal {
   transform: translate3d(130%, 18px, 0) scale(0.97);
   transition-duration: 1000ms;
 }
 
-/* Left / Right */
+
 .modal-left {
   width: 40%;
   background: #2A3647;
