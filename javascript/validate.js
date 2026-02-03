@@ -47,11 +47,55 @@ function validateEmail() {
 /**
  * Password prüfen
  */
-function validatePassword() {
+// Initial prüfen
+toggleIconState();
 
+password.addEventListener("input", toggleIconState);
+
+password.addEventListener("click", (e) => {
+  if (!password.value) return;
+
+  const clickOnIcon = e.offsetX > password.offsetWidth - 35;
+  if (!clickOnIcon) return;
+
+  const hidden = password.type === "password";
+  password.type = hidden ? "text" : "password";
+  password.classList.toggle("show-password", hidden);
+});
+
+
+confirmPassword.addEventListener("input", toggleIconState);
+
+confirmPassword.addEventListener("click", (e) => {
+  // nur reagieren, wenn rechts geklickt wird (Icon-Bereich)
+  if (!confirmPassword.value) return;
+
+  const clickOnIcon = e.offsetX > confirmPassword.offsetWidth - 35;
+  if (!clickOnIcon) return;
+  const hidden2 = confirmPassword.type === "password";
+  confirmPassword.type = hidden2 ? "text" : "password";
+  confirmPassword.classList.toggle("show-password", hidden2);
+});
+
+
+
+function toggleIconState() {
+  if (password.value.length === 0) {
+    password.classList.add("password-empty");
+    password.type = "password";
+    password.classList.remove("show-password");
+  } else {
+    password.classList.remove("password-empty");
+  }
+}
+      
+
+function validatePassword() {
+  
   switch (true) {
     case password.value.length > 5:
       password.classList.add("isValidate");
+      password.classList.add("visibility-off");
       password.classList.remove("isInvaled");
       infoPassword.style.display = "none";
       break;
@@ -59,6 +103,7 @@ function validatePassword() {
       infoPassword.style.display = "block";
       password.classList.add("isInvaled");
       password.classList.remove("isValidate");
+      password.classList.remove("visibility-off");
   }
 }
 /**

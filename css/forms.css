@@ -94,8 +94,31 @@ input[type=password] {
 
 .isValidate{
     border: 1px solid greenyellow !important;
+    background-image: url('../assets/icons/visibility_off.svg') !important;
+    cursor: pointer;
 }
 
 .isInvaled{
     border: 1px solid rgb(255, 47, 47) !important;
+}
+
+/* Passwort sichtbar */
+input.show-password {
+    background-image: url('../assets/icons/visibility.svg') !important;
+    cursor: text;
+}
+
+/* Optional: Hover zeigt Klickbarkeit */
+input[type=password],
+input.show-password {
+    cursor: pointer;
+    background-position: right 10px center;
+}
+
+input[type=password] {
+    cursor: pointer;
+}
+
+input[type=password]:hover {
+    background-position: right 10px center;
 }

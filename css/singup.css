@@ -9,12 +9,16 @@
 
 .sing_up_page .logo_signup_page {
     height: 80px;
-
     display: flex;
     justify-content: flex-start !important;
     align-items: center;
     position: relative;
     z-index: 5;
+}
+
+.visibility-off{
+    display: block;
+    background-image: url("../assets/icons/visibility_off.svg");
 }
 
 .info-password {
