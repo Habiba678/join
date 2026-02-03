@@ -340,7 +340,7 @@ body {
   position: relative;
   right: 8px;
   z-index: 1;
-  transform: translate3d(130%, 18px, 0) scale(0.97);
+  transform: translate3d(200%, 18px, 0) scale(0.97);
   will-change: transform;
   transition: transform 2000ms cubic-bezier(.2,.85,.2,1);
 }
@@ -352,7 +352,7 @@ body {
 
 
 #addContactModal.is-closing .modal {
-  transform: translate3d(130%, 18px, 0) scale(0.97);
+  transform: translate3d(200%, 18px, 0) scale(0.97);
   transition-duration: 1000ms;
 }
 
