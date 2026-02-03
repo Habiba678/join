@@ -1,4 +1,3 @@
-const ADD_TASK_PAGE = "./add_task.html";
 const STORAGE_KEY = "tasks";
 const CONTACTS_STORAGE_KEY = "join_contacts_v1";
 
@@ -76,7 +75,7 @@ function openAddTaskOverlay(status) {
   if (!backdrop) return;
   backdrop.dataset.status = status || "todo";
   backdrop.hidden = false;
-  document.body.classList.add("no-scroll");
+  updateBodyScrollLock();
 
   if (typeof resetAddTaskForm === "function") resetAddTaskForm();
   else if (typeof clearForm === "function") clearForm();
@@ -89,7 +88,7 @@ function closeAddTaskOverlay() {
   const backdrop = document.getElementById("addTaskOverlayBackdrop");
   if (!backdrop) return;
   backdrop.hidden = true;
-  document.body.classList.remove("no-scroll");
+  updateBodyScrollLock();
   if (typeof clearForm === "function") clearForm();
 }
 
@@ -594,14 +593,14 @@ function showOverlay() {
   const backdrop = document.getElementById("taskOverlayBackdrop");
   if (!backdrop) return;
   backdrop.hidden = false;
-  document.body.style.overflow = "hidden";
+  updateBodyScrollLock();
 }
 
 function closeTaskOverlay() {
   const backdrop = document.getElementById("taskOverlayBackdrop");
   if (!backdrop) return;
   backdrop.hidden = true;
-  document.body.style.overflow = "";
+  updateBodyScrollLock();
   openedTaskId = null;
   resetOverlayEditMode();
 }
@@ -1126,11 +1125,15 @@ function getInputValue(id) {
   return el ? el.value : "";
 }
 
-function parseCommaList(value) {
-  return String(value || "")
-    .split(/[;,]/)
-    .map((entry) => entry.trim())
-    .filter(Boolean);
+function updateBodyScrollLock() {
+  const addTaskOpen = isBackdropOpen("addTaskOverlayBackdrop");
+  const taskOpen = isBackdropOpen("taskOverlayBackdrop");
+  document.body.classList.toggle("no-scroll", addTaskOpen || taskOpen);
+}
+
+function isBackdropOpen(id) {
+  const el = document.getElementById(id);
+  return !!(el && !el.hidden);
 }
 
 function formatDate(value) {
