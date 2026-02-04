@@ -383,10 +383,12 @@ body {
   font-size: 40px;
 }
 
+
 .modal-left p {
   margin: 8px 0 0;
   font-size: 18px !important;
 }
+
 
 .modal-line {
   width: 58px;
@@ -402,9 +404,10 @@ body {
   position: relative;
   background: #f6f7f8;
   border-radius: 0 30px 30px 0;
+ 
+  
 }
 
-/* Close Button */
 .modal-close {
   position: absolute;
   top: 18px;
@@ -412,23 +415,23 @@ body {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  border: 1px solid rgba(0,0,0,0.08);
-  background-color: #ffffff;
+  border: none;
+  background: transparent;   
   color: #2A3647;
   font-size: 20px;
-  line-height: 1;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: background 180ms ease, transform 180ms ease;
+
+  transition: background-color 0.2s ease;
 }
+
 
 .modal-close:hover {
-  background: #f1f4f7;
-  transform: scale(1.05);
-}
+  background-color: rgba(0, 0, 0, 0.08); 
 
+}
 
 .modal-person {
   width: 120px;
@@ -451,11 +454,12 @@ body {
   opacity: 0.6;
 }
 
+
 .modal-initials {
-  font-size: 40px;
+  font-size: 47px !important;
   font-weight: 700;
   color: #ffffff;
-  line-height: 1;
+  
 }
 
 #addContactForm {
@@ -469,6 +473,7 @@ body {
 
 .input-wrapper {
   position: relative;
+ 
 }
 
 .input-wrapper input {
@@ -495,7 +500,6 @@ input::placeholder {
   opacity: 0.6;
 }
 
-/* Buttons */
 .modal-actions {
   display: flex;
   gap: 12px;
@@ -552,6 +556,72 @@ input::placeholder {
 }
 
 
+.contacts-back-btn,
+#contactsBackBtn {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  outline: none ;
+  padding: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  
+}
+
+.contacts-back-btn img,
+#contactsBackBtn img {
+  display: block;
+  box-shadow: none;
+  filter: none;
+}
+
+.contact-details {
+  position: relative;
+}
+
+.contact-more-btn {
+  all: unset;
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #2A3647;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.contact-more-btn:focus,
+.contact-more-btn:active {
+  outline: none;
+  box-shadow: none;
+}
 
 
 
+@media (max-width: 900px) {
+  .contacts-more-btn {
+    display: flex !important;
+    position: fixed;
+    right: 20px;
+    bottom: 90px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #29ABE2;
+    color: white;
+    border: none;
+    font-size: 22px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 2000;
+  }
+}

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -62,9 +61,32 @@
               <h1>Contacts</h1>
               <div class="header-line"></div>
               <span>Better with a team</span>
+              
+
+              
+              <button class="contacts-back-btn" id="contactsBackBtn" type="button" aria-label="Back">
+                <img src="../assets/icons/pfeil-links-blue.png" alt="Back">
+              </button>
             </div>
 
+            
             <div class="contact-details" id="contactDetails"></div>
+
+           
+            <button class="contacts-more-btn d-none" id="contactsMoreBtn" type="button" aria-label="More">
+              <span class="dots">⋮</span>
+            </button>
+
+            
+            <div class="contacts-more-menu d-none" id="contactsMoreMenu">
+              <button class="contacts-more-item" id="contactsMoreEdit" type="button">
+                <img src="../assets/icons/edit.svg" alt=""> Edit
+              </button>
+              <button class="contacts-more-item" id="contactsMoreDelete" type="button">
+                <img src="../assets/icons/delete.svg" alt=""> Delete
+              </button>
+            </div>
+
           </main>
         </div>
 
@@ -78,7 +100,8 @@
         <img src="../assets/icons/logo-white.svg" class="modal-logo" alt="">
         <h2>Add contact</h2>
         <p>Tasks are better with a team!</p>
-        <div class="modal-line"></div>
+        <div class="modal-line">
+        </div>
       </div>
 
       <div class="modal-right">
@@ -120,7 +143,6 @@
     </div>
   </div>
 
-  
   <script src="../javascript/templates/contact_template.js" defer></script>
   <script src="../javascript/contact.js"></script>
 </body>

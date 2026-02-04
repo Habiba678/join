@@ -86,6 +86,37 @@ function getEl(id) {
   return document.getElementById(id);
 }
 
+function isMobile() {
+  return window.matchMedia && window.matchMedia("(max-width: 320px)").matches;
+}
+
+function showMobileDetails() {
+  let l = getEl("contactsList");
+  let d = getEl("contactDetails");
+  if (l) l.classList.add("d-none");
+  if (d) d.classList.remove("d-none");
+}
+
+function showMobileList() {
+  let l = getEl("contactsList");
+  let d = getEl("contactDetails");
+  if (d) d.classList.add("d-none");
+  if (l) l.classList.remove("d-none");
+  let menu = getEl("mobileActionsMenu");
+  if (menu) menu.classList.remove("is-open");
+}
+
+function toggleMobileMenu() {
+  let menu = getEl("mobileActionsMenu");
+  if (!menu) return;
+  menu.classList.toggle("is-open");
+}
+
+function closeMobileMenu() {
+  let menu = getEl("mobileActionsMenu");
+  if (menu) menu.classList.remove("is-open");
+}
+
 function removeModalNow() {
   let m = getEl("addContactModal");
   if (m) m.remove();
@@ -240,6 +271,9 @@ function renderDetails() {
     initials: getInitials(c.name),
     colorClass: c.colorClass || colorClassFor(c.id || (c.email || c.name || ""))
   });
+
+  closeMobileMenu();
+  if (isMobile()) showMobileDetails();
 }
 
 function createFromForm() {
@@ -306,6 +340,7 @@ function deleteContact(id) {
   saveContacts();
   renderContactsList();
   renderDetails();
+  if (isMobile()) showMobileList();
 }
 
 function handleSecondary(btn) {
@@ -321,6 +356,25 @@ function handleSecondary(btn) {
 
 function handleClick(e) {
   if (e.target.closest("#openAddContact")) return openModal("create", null);
+
+  if (e.target.closest("#mobileBackBtn")) {
+    if (isMobile()) showMobileList();
+    return;
+  }
+
+  if (e.target.closest("#mobileMenuBtn")) {
+    if (isMobile()) toggleMobileMenu();
+    return;
+  }
+
+  if (isMobile()) {
+    let menu = getEl("mobileActionsMenu");
+    if (menu && menu.classList.contains("is-open")) {
+      let insideMenu = e.target.closest("#mobileActionsMenu");
+      let onMenuBtn = e.target.closest("#mobileMenuBtn");
+      if (!insideMenu && !onMenuBtn) closeMobileMenu();
+    }
+  }
 
   let item = e.target.closest(".contact-item");
   if (item && item.dataset.id) {
@@ -351,8 +405,12 @@ function handleClick(e) {
     let id = act.dataset.id;
     let a = act.dataset.action;
 
-    if (a === "delete") return deleteContact(id);
+    if (a === "delete") {
+      closeMobileMenu();
+      return deleteContact(id);
+    }
     if (a === "edit") {
+      closeMobileMenu();
       let c = contacts.find(function (x) {
         return x.id === id;
       });
@@ -390,6 +448,8 @@ function init() {
 
   renderContactsList();
   renderDetails();
+
+  if (isMobile()) showMobileList();
 
   document.addEventListener("click", handleClick);
   document.addEventListener("submit", handleSubmit);
