@@ -9,7 +9,6 @@ body {
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 
-/* Header */
 .header {
   height: 96px;
   background: #ffffff;
@@ -44,7 +43,6 @@ body {
   flex: 1;
 }
 
-/* Sidebar */
 .contacts-sidebar {
   width: 360px;
   background: #ffffff;
@@ -90,16 +88,21 @@ body {
   flex-direction: column;
   gap: 12px;
   flex: 1;
+  
 }
 
-.letter-group {
-  font-size: 16px;
+.letter-group{
+  padding: 12px 24px 6px;
+  font-size: 14px;
+  font-weight: 500;
   color: black !important;
-  border-bottom: 1px solid #D1D1D1;
-  padding-bottom: 6px;
-  margin-top: 16px;
+  border-bottom: 1px solid #d1d1d1;
 }
 
+.letter-group .letter{
+  position: relative;
+  top: -6px;
+}
 
 .contact-item {
   display: flex;
@@ -358,7 +361,7 @@ body {
 
 #addContactModal.is-closing .modal {
   transform: translate3d(200%, 18px, 0) scale(0.97);
-  transition-duration: 1000ms;
+  transition-duration: 3000ms;
 }
 
 
@@ -426,7 +429,7 @@ body {
   transform: scale(1.05);
 }
 
-/* Person Circle */
+
 .modal-person {
   width: 120px;
   height: 120px;
@@ -455,7 +458,6 @@ body {
   line-height: 1;
 }
 
-/* Form */
 #addContactForm {
   max-width: 420px;
   margin-top: 80px;
@@ -552,351 +554,4 @@ input::placeholder {
 
 
 
-/* =========================================================
-   RESPONSIVE – FIGMA (START ab 900px runter bis 320px)
-   -> NUR CSS (Layout/Größen/Positionen)
-   -> Desktop bleibt wie jetzt, Mobile wird 1:1 wie Figma
-========================================================= */
 
-/* ---------- DESKTOP bleibt wie es ist ---------- */
-@media (min-width: 900px) {
-  .contacts-page {
-    flex-direction: row;
-  }
-
-  .contacts-sidebar {
-    display: flex;
-    width: 360px;
-    position: relative;
-  }
-
-  .contacts-main {
-    display: block;
-    padding: 48px;
-  }
-
-  /* Desktop Modal bleibt horizontal */
-  .modal {
-    width: 940px;
-    height: 440px;
-    flex-direction: row;
-    border-radius: 30px;
-  }
-
-  .modal-left {
-    width: 40%;
-    border-radius: 30px 0 0 30px;
-  }
-
-  .modal-right {
-    width: 60%;
-    border-radius: 0 30px 30px 0;
-  }
-}
-
-
-/* =========================================================
-   MOBILE / TABLET – 899px und kleiner (Figma Mobile)
-========================================================= */
-@media (max-width: 899px) {
-  /* Header kompakter */
-  .header {
-    height: 80px;
-    padding: 16px 16px 16px 16px;
-  }
-
-  .header-title {
-    right: 0;
-    font-size: 16px;
-  }
-
-  /* Sidebar verschwindet (links darf nix mehr “Desktop-mäßig” stehen) */
-  .contacts-sidebar {
-    width: 100%;
-    padding: 0;
-    box-shadow: none;
-    min-height: auto;
-  }
-
-  /* Layout: Mobile = 1 Spalte */
-  .contacts-page {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  /* Main zuerst NICHT neben der Liste, sondern als eigene “Seite” */
-  .contacts-main {
-    width: 100%;
-    padding: 0;
-    background: #f6f7f8;
-  }
-
-  /* Diese beiden Blöcke sind wichtig:
-     - Kontaktliste = eine Seite
-     - Details = zweite Seite
-     Du steuerst das über dein JS mit .d-none (hast du ja schon).
-  */
-  .contacts-sidebar,
-  .contacts-main {
-    height: calc(100vh - 80px);
-    overflow: hidden;
-  }
-
-  .contacts-list {
-    height: 100%;
-    overflow-y: auto;
-    padding: 12px 0 90px;
-    gap: 0;
-  }
-
-  /* Letter Group wie Figma (mehr Luft, klare Linie) */
-  .letter-group {
-    margin: 12px 16px 6px;
-    padding-bottom: 8px;
-    font-size: 14px;
-    color: #a8a8a8;
-    border-bottom: 1px solid #e8eaee;
-  }
-
-  /* Kontakt-Row (Mobile) */
-  .contact-item {
-    padding: 12px 16px;
-    border-radius: 0;
-  }
-
-  .contact-mail {
-    font-size: 14px;
-  }
-
-  /* ---------- Add Contact Button: nur Icon (Floating) ---------- */
-  .contacts-add-btn {
-    position: fixed;
-    right: 16px;
-    bottom: 92px; /* Platz für Bottom-Nav */
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    padding: 0;
-    margin: 0;
-    gap: 0;
-    justify-content: center;
-    z-index: 999;
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
-    font-size: 0;          /* Text weg */
-    line-height: 0;
-  }
-
-  .contacts-add-btn span,
-  .contacts-add-btn p {
-    display: none !important; /* falls Text in span/p drin ist */
-  }
-
-  .contacts-add-icon {
-    width: 26px;
-    height: 26px;
-  }
-
-  /* ---------- Contacts Header auf Mobile (wie Figma Details-Seite) ---------- */
-  .contacts-header {
-    margin: 0;
-    right: 0;
-    padding: 16px 16px 10px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-  }
-
-  .contacts-header h1 {
-    font-size: 32px;
-    line-height: 1.1;
-  }
-
-  .header-line {
-    width: 72px;
-    height: 3px;
-    border-radius: 2px;
-  }
-
-  .contacts-header span {
-    font-size: 16px;
-  }
-
-  /* Details-Block kompakt */
-  .contact-details {
-    margin-top: 0;
-    right: 0;
-    padding: 16px;
-  }
-
-  .contact-detail-header {
-    gap: 14px;
-    margin-bottom: 18px;
-  }
-
-  .avatar.big {
-    width: 84px;
-    height: 84px;
-    font-size: 32px;
-  }
-
-  .contact-detail-header h2 {
-    font-size: 22px;
-  }
-
-  /* Actions (Edit/Delete) nicht als Desktop-Leiste */
-  .contact-actions {
-    display: none; /* auf Mobile kommt es über die 3 Punkte */
-  }
-
-  /* =========================================================
-     MODAL – MOBILE (Add / Edit contact) 1:1 hochkant
-  ========================================================= */
-
-  #addContactModal {
-    align-items: center;
-    justify-content: center;
-  }
-
-  .modal {
-    width: min(92vw, 360px);
-    height: min(78vh, 520px);
-    margin-top: 0;
-    right: 0;
-    border-radius: 24px;
-    overflow: hidden;
-    flex-direction: column;             /* IMPORTANT: hochkant */
-    transform: translate3d(0, 0, 0) scale(1);
-    transition: transform 400ms ease;
-  }
-
-  /* “Linke Seite” wird Kopfbereich (dunkel) */
-  .modal-left {
-    width: 100%;
-    height: 42%;
-    border-radius: 0;
-    padding: 22px 20px;
-    position: relative;
-  }
-
-  .modal-logo {
-    width: 40px;
-    margin-bottom: 12px;
-  }
-
-  .modal-left h2 {
-    font-size: 28px;
-    line-height: 1.1;
-  }
-
-  .modal-left p {
-    display: none; /* dieser Satz soll weg sein (wie du gesagt hast) */
-  }
-
-  .modal-line {
-    width: 56px;
-    height: 3px;
-    margin-top: 10px;
-  }
-
-  /* Rechte Seite wird Content-Bereich (hell) */
-  .modal-right {
-    width: 100%;
-    height: 58%;
-    border-radius: 0;
-    padding: 56px 18px 18px; /* Platz für Avatar-Kreis */
-    background: #f6f7f8;
-  }
-
-  /* Close Button: oben rechts */
-  .modal-close {
-    top: 14px;
-    right: 14px;
-    width: 30px;
-    height: 30px;
-    font-size: 18px;
-    z-index: 3;
-  }
-
-  /* Avatar-Kreis: mittig auf der Trennlinie */
-  .modal-person {
-    width: 96px;
-    height: 96px;
-    left: 50%;
-    top: calc(42% - 48px);
-    transform: translateX(-50%);
-    box-shadow: 0 0 0 4px #f6f7f8;
-    z-index: 2;
-  }
-
-  .modal-person img {
-    width: 44px;
-  }
-
-  /* Formular zentriert, keine Desktop-Abstände */
-  #addContactForm {
-    max-width: none;
-    width: 100%;
-    margin: 0;
-    gap: 12px;
-  }
-
-  .input-wrapper input {
-    height: 40px;
-    border-radius: 10px;
-    padding: 0 40px 0 14px;
-    font-size: 15px;
-  }
-
-  .input-icon {
-    right: 14px;
-    width: 18px;
-  }
-
-  /* Buttons: Mobile = untereinander bzw. primär groß */
-  .modal-actions {
-    margin-top: 14px;
-    gap: 10px;
-    flex-direction: column;
-  }
-
-  .btn-create,
-  .btn-cancel {
-    width: 100%;
-    height: 44px;
-    justify-content: center;
-    border-radius: 10px;
-  }
-
-  /* Optional: Wenn du Cancel auf Mobile NICHT willst (wie in manchen Figma Screens) */
-  /* .btn-cancel { display: none; } */
-}
-
-
-/* ---------- EXTRA: sehr kleine Phones ---------- */
-@media (max-width: 420px) {
-  .modal {
-    width: 92vw;
-    height: 80vh;
-  }
-
-  .contacts-header h1 {
-    font-size: 28px;
-  }
-}
-
-@media (max-width: 320px) {
-  .modal-left h2 {
-    font-size: 24px;
-  }
-
-  .modal-person {
-    width: 88px;
-    height: 88px;
-    top: calc(42% - 44px);
-  }
-
-  .input-wrapper input {
-    height: 38px;
-    font-size: 14px;
-  }
-}

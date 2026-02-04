@@ -1,4 +1,3 @@
-/* templates.js */
 function contactListItemTemplate(c, isActive) {
   return `
   <div class="contact-item ${isActive ? "active" : ""}" data-id="${c.id}">
@@ -12,7 +11,7 @@ function contactListItemTemplate(c, isActive) {
 
 function contactActionsTemplate(c) {
   return `
-  <div class="contact-actions">
+  <div class="contact-actions desktop-actions">
     <button class="contact-action edit" data-action="edit" data-id="${c.id}">
       <img src="../assets/icons/edit.svg"><span>Edit</span>
     </button>
@@ -22,8 +21,30 @@ function contactActionsTemplate(c) {
   </div>`;
 }
 
+function contactMobileActionsTemplate(c) {
+  return `
+  <div class="mobile-actions-menu d-none" id="mobileActionsMenu" data-id="${c.id}">
+    <button class="mobile-action-item" data-action="edit" data-id="${c.id}">
+      <img src="../assets/icons/edit.svg"><span>Edit</span>
+    </button>
+    <button class="mobile-action-item" data-action="delete" data-id="${c.id}">
+      <img src="../assets/icons/delete.svg"><span>Delete</span>
+    </button>
+  </div>`;
+}
+
+function contactDetailsHeaderMobileTemplate() {
+  return `
+  <div class="contact-detail-topbar mobile-only">
+    <button class="mobile-back-btn" id="mobileBackBtn" type="button" aria-label="Back">
+      <img src="../assets/icons/pfeil-links-blue.png" alt="Back">
+    </button>
+  </div>`;
+}
+
 function contactDetailsTemplate(c) {
   return `
+  ${contactDetailsHeaderMobileTemplate()}
   <div class="contact-detail-header">
     <div class="avatar big ${c.colorClass}">${c.initials}</div>
     <div class="contact-detail-headtext">
@@ -31,11 +52,18 @@ function contactDetailsTemplate(c) {
       ${contactActionsTemplate(c)}
     </div>
   </div>
+
   <div class="contact-info">
     <h3>Contact Information</h3>
     <p><strong>Email</strong><br><a class="contact-link" href="mailto:${c.email}">${c.email}</a></p>
     <p><strong>Phone</strong><br><span>${c.phone || "-"}</span></p>
-  </div>`;
+  </div>
+
+  <button class="mobile-fab-menu mobile-only" id="mobileMenuBtn" type="button" aria-label="More">
+    ⋮
+  </button>
+  ${contactMobileActionsTemplate(c)}
+  `;
 }
 
 function modalLeftTemplate(mode) {
