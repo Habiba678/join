@@ -1218,6 +1218,7 @@ body.no-scroll {
 /* RESPONSIVE*/
 @media (max-width: 900px) {
   .layout {
+    min-width: 100%;
     justify-content: center;
     align-items: center;
     flex-direction: column-reverse;
