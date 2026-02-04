@@ -1,4 +1,4 @@
-#assignedText{
+#assignedText {
   display: flex;
   justify-content: space-around;
 }
@@ -6,7 +6,7 @@
 .multi-select {
   position: relative;
   width: 100%;
-  
+
 }
 
 .multi-select-input {
@@ -15,7 +15,7 @@
   cursor: pointer;
   min-height: 40px;
   border-radius: 8px;
-    background: white;
+  background: white;
 }
 
 .multi-select-dropdown {
@@ -89,15 +89,17 @@
 
 .contact-option input[type="checkbox"] {
   pointer-events: none;
- height: 21px;
+  height: 21px;
   width: 21px;
 }
+
 /* new select field */
 
 
-.content-wrepper{
+.content-wrepper {
   max-width: 1920px;
-  
+  flex-direction: row;
+
 }
 
 .kpi-panel-task {
@@ -434,6 +436,41 @@ label .label-star {
 
 
 @media (max-width: 850px) {
+  .header {
+    padding-left: 24px;
+  }
+
+  .header-title {
+    display: block !important;
+    height: 50px;
+    width: 50px;
+    content: url("../assets/icons/logo.svg");
+  }
+
+  .header-help {
+    display: none;
+  }
+
+  .add-task-button {
+    background-image: url("../assets/icons/addPlus-white.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    font-size: 0;
+    height: 48px;
+    border-radius: 16px;
+    margin-left: 90%;
+  }
+
+  .add-task-button:hover {
+    background-image: url("../assets/icons/addPlus-white.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    font-size: 0;
+    height: 48px;
+    border-radius: 16px;
+
+  }
+
   .kpi-panel-task {
     flex-direction: column;
   }
@@ -465,7 +502,7 @@ label .label-star {
     gap: 5px;
   }
 
-  .priority-section li{
+  .priority-section li {
     width: 100%;
     height: 46px;
   }
@@ -477,8 +514,9 @@ label .label-star {
     margin-top: 0px;
 
   }
-  .create-task-button{
+
+  .create-task-button {
     margin-top: 5px;
   }
-  
+
 }
