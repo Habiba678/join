@@ -1,0 +1,111 @@
+/* select 1 */
+
+.multi-select {
+    position: relative;
+    width: 100%;
+   
+}
+
+.multi-select-input {
+    border: 1px solid #ccc;
+        border-radius: 8px;
+    padding: 8px;
+    cursor: pointer;
+    min-height: 40px;
+    background: white;
+}
+
+.multi-select-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+}
+
+.multi-select-input {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 8px 10px;
+    cursor: pointer;
+    min-height: 40px;
+}
+
+.dropdown-arrow {
+    font-size: 12px;
+    transition: transform 0.3s ease;
+}
+
+.dropdown-arrow.open {
+    transform: rotate(180deg);
+}
+
+.hidden {
+    display: none;
+}
+
+
+/* Select 2 - and label */
+
+.select-wrapper {
+    position: relative;
+    width: auto;
+}
+
+#selectIcon {
+    position: absolute;
+    appearance: unset;
+    right: 10px;
+    top: 50%;
+    font-size: 12px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    transform: translateY(-50%);
+    transition: transform 0.2s ease;
+    pointer-events: none;
+}
+
+.select-wrapper.open #selectIcon {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+select {
+    box-sizing: border-box;
+    height: 42px;
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    appearance: unset;
+    background-size: 26px;
+    padding: 8px 32px 8px 8px;
+    transition: 0.4s ease-in-out;
+    font-size: 15px;
+    outline: unset;
+}
+
+label {
+    width: 100%;
+    text-align: left;
+    margin: 12px 0 4px;
+}
+
+select:hover {
+    border-color: #999;
+}
+
+.multi-select-input:hover{
+    border-color: #999;
+}
+
+option {
+    color: #666;
+    border-radius: 8px;
+    background: #eeeeee00;
+    padding: 10px;
+    transition: 0.4s;
+}

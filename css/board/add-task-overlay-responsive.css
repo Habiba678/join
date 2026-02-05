@@ -1,0 +1,49 @@
+@media (max-width: 850px) {
+  .add-task-overlay .kpi-panel-task {
+    flex-direction: column;
+  }
+
+  .add-task-overlay .form_1 {
+    width: 100%;
+  }
+
+  .add-task-overlay .form-separator {
+    width: 100%;
+    height: 2px;
+    margin: 15px 0 15px 0;
+  }
+
+  .add-task-overlay .form_2 {
+    width: 100%;
+  }
+
+  .add-task-overlay .kpi-panel-task-footer {
+    margin-bottom: 80px;
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 350px) {
+  .add-task-overlay .priority-section {
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .add-task-overlay .priority-section li {
+    width: 100%;
+    height: 46px;
+  }
+
+  .add-task-overlay .kpi-panel-task-footer {
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 80px;
+    margin-top: 0;
+  }
+
+  .add-task-overlay .create-task-button {
+    margin-top: 5px;
+  }
+}
+

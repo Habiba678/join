@@ -1,0 +1,242 @@
+/* ======================
+   BOARD / COLUMNS
+====================== */
+.board {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 26px;
+  padding: 0 64px 64px;
+  width: 100%;
+  position: relative;
+  height: auto;
+  overflow-x: hidden;
+}
+
+.column {
+  flex: 0 0 300px;
+  width: 300px;
+  min-width: 300px;
+  max-width: 300px;
+  max-height: 400px;
+  flex-shrink: 0;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.column::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+.column::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle*/
+.column::-webkit-scrollbar-thumb {
+  background: #c5c5c5;
+  border-radius: 8px;
+}
+
+/* Handle on hover */
+.column::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.column-header {
+  display: flex;
+  position: absolute;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 20px;
+  color: #2a3647;
+  margin-bottom: 6px;
+}
+
+.add-card-icon {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.add-card-icon:hover {
+  background: rgba(41, 171, 226, 0.15);
+  transform: scale(1.08);
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 100px;
+  padding-bottom: 10px;
+  align-items: flex-start;
+  margin-top: 50px;
+}
+
+.empty {
+  width: 252px;
+  max-width: 252px;
+  padding: 12px;
+  background: #e7e7e7;
+  border: 1px dashed #a8a8a8;
+  border-radius: 10px;
+  text-align: center;
+  color: #a8a8a8;
+  margin-top: 50px;
+}
+
+/* Drag over */
+.column.drag-over .cards {
+  background: rgba(41, 171, 226, 0.08);
+  border-radius: 12px;
+  transition: background 0.2s ease;
+}
+
+/* ======================
+   CARD (fixed width)
+====================== */
+.card {
+  width: 252px;
+  max-width: 252px;
+  height: 250px;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.08);
+  cursor: grab;
+  user-select: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-content {
+  flex: 1 1 auto;
+  overflow: auto;
+  padding-right: 6px;
+}
+
+/* width */
+.card-bottom {
+  flex-shrink: 0;
+}
+
+.card:hover {
+  box-shadow: 0px 10px 22px rgba(0, 0, 0, 0.14);
+  transform: translateY(-1px);
+}
+
+.card.dragging {
+  opacity: 0.4;
+  transform: rotate(3deg) scale(1.03);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
+  padding: 4px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #fff;
+  margin-bottom: 10px;
+  white-space: nowrap;
+}
+
+.label.user {
+  background: #0038ff;
+}
+
+.label.tech {
+  background: #1fd7c1;
+}
+
+.title {
+  font-weight: 700;
+  font-size: 16px;
+  color: #2a3647;
+  margin-bottom: 6px;
+  word-break: break-word;
+}
+
+.desc {
+  font-size: 16px;
+  color: #a8a8a8;
+  margin: 0 0 12px;
+  word-break: break-word;
+}
+
+/* Card progress + footer */
+.card-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 6px;
+}
+
+.card-progress-bar {
+  flex: 1;
+  height: 8px;
+  background: #f4f4f4;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.card-progress-fill {
+  height: 100%;
+  background: #29abe2;
+  border-radius: 8px;
+}
+
+.card-progress-text {
+  font-size: 12px;
+  color: #a8a8a8;
+  min-width: 36px;
+  text-align: right;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.card-contacts {
+  display: flex;
+  align-items: center;
+}
+
+.card-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid #ffffff;
+  margin-left: -8px;
+}
+
+.card-avatar:first-child {
+  margin-left: 0;
+}
+
+.card-priority-icon.medium {
+  width: 20px;
+  opacity: 0.9;
+}
+

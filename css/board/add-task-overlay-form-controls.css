@@ -1,0 +1,77 @@
+.add-task-overlay label .label-star {
+  color: red;
+}
+
+.add-task-overlay select {
+  box-sizing: border-box;
+  height: 42px;
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  appearance: unset;
+  background-image: url("../../assets/icons/arrow_drop_downaa.png");
+  background-position: right 8px center;
+  background-repeat: no-repeat;
+  background-size: 26px;
+  padding: 8px 32px 8px 8px;
+  transition: 0.4s;
+}
+
+.add-task-overlay select:hover {
+  border-color: #999;
+}
+
+.add-task-overlay option {
+  color: #666;
+  border-radius: 8px;
+  background: #eeeeee00;
+  padding: 10px;
+  transition: 0.4s;
+}
+
+.add-task-overlay .kpi-panel-task-footer {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.add-task-overlay .create-task-button {
+  display: flex;
+  flex-direction: row;
+  gap: 35px;
+}
+
+.add-task-overlay .primary-btn {
+  display: flex;
+  height: 53px;
+  width: 135px;
+  font-size: large;
+  border: unset;
+  color: white;
+  background-color: rgb(42, 54, 71);
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+}
+
+.add-task-overlay .primary-btn .btn-icon {
+  margin: 0 auto;
+  height: 24px;
+  width: 24px;
+}
+
+.add-task-overlay .primary-btn:focus {
+  border: 1px gray solid;
+  transition: 0.8s ease-in-out;
+}
+
+.add-task-overlay .--primary-btn-cancel {
+  width: auto;
+  background-color: #fffefe;
+  border: 1px solid grey;
+  color: #000;
+}
+

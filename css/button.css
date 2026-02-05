@@ -1,0 +1,77 @@
+.primary-btn {
+    display: flex;
+    height: 53px;
+    width: 135px;
+    font-size: large;
+    border: unset;
+    color: white;
+    background-color: rgb(42, 54, 71);
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+}
+
+.primary-btn .btn-icon {
+    margin: 0 auto;
+    height: 24px;
+    width: 24px;
+}
+
+.priority-btn {
+    width: 136px;
+    height: 56px;
+    border: 1px solid #d0d0d0;
+    background: #ffffff;
+    border-radius: 8px;
+    color: #000;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.priority-btn .btn-icon {
+    filter: none;
+}
+
+.priority-btn.medium .btn-icon {
+    filter: brightness(0) saturate(100%) invert(57%) sepia(88%) saturate(749%) hue-rotate(1deg) brightness(103%) contrast(103%);
+}
+
+.priority-btn.--selected {
+    color: #ffffff;
+    border-color: transparent;
+}
+
+.priority-btn.--selected .btn-icon {
+    filter: brightness(0) invert(1);
+}
+
+.priority-btn.urgent.--selected {
+    background-color: #ff3d00;
+}
+
+.priority-btn.medium.--selected {
+    background-color: rgb(255, 168, 0);
+}
+
+.priority-btn.low.--selected {
+    background-color: #7ae229;
+}
+
+.primary-btn:focus {
+    border: 1px gray solid;
+    transition: 0.8s ease-in-out;
+}
+
+.--primary-btn-cancel {
+    width: auto;
+    background-color: #fffefe;
+    border: 1px solid grey;
+    color: black;
+}

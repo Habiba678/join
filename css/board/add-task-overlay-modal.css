@@ -1,0 +1,81 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-overlay.is-open {
+  display: flex;
+}
+
+.modal-card {
+  width: min(420px, 90vw);
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+  padding: 18px 20px 16px;
+  border-left: 6px solid rgb(42, 54, 71);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: rgb(42, 54, 71);
+}
+
+.modal-close {
+  border: none;
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  color: #666;
+}
+
+.modal-body {
+  margin-top: 10px;
+  color: #333;
+}
+
+.modal-actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal-actions .modal-ok {
+  height: 42px;
+  width: 110px;
+}
+
+.modal-overlay .primary-btn {
+  display: flex;
+  height: 53px;
+  width: 135px;
+  font-size: large;
+  border: unset;
+  color: #fff;
+  background-color: rgb(42, 54, 71);
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+}
+
+.modal-overlay .primary-btn:focus {
+  border: 1px gray solid;
+  transition: 0.8s ease-in-out;
+}
+

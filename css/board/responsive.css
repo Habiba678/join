@@ -1,0 +1,247 @@
+/* RESPONSIVE*/
+@media (max-width: 900px) {
+  .layout {
+    min-width: 0;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .cantainer,
+  .container {
+    flex: 1;
+    background: #f6f7f8;
+    width: 100%;
+  }
+
+  /* ---------Sidebar section start----------------- */
+  .sidebar {
+    width: 100vw;
+    height: calc(80px + env(safe-area-inset-bottom));
+    background-color: #2a3647;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0 env(safe-area-inset-bottom);
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+  }
+
+  .logo {
+    display: none;
+  }
+
+  .menu {
+    margin-top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .menu ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0 10px;
+  }
+
+  .menu li {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .menu a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 8px;
+    width: auto;
+    font-size: 12px;
+    white-space: nowrap;
+    color: #a8a8a8;
+    text-decoration: none;
+    position: relative;
+  }
+
+  .menu img {
+    width: 22px;
+    height: 22px;
+  }
+
+  .sidebar-footer {
+    display: none;
+  }
+
+  /* ---------Sidebar section end----------------- */
+  /* ---------header section start----------------- */
+  .header {
+    padding-left: 24px;
+  }
+
+  .header-title {
+    display: block;
+    height: 50px;
+    width: 50px;
+    content: url("../../assets/icons/logo.svg");
+  }
+
+  .header-help {
+    display: none;
+  }
+
+  /* ---------header section end----------------- */
+  .board-section {
+    padding: 0 24px;
+  }
+
+  .board-header {
+    align-items: flex-start;
+    flex-direction: column;
+    padding-left: 0;
+  }
+
+  .board-title {
+    position: static;
+  }
+
+  .board-nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    margin-left: 0;
+    margin-top: 15px;
+    width: auto;
+  }
+
+  .search-bar {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 252px;
+    max-width: 252px;
+  }
+
+  .search-input {
+    width: 252px;
+    max-width: 252px;
+  }
+
+  .add-task-button {
+    background-image: url("../../assets/icons/addPlus-white.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    font-size: 0;
+    height: 48px;
+    border-radius: 16px;
+    margin-left: 0;
+    align-self: auto;
+  }
+
+  .add-task-button:hover {
+    background-image: url("../../assets/icons/addPlus-white.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    font-size: 0;
+    height: 48px;
+    border-radius: 16px;
+  }
+
+  .board {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding: 0 24px 24px;
+    overflow-x: hidden;
+  }
+
+  .main {
+    padding-bottom: calc(92px + env(safe-area-inset-bottom));
+  }
+
+  .column {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    max-height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-shrink: 0;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+
+  .column-header {
+    width: 252px;
+    max-width: 252px;
+  }
+
+  .cards {
+    width: 252px;
+    min-width: 252px;
+    max-width: 252px;
+    height: 100%;
+    background: transparent;
+    border-radius: 24px;
+    padding: 16px 0;
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card {
+    width: 252px;
+    max-width: 252px;
+    height: 250px;
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 16px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.08);
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .empty {
+    width: 252px;
+    max-width: 252px;
+  }
+
+  .task-overlay {
+    height: auto;
+    padding: 28px 22px;
+  }
+
+  .task-overlay-title {
+    font-size: 38px;
+  }
+
+  .task-chip {
+    font-size: 18px;
+    padding: 4px 16px;
+  }
+
+  .task-edit-row {
+    grid-template-columns: 1fr;
+  }
+}

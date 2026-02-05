@@ -1,0 +1,336 @@
+/* ======================
+   ADD TASK OVERLAY
+====================== */
+
+body.no-scroll {
+  overflow: hidden;
+}
+
+.add-task-overlay-backdrop[hidden] {
+  display: none !important;
+}
+
+.add-task-overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 9999;
+}
+
+.add-task-overlay {
+  width: min(1100px, 96vw);
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 24px 28px 18px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.add-task-overlay-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.add-task-overlay-title {
+  margin: 0;
+  font-size: 61px;
+  font-weight: 700;
+  color: #2a3647;
+}
+
+.add-task-overlay-close {
+  border: none;
+  background: #f6f7f8;
+  color: #2a3647;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.add-task-overlay-close:hover {
+  background: #e9ecf1;
+}
+
+.add-task-overlay .kpi-panel-task {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  width: 100%;
+  justify-content: center;
+  padding: 0;
+}
+
+.add-task-overlay #assignedText {
+  display: flex;
+  justify-content: space-around;
+}
+
+.add-task-overlay .multi-select {
+  position: relative;
+  width: 100%;
+}
+
+.add-task-overlay .multi-select-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #ccc;
+  padding: 8px 10px;
+  cursor: pointer;
+  min-height: 40px;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.add-task-overlay .multi-select-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  border: 1px solid #ccc;
+  background: #fff;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.add-task-overlay .dropdown-arrow {
+  font-size: 12px;
+  transition: transform 0.2s ease;
+}
+
+.add-task-overlay .dropdown-arrow.open {
+  transform: rotate(180deg);
+}
+
+.add-task-overlay .hidden {
+  display: none;
+}
+
+.add-task-overlay .contact-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.add-task-overlay .contact-option:hover {
+  background: #f2f2f2;
+}
+
+.add-task-overlay .contact-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #2a7cff;
+  color: #fff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-task-overlay .contact-option input[type="checkbox"] {
+  pointer-events: none;
+  width: 21px;
+  height: 21px;
+}
+
+.add-task-overlay .form_1 {
+  display: flex;
+  width: 40%;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-task-overlay .form_2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 40%;
+}
+
+.add-task-overlay .form-details {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  width: 80%;
+  gap: 8px;
+}
+
+.add-task-overlay .form-details input {
+  height: 42px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.add-task-overlay .form-details input[type="text"],
+.add-task-overlay .form-details input[type="date"] {
+  height: 42px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  padding: 0 10px;
+}
+
+.add-task-overlay .form-details textarea {
+  width: 100%;
+  height: 25%;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.add-task-overlay .form-separator {
+  width: 2px;
+  background-color: rgb(174, 174, 174);
+  margin-left: 2%;
+  margin-right: 2%;
+  border-radius: 16px;
+  opacity: 0.2;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.add-task-overlay .priority-section {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  gap: 15px;
+}
+
+.add-task-overlay .priority-btn {
+  width: 136px;
+  height: 56px;
+  border: 1px solid #d0d0d0;
+  background: #ffffff;
+  border-radius: 8px;
+  color: #000;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.add-task-overlay .priority-btn .btn-icon {
+  filter: none;
+}
+
+.add-task-overlay .priority-btn.medium .btn-icon {
+  filter: brightness(0) saturate(100%) invert(57%) sepia(88%) saturate(749%)
+    hue-rotate(1deg) brightness(103%) contrast(103%);
+}
+
+.add-task-overlay .priority-btn.--selected {
+  color: #ffffff;
+  border-color: transparent;
+}
+
+.add-task-overlay .priority-btn.--selected .btn-icon {
+  filter: brightness(0) invert(1);
+}
+
+.add-task-overlay .priority-btn.urgent.--selected {
+  background-color: #ff3d00;
+}
+
+.add-task-overlay .priority-btn.medium.--selected {
+  background-color: rgb(255, 168, 0);
+}
+
+.add-task-overlay .priority-btn.low.--selected {
+  background-color: #7ae229;
+}
+
+.add-task-overlay .subtasks-input {
+  position: relative;
+  width: 100%;
+}
+
+.add-task-overlay .subtasks-input input {
+  width: 100%;
+  padding-right: 44px;
+}
+
+.add-task-overlay .subtasks-add-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-task-overlay .subtasks-add-btn img {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0) saturate(100%);
+}
+
+.add-task-overlay .subtasks-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.add-task-overlay .subtasks-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f6f7f8;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 14px;
+}
+
+.add-task-overlay .subtasks-remove {
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 2px;
+}
+
+.add-task-overlay label {
+  width: 100%;
+  text-align: left;
+  margin: 12px 0 4px;
+}
+
+.add-task-overlay .form-details > label:first-child {
+  margin-top: 0;
+}
+

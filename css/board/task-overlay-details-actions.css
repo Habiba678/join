@@ -1,0 +1,58 @@
+/* Bottom actions (Delete | Edit) */
+.task-overlay-actions {
+  margin-top: auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.task-overlay-action {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 400;
+  color: #2a3647;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.task-overlay-action[hidden] {
+  display: none !important;
+}
+
+#taskOverlayCancel,
+#taskOverlaySave {
+  border: 1px solid #cfd6e4;
+}
+
+#taskOverlaySave {
+  background: #2a3647;
+  color: #ffffff;
+  border-color: #2a3647;
+  padding: 10px 16px;
+}
+
+#taskOverlaySave img {
+  width: 16px;
+  height: 16px;
+  filter: brightness(0) invert(1);
+}
+
+.task-overlay-action:hover {
+  background: rgba(42, 54, 71, 0.08);
+  transform: translateY(-1px);
+}
+
+.task-overlay-sep {
+  width: 1px;
+  height: 24px;
+  background: #d1d1d1;
+}
+

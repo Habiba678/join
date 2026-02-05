@@ -1,0 +1,36 @@
+/* ======================
+   TASK OVERLAY 
+====================== */
+
+.task-overlay-backdrop[hidden] {
+  display: none !important;
+}
+
+.task-overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+  display: grid;
+  place-items: center;
+  z-index: 9999;
+  padding: 16px;
+}
+
+.task-overlay {
+  position: relative;
+  width: 525px;
+  height: 871px;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 32px);
+
+  background: #ffffff;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.16);
+  border-radius: 30px;
+
+  padding: 48px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow: auto;
+}
+

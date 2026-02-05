@@ -1,0 +1,100 @@
+/* ======================
+   BOARD HEADER
+====================== */
+.board-section {
+  padding: 0 64px;
+}
+
+@media (min-width: 1920px) {
+  .cantainer,
+  .container {
+    max-width: none;
+    margin: 0;
+  }
+
+  .board-section {
+    padding-right: 64px;
+  }
+
+  .board-section,
+  .board {
+    max-width: 100%;
+    margin: 0;
+  }
+}
+
+.board-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  margin-top: 48px;
+  flex-shrink: 0;
+  padding-bottom: 48px;
+  gap: 24px;
+}
+
+.board-title {
+  font-size: 61px;
+  color: #2a3647;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.board-nav {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  margin-left: auto;
+}
+
+.search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  padding: 12px 40px 12px 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  background: #fff;
+}
+
+.separator {
+  position: absolute;
+  right: 48px;
+  width: 1px;
+  height: 24px;
+  background-color: #d1d1d1;
+}
+
+.search-icon {
+  position: absolute;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.add-task-button {
+  padding: 12px 24px;
+  background-color: #2a3647;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 21px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.add-task-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+  background: #243040;
+}
+

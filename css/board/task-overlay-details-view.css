@@ -1,0 +1,195 @@
+/* top row */
+.task-overlay-top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.task-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 24px;
+  height: 36px;
+  border-radius: 8px;
+
+  font-size: 23px;
+  font-weight: 400;
+  line-height: 120%;
+  color: #fff;
+}
+
+.task-chip.tech {
+  background: #1fd7c1;
+}
+
+.task-chip.user {
+  background: #0038ff;
+}
+
+/* close button (circle hover) */
+.task-overlay-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 56px;
+  background: transparent;
+  cursor: pointer;
+
+  display: grid;
+  place-items: center;
+
+  font-size: 18px;
+  color: #2a3647;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.task-overlay-close:hover {
+  background: rgba(42, 54, 71, 0.08);
+  transform: scale(1.05);
+}
+
+/* big title */
+.task-overlay-title {
+  width: 100%;
+  margin: 0;
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 120%;
+  color: #000;
+  word-break: break-word;
+}
+
+/* description */
+.task-overlay-desc {
+  width: 100%;
+  margin: 0;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 120%;
+  color: #000;
+  word-break: break-word;
+}
+
+/* view layout */
+.task-overlay-view {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  gap: 20px;
+}
+
+/* due/priority rows */
+.task-overlay-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 25px;
+  width: 100%;
+}
+
+.task-overlay-label {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 120%;
+  color: #42526e;
+  min-width: 110px;
+}
+
+/* priority pill like join */
+.task-overlay-prio {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 120%;
+  color: #2a3647;
+}
+
+.task-overlay-prio-icon {
+  width: 20px;
+}
+
+/* blocks */
+.task-overlay-block {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Assigned list */
+.task-overlay-assigned {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.task-overlay-person {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  padding: 7px 16px;
+  border-radius: 10px;
+}
+
+.task-overlay-badge {
+  width: 42px;
+  height: 42px;
+  border-radius: 45px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 400;
+  border: 2px solid #fff;
+}
+
+/* Subtasks */
+.task-overlay-subtasks {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.task-overlay-subtask {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 16px;
+}
+
+.task-overlay-subtask input {
+  width: 18px;
+  height: 18px;
+  appearance: none;
+  border: 2px solid #2a3647;
+  border-radius: 4px;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+
+.task-overlay-subtask input:checked {
+  background: #2a3647;
+  border-color: #2a3647;
+}
+
+.task-overlay-subtask input:checked::after {
+  content: "";
+  width: 6px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-top: -1px;
+}
+

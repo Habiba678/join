@@ -7,6 +7,7 @@ let infoConfirmPassword = document.getElementById("info-password");
 let isAccept = document.getElementById("accept-id");
 let isAcceptPolice = document.getElementById("accept-police");
 let singupButton = document.getElementById("singup-button");
+let iconImg = document.getElementById("lock-icon");
 /**
  * Input  Name prüfen
  */
@@ -22,19 +23,21 @@ function validateFullname() {
   }
 }
 /**
- * Akzeptiert ein Input-Element oder einen String und gibt true/false zurück
+ * Akzeptiert einen String und gibt true/false zurück
  */
 function validateEmailRegEx(emailInput) {
-  
-  const value = typeof emailInput === 'string' ? emailInput : (emailInput && emailInput.value) || '';
-  const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const value =
+    typeof emailInput === "string"
+      ? emailInput
+      : (emailInput && emailInput.value) || "";
+  const pattern =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return pattern.test(String(value).toLowerCase());
 }
 /**
  * Email prüfen
  */
 function validateEmail() {
- 
   const isValid = validateEmailRegEx(email);
   if (isValid) {
     email.classList.add("isValidate");
@@ -47,37 +50,47 @@ function validateEmail() {
 /**
  * Password prüfen
  */
+function updatePasswordIcon() {
+  if (password.value.length === 0) {
+    if (!iconImg) return;
+    iconImg.src = "../assets/icons/lock.png";
+    return;
+  }
+  if (!iconImg) return;
+  iconImg.src =
+    password.type === "text"
+      ? "../assets/icons/visibility.svg"
+      : "../assets/icons/visibility_off.svg";
+}
+
 // Initial prüfen
 toggleIconState();
 
 password.addEventListener("input", toggleIconState);
-
 password.addEventListener("click", (e) => {
   if (!password.value) return;
-
   const clickOnIcon = e.offsetX > password.offsetWidth - 35;
   if (!clickOnIcon) return;
-
-  const hidden = password.type === "password";
-  password.type = hidden ? "text" : "password";
-  password.classList.toggle("show-password", hidden);
+  password.type = password.type === "password" ? "text" : "password";
+  password.classList.toggle("show-password");
+  updatePasswordIcon();
 });
 
+if (!confirmPassword) {
+  confirmPassword = "";
+} else {
+  confirmPassword.addEventListener("input", toggleIconState);
+  confirmPassword.addEventListener("click", (e) => {
+    // nur reagieren, wenn rechts geklickt wird (Icon-Bereich)
+    if (!confirmPassword.value) return;
 
-confirmPassword.addEventListener("input", toggleIconState);
-
-confirmPassword.addEventListener("click", (e) => {
-  // nur reagieren, wenn rechts geklickt wird (Icon-Bereich)
-  if (!confirmPassword.value) return;
-
-  const clickOnIcon = e.offsetX > confirmPassword.offsetWidth - 35;
-  if (!clickOnIcon) return;
-  const hidden2 = confirmPassword.type === "password";
-  confirmPassword.type = hidden2 ? "text" : "password";
-  confirmPassword.classList.toggle("show-password", hidden2);
-});
-
-
+    const clickOnIcon = e.offsetX > confirmPassword.offsetWidth - 35;
+    if (!clickOnIcon) return;
+    const hidden2 = confirmPassword.type === "password";
+    confirmPassword.type = hidden2 ? "text" : "password";
+    confirmPassword.classList.toggle("show-password", hidden2);
+  });
+}
 
 function toggleIconState() {
   if (password.value.length === 0) {
@@ -87,11 +100,10 @@ function toggleIconState() {
   } else {
     password.classList.remove("password-empty");
   }
+  updatePasswordIcon();
 }
-      
 
 function validatePassword() {
-  
   switch (true) {
     case password.value.length > 5:
       password.classList.add("isValidate");
@@ -104,16 +116,19 @@ function validatePassword() {
       password.classList.add("isInvaled");
       password.classList.remove("isValidate");
       password.classList.remove("visibility-off");
+      iconImg.src = "../assets/icons/lock.png";
   }
+  updatePasswordIcon();
 }
 /**
  *  Confirm Password prüfen
  */
 function validateConfirmPassword() {
   validatePassword(password, infoPassword);
-  
+
   switch (true) {
-    case password.value === confirmPassword.value && confirmPassword.value != "":
+    case password.value === confirmPassword.value &&
+      confirmPassword.value != "":
       confirmPassword.classList.add("isValidate");
       confirmPassword.classList.remove("isInvaled");
       infoPassword.style.display = "none";
@@ -130,9 +145,12 @@ function validateConfirmPassword() {
  *  Formular Validierung - Alle Felder prüfen
  */
 function validateSingUpForm() {
-  
   switch (true) {
-    case isAccept.checked && full_name.value !== "" && email.value.length > 0 && password.value.length > 5 && password.value === confirmPassword.value:
+    case isAccept.checked &&
+      full_name.value !== "" &&
+      email.value.length > 0 &&
+      password.value.length > 5 &&
+      password.value === confirmPassword.value:
       singupButton.classList.remove("disebles-singup-button");
       isAcceptPolice.classList.add("accept-police");
       document.getElementById("singup-button").disabled = false;

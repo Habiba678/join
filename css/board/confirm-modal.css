@@ -1,0 +1,70 @@
+/* ======================
+   DELETE CONFIRM MODAL
+====================== */
+
+.confirm-backdrop[hidden] {
+  display: none !important;
+}
+
+.confirm-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+  display: grid;
+  place-items: center;
+  z-index: 10000;
+  padding: 16px;
+}
+
+.confirm-modal {
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.16);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.confirm-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #2a3647;
+}
+
+.confirm-text {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 400;
+  color: #2a3647;
+  word-break: break-word;
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.confirm-btn {
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.confirm-btn.cancel {
+  background: #f2f2f2;
+  color: #2a3647;
+}
+
+.confirm-btn.confirm {
+  background: #2a3647;
+  color: #fff;
+}
+
