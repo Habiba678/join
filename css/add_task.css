@@ -148,6 +148,17 @@
   gap: 6px;
 }
 
+.required-note {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: #2a3647;
+}
+
+.required-note .label-star {
+  margin-right: 4px;
+  color: #ff3d00;
+}
+
 .subtasks-item {
   display: flex;
   align-items: center;
@@ -196,7 +207,7 @@
 
 .kpi-panel-task-footer {
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-end;
   width: 100%;
   margin-top: 16px;
 }
@@ -210,6 +221,20 @@
   display: flex;
   flex-direction: row;
   gap: 35px;
+  margin-left: auto;
+}
+
+.kpi-panel-task-footer .primary-btn:hover {
+  background-color: #29abe2;
+  border-color: #29abe2;
+}
+
+.kpi-panel-task-footer .primary-btn.--primary-btn-cancel:hover {
+  color: #ffffff;
+}
+
+.kpi-panel-task-footer .primary-btn.--primary-btn-cancel:hover .btn-icon {
+  filter: brightness(0) invert(1);
 }
 
 label .label-star {
@@ -322,6 +347,7 @@ label .label-star {
 
   .kpi-panel-task {
     flex-direction: column;
+    padding-bottom: calc(160px + env(safe-area-inset-bottom));
   }
 
   .form_1 {
@@ -339,8 +365,19 @@ label .label-star {
   }
 
   .kpi-panel-task-footer {
-    margin-bottom: 80px;
-    margin-top: 0px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: calc(80px + env(safe-area-inset-bottom));
+    z-index: 998;
+    margin: 0;
+    padding: 12px 20px;
+    background: #f6f7f8;
+    box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
   }
 }
 
@@ -359,8 +396,7 @@ label .label-star {
   .kpi-panel-task-footer {
     align-items: center;
     flex-direction: column;
-    margin-bottom: 80px;
-    margin-top: 0px;
+    margin: 0;
 
   }
 
