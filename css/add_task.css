@@ -206,9 +206,10 @@
 }
 
 .kpi-panel-task-footer {
-  display: flex;
-  justify-content: flex-end;
+  display: grid;
+  justify-content: space-around;
   width: 100%;
+  grid-template-columns: auto auto auto;
   margin-top: 16px;
 }
 
