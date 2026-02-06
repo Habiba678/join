@@ -52,16 +52,17 @@
 
 .content-wrepper {
   max-width: 1920px;
+  align-items: center;
   flex-direction: row;
 }
 
 .kpi-panel-task {
   display: flex;
-  flex-direction: row;
-  gap: 5px;
-  padding: 35px;
-  width: 100%;
   justify-content: center;
+  flex-direction: row;
+  width: 100%;
+  padding: 35px;
+  gap: 5px;
 }
 
 .form_1 {
@@ -305,7 +306,15 @@ label .label-star {
   height: 42px;
   width: 110px;
 }
-
+@media (max-width: 1024px) {
+.form-details {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    width: 100%;
+    gap: 8px;
+  }
+}
 
 @media (max-width: 900px) {
   .header {
