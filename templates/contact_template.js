@@ -42,7 +42,7 @@ function contactDetailsTemplate(c) {
 
     <div class="mobile-actions-menu" id="mobileActionsMenu">
       <button class="contact-action edit" data-action="edit" data-id="${c.id}">
-       
+        <img src="../assets/icons/edit.svg"><span>Edit</span>
       </button>
       <button class="contact-action delete" data-action="delete" data-id="${c.id}">
         <img src="../assets/icons/delete.svg"><span>Delete</span>
