@@ -200,17 +200,20 @@
 
 .priority-section {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   width: 100%;
-  gap: 15px;
+  gap: 16px;
 }
 
 .kpi-panel-task-footer {
   display: grid;
+  align-items: center;
   justify-content: space-around;
   width: 100%;
-  grid-template-columns: auto auto auto;
-  margin-top: 16px;
+  height: 200px;
+  grid-template-columns: auto auto;
+  grid-column: 2;
+
 }
 
 
@@ -304,8 +307,8 @@ label .label-star {
 }
 
 
-@media (max-width: 850px) {
-.header {
+@media (max-width: 900px) {
+  .header {
     height: 96px;
     background: #ffffff;
     display: flex;
@@ -314,6 +317,7 @@ label .label-star {
     padding: 24px 40px 20px 25px;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.08);
   }
+
   .header-title {
     display: block !important;
     height: 50px;
@@ -366,19 +370,14 @@ label .label-star {
   }
 
   .kpi-panel-task-footer {
-    position: fixed;
+    position: relative;
     left: 0;
     right: 0;
     bottom: calc(80px + env(safe-area-inset-bottom));
     z-index: 998;
     margin: 0;
     padding: 12px 20px;
-    background: #f6f7f8;
-    box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.08);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+
   }
 }
 
@@ -394,12 +393,14 @@ label .label-star {
     height: 46px;
   }
 
-  .kpi-panel-task-footer {
-    align-items: center;
-    flex-direction: column;
-    margin: 0;
-
-  }
+    .kpi-panel-task-footer {
+      display: grid;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      height: auto;
+      grid-template-columns: auto;
+    }
 
   .create-task-button {
     margin-top: 5px;
