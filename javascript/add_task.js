@@ -54,7 +54,11 @@ function initSubtasks() {
 
   if (btn && input) {
     btn.onclick = addSubtasksFromInput;
-    input.onkeydown = (e) => e.key === "Enter" && addSubtasksFromInput();
+    input.onkeydown = (e) => {
+      if (e.key !== "Enter") return;
+      e.preventDefault();
+      addSubtasksFromInput();
+    };
   }
 
   if (list) {

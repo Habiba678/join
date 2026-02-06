@@ -52,16 +52,17 @@
 
 .content-wrepper {
   max-width: 1920px;
+  align-items: center;
   flex-direction: row;
 }
 
 .kpi-panel-task {
   display: flex;
-  flex-direction: row;
-  gap: 5px;
-  padding: 35px;
-  width: 100%;
   justify-content: center;
+  flex-direction: row;
+  width: 100%;
+  padding: 35px;
+  gap: 5px;
 }
 
 .form_1 {
@@ -148,6 +149,17 @@
   gap: 6px;
 }
 
+.required-note {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: #2a3647;
+}
+
+.required-note .label-star {
+  margin-right: 4px;
+  color: #ff3d00;
+}
+
 .subtasks-item {
   display: flex;
   align-items: center;
@@ -189,16 +201,20 @@
 
 .priority-section {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   width: 100%;
-  gap: 15px;
+  gap: 16px;
 }
 
 .kpi-panel-task-footer {
-  display: flex;
+  display: grid;
+  align-items: center;
   justify-content: space-around;
   width: 100%;
-  margin-top: 16px;
+  height: 200px;
+  grid-template-columns: auto auto;
+  grid-column: 2;
+
 }
 
 
@@ -210,6 +226,20 @@
   display: flex;
   flex-direction: row;
   gap: 35px;
+  margin-left: auto;
+}
+
+.kpi-panel-task-footer .primary-btn:hover {
+  background-color: #29abe2;
+  border-color: #29abe2;
+}
+
+.kpi-panel-task-footer .primary-btn.--primary-btn-cancel:hover {
+  color: #ffffff;
+}
+
+.kpi-panel-task-footer .primary-btn.--primary-btn-cancel:hover .btn-icon {
+  filter: brightness(0) invert(1);
 }
 
 label .label-star {
@@ -276,10 +306,18 @@ label .label-star {
   height: 42px;
   width: 110px;
 }
+@media (max-width: 1024px) {
+.form-details {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    width: 100%;
+    gap: 8px;
+  }
+}
 
-
-@media (max-width: 850px) {
-.header {
+@media (max-width: 900px) {
+  .header {
     height: 96px;
     background: #ffffff;
     display: flex;
@@ -288,6 +326,7 @@ label .label-star {
     padding: 24px 40px 20px 25px;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.08);
   }
+
   .header-title {
     display: block !important;
     height: 50px;
@@ -322,6 +361,7 @@ label .label-star {
 
   .kpi-panel-task {
     flex-direction: column;
+    padding-bottom: calc(160px + env(safe-area-inset-bottom));
   }
 
   .form_1 {
@@ -339,8 +379,14 @@ label .label-star {
   }
 
   .kpi-panel-task-footer {
-    margin-bottom: 80px;
-    margin-top: 0px;
+    position: relative;
+    left: 0;
+    right: 0;
+    bottom: calc(80px + env(safe-area-inset-bottom));
+    z-index: 998;
+    margin: 0;
+    padding: 12px 20px;
+
   }
 }
 
@@ -356,13 +402,14 @@ label .label-star {
     height: 46px;
   }
 
-  .kpi-panel-task-footer {
-    align-items: center;
-    flex-direction: column;
-    margin-bottom: 80px;
-    margin-top: 0px;
-
-  }
+    .kpi-panel-task-footer {
+      display: grid;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      height: auto;
+      grid-template-columns: auto;
+    }
 
   .create-task-button {
     margin-top: 5px;
