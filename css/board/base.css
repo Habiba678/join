@@ -174,12 +174,12 @@ body {
   border: 2px solid #2a3647;
   display: grid;
   place-items: center;
+  font: inherit;
   font-weight: 700;
   color: #29abe2;
   background: #ffffff;
   cursor: pointer;
   padding: 0;
-  font: inherit;
   appearance: none;
 }
 
