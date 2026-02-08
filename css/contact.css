@@ -5,7 +5,9 @@
 
 html, body {
   height: 100%;
+  touch-action: none;
   margin: 0;
+  scroll-behavior: none;
   background: #f6f7f8;
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
