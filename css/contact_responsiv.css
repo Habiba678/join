@@ -1,3 +1,8 @@
+/* Scroll-Fix ohne Designänderung */
+* {
+  box-sizing: border-box;
+}
+
 @media (max-width: 1024px) {
  
   .contacts-page,
@@ -23,12 +28,14 @@
   }
 
 
-
+  /* ✅ FIXED */
   .modal {
-    width: 780px;
+    width: 100%;
+    max-width: 780px;
     height: 340px;
     position: relative;
-    left: 25px;
+    margin: 0 auto;
+    left: 0;
   }
 
   .contacts-main {
@@ -264,11 +271,15 @@
     width: 100%;
     max-width: 420px;
     height: auto;
-    margin: 0;
+    margin: 0 auto;
     right: auto;
     display: flex;
     flex-direction: column;
     border-radius: 30px;
+  }
+
+  .modal-close {
+    color: #ffffff;
   }
 
   .modal-left {

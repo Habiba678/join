@@ -1,4 +1,14 @@
+* {
+  box-sizing: border-box;
+}
 
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: #f6f7f8;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
 
 .layout {
   display: flex;
