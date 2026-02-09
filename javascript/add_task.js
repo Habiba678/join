@@ -4,7 +4,6 @@ let selectedPriority = null;
 let pendingSubtasks = [];
 const selectedContacts = new Set();
 
-
 // ------------------ INIT ------------------
 document.addEventListener("DOMContentLoaded", () => {
   populateAssignedContacts();
@@ -89,7 +88,7 @@ function addSubtasksFromInput() {
   renderSubtasks();
 }
 
-function renderSubtasks() {
+ function renderSubtasks() {
   const list = document.getElementById("subtasksList");
   if (!list) return;
 
@@ -104,20 +103,23 @@ function renderSubtasks() {
 }
 
 // ------------------ CONTACTS / MULTI SELECT ------------------
-function populateAssignedContacts() {
+async function populateAssignedContacts() {
   const dropdown = document.getElementById("assignedDropdown");
   if (!dropdown) return;
 
   dropdown.innerHTML = "";
-  loadContactsFromStorage().forEach((c) => {
+  const contactsData = await loadContactsFromStorage();
+  const list = Array.isArray(contactsData) ? contactsData : Object.values(contactsData || {});
+
+  list.forEach((c) => {
     if (!c?.id || !c?.name) return;
 
     const row = document.createElement("div");
     row.className = "contact-option";
     row.innerHTML = `
-    <div class="contact-avatar">${getInitials(c.name)}</div>
-    <span>${c.name}</span>
-    <input type="checkbox" ${selectedContacts.has(c.id) ? "checked" : ""}>
+      <div class="contact-avatar">${getInitials(c.name)}</div>
+      <span>${c.name}</span>
+      <input type="checkbox" ${selectedContacts.has(c.id) ? "checked" : ""}>
     `;
 
     row.onclick = () => toggleContact(c.id);
@@ -131,21 +133,24 @@ function toggleContact(id) {
     : selectedContacts.add(id);
 
   populateAssignedContacts();
-  renderSelectedContacts();
+   renderSelectedContacts();
 }
-
-function renderSelectedContacts() {
+async function renderSelectedContacts() {
   const text = document.getElementById("assignedText");
+  if (!text) return;
 
   if (!selectedContacts.size) {
     text.textContent = "Select contacts to assign";
     return;
   }
 
+  const contactsData = await loadContactsFromStorage();
+  const list = Array.isArray(contactsData) ? contactsData : Object.values(contactsData || {});
+
   text.innerHTML = [...selectedContacts]
     .map((id) => {
-      const c = loadContactsFromStorage().find((x) => x.id === id);
-      return `<span class="contact-avatar">${getInitials(c.name)}</span>`;
+      const c = list.find((x) => x.id === id);
+      return `<span class="contact-avatar">${getInitials(c?.name || "")}</span>`;
     })
     .join("");
 }
@@ -170,60 +175,58 @@ function initAssignedDropdown() {
 }
 
 // ------------------ TASK CREATE ------------------
-function createTask() {
-  const title = document.getElementById("titel").value.trim();
-  const description = document.getElementById("description").value.trim();
-  const dueDate = document.getElementById("date").value;
-  const category = document.getElementById("category").value;
-  
+async function createTask() {
+  const titleEl = document.getElementById("titel");
+  const descriptionEl = document.getElementById("description");
+  const dueDateEl = document.getElementById("date");
+  const categoryEl = document.getElementById("category");
+
+  const title = titleEl?.value.trim() || "";
+  const description = descriptionEl?.value.trim() || "";
+  const dueDate = dueDateEl?.value || "";
+  const category = categoryEl?.value || "";
+
   if (!title || !dueDate || !category) {
     openValidationModal();
-    
     return;
   }
-  
-  async function taskData() {
-    const dbTask = "https://join-da53b-default-rtdb.firebaseio.com/";
-    let id = Date.now().toString();
 
+  const dbTask = "https://join-da53b-default-rtdb.firebaseio.com/";
+  let id = Date.now().toString();
+
+  const task = {
+    id,
+    title,
+    description,
+    dueDate,
+    category,
+    priority: selectedPriority,
+    status: getAddTaskStatus(),
+    subtasks: [...pendingSubtasks],
+    assigned: [...selectedContacts],
+  };
+
+  // Try to persist to remote DB, but don't block local UI if it fails
+  try {
     const response = await fetch(dbTask + ".json", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id,
-        title,
-        description,
-        dueDate,
-        category,
-        priority: selectedPriority,
-        status: getAddTaskStatus(),
-        subtasks: [...pendingSubtasks],
-        assigned: [...selectedContacts],
-      }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(task),
     });
-
-    return await response.json();
+    await response.json();
+  } catch (e) {
+    console.error("Failed to save task remotely", e);
   }
-  taskData();
 
-
-  // für localstorage
-  // const task = {
-  //   id: Date.now().toString(),
-  //   title,
-  //   description,
-  //   dueDate,
-  //   category,
-  //   priority: selectedPriority,
-  //   status: getAddTaskStatus(),
-  //   subtasks: [...pendingSubtasks],
-  //   assigned: [...selectedContacts],
-  // };
-
-  // const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-  // localStorage.setItem("tasks", JSON.stringify(tasks));
+  // Save locally so the board can render immediately
+  try {
+    const tasks = typeof getTasks === "function" ? getTasks() : JSON.parse(localStorage.getItem("tasks") || "[]");
+    tasks.push(task);
+    if (typeof saveTasks === "function") saveTasks(tasks);
+    else localStorage.setItem("tasks", JSON.stringify(tasks));
+  } catch (e) {
+    console.error("Failed to save task locally", e);
+  }
 
   const overlay = document.getElementById("addTaskOverlayBackdrop");
   if (overlay) {
@@ -232,31 +235,38 @@ function createTask() {
     if (typeof updateEmptyStates === "function") updateEmptyStates();
     return;
   }
- 
- location.href = "./board.html";
+
+  location.href = "./board.html";
 }
 
 
 
 
-async function loadTasks() {
-  const dbTask = "https://join-da53b-default-rtdb.firebaseio.com/";
+// async function loadTasks() {
+//   const dbTask = "https://join-da53b-default-rtdb.firebaseio.com/";
 
-  const response = await fetch(dbTask + ".json");
-  const data = await response.json();
+//   const response = await fetch(dbTask + ".json");
+//   const data = await response.json();
 
-  console.log(data);
-  return data;
-}
+//   console.log(data);
+//   return data;
+// }
 
-loadTasks();
+
 
 // ------------------ STORAGE ------------------
-function loadContactsFromStorage() {
+async function loadContactsFromStorage() {
   try {
-   
-    return JSON.parse(localStorage.getItem("join_contacts_v1")) || [];
-  } catch {
+    const dbTask = "https://join-da53b-default-rtdb.firebaseio.com/";
+    const response = await fetch(dbTask + ".json");
+    const data = await response.json();
+
+    // Firebase RTDB returns an object (key -> value). Convert to array for easier handling.
+    if (!data) return [];
+    if (Array.isArray(data)) return data;
+    return Object.values(data);
+  } catch (e) {
+    console.error("Failed to load contacts", e);
     return [];
   }
 }
