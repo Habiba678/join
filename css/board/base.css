@@ -200,6 +200,10 @@ body {
   appearance: none;
 }
 
+.header-user:hover {
+  background-color: #ccc;
+}
+
 .header-user-area {
   position: relative;
 }

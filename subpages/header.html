@@ -1,54 +1,74 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Header-Detail</title>
-  <link rel="icon" type="image/svg" sizes="32x32" href="/assets/icons/logo.svg">
-  <link rel="stylesheet" href="../css/header.css">
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/header.css" />
+    <link rel="stylesheet" href="/join/css/fonts.css" />
+    <title>Layout</title>
+  </head>
 
-<body>
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="logo">
-        <img src="../assets/icons/logo-white.svg" alt="Join" />
-      </div>
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="logo">
+          <img src="../assets/icons/logo-white.svg" alt="Join" />
+        </div>
 
-      <nav class="menu">
-        <ul>
-          <li><a href="./summary.html"><img src="../assets/icons/summary-gray.svg" alt="">Summary</a></li>
-          <li><a href="./add_task.html"><img src="../assets/icons/addTask-gray.svg" alt="">Add Task</a></li>
-          <li><a href="./board.html"><img src="../assets/icons/board-gray.svg" alt="">Board</a></li>
-          <li><a href="./contact.html"><img src="../assets/icons/contacts-gray.svg" alt="">Contacts</a></li>
-        </ul>
-      </nav>
+        <nav class="menu">
+          <ul>
+            <li>
+              <a href="/join/pages/summary.html">
+                <img src="../assets/icons/summary-gray.svg" alt="" />
+                Summary
+              </a>
+            </li>
+            <li>
+              <a href="/join/pages/add_task.html">
+                <img src="../assets/icons/addTask-gray.svg" alt="" />
+                Add Task
+              </a>
+            </li>
+            <li>
+              <a href="/join/pages/board.html">
+                <img src="../assets/icons/board-gray.svg" alt="" />
+                Board
+              </a>
+            </li>
+            <li>
+              <a class="active" href="/join/pages/contacts.html">
+                <img src="../assets/icons/contacts-gray.svg" alt="" />
+                Contacts
+              </a>
+            </li>
+          </ul>
+        </nav>
 
-      <div class="sidebar-footer">
-        <a href="./privacy_policy.html">Privacy Policy</a>
-        <a href="./legal_notice.html">Legal notice</a>
-      </div>
-    </aside>
+        <div class="sidebar-footer">
+          <a href="../subpages/privacy_policy.html">Privacy Policy</a>
+          <a href="../subpages/legal_notice.html">Legal notice</a>
+        </div>
+      </aside>
 
-    <div class="cantainer">
-      <div class="main">
-        <header class="header">
-          <div class="content-wrepper-header">
-            <div class="header-left">
-              <img src="../assets/icons/logo.svg" class="header-logo" alt="Join Logo">
-              <span class="header-title">Kanban Project Management Tool</span>
+      <div class="cantainer">
+        <div class="main">
+          <header>
+            <div class="content-wrepper-header">
+              <div class="header-left">
+                <img src="../assets/icons/logo.svg" class="header-logo" alt="Join Logo" />
+                <span class="header-title">Kanban Project Management Tool</span>
+              </div>
+
+              <div class="header-right">
+                <div class="header-help">?</div>
+                <div class="header-guest">SM</div>
+              </div>
             </div>
+          </header>
 
-            <div class="header-right">
-              <div class="header-help">?</div>
-              <div class="header-guest">SM</div>
-            </div>
-          </div>
-        </header>
-
-        <main class="detail-content"></main>
+          <div class="detail-content"></div>
+        </div>
       </div>
     </div>
-  </div>
-</body>
+  </body>
 </html>
