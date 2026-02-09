@@ -34,10 +34,10 @@
                 <input id="password" onchange="validatePassword()" class="" type="password" placeholder="Password" autocomplete="off" >
                 <img id="lock-icon" src="./assets/icons/lock.png" alt="password icon" class="input-icon">
             </div>
-            <span class="info-password" id="info-password">Das Password muss mindestens 6 zeichen lang sein. </span>
+            <span class="info-password" id="info-password">Check your email and password. Please try again</span>
 
             <div class="button-group">
-                <button type="submit" class="login-btn">Log In</button>
+                <button type="button" onclick="logIn()" class="login-btn">Log In</button>
                 <button onclick="goToSummary()" type="button" class="guest-btn">Guest Log In</button>
             </div>
         </form>
@@ -55,7 +55,8 @@
       
     </footer>
 </div>
-    <script src="./javascript/animation.js"></script>
-    <script src="./javascript/validate.js"></script>
+<script src="./javascript/validate.js"></script>
+<script src="./javascript/animation.js"></script>
+<script src="./javascript/login.js"></script>
 </body>
 </html>
