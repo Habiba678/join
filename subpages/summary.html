@@ -45,7 +45,17 @@
   
           <div class="header-right">
             <div class="header-help">?</div>
-            <div class="header-guest">SM</div>
+            <div class="header-user-area">
+              <button class="header-user" id="headerUserBtn" type="button" aria-expanded="false"
+                aria-controls="userMenu" aria-label="Open user menu">
+                G
+              </button>
+              <div class="user-menu" id="userMenu" role="menu" aria-hidden="true">
+                <a class="user-menu-item" href="./legal_notice.html" role="menuitem">Legal Notice</a>
+                <a class="user-menu-item" href="./privacy_policy.html" role="menuitem">Privacy Policy</a>
+                <a class="user-menu-item" href="../index.html" role="menuitem">Log out</a>
+              </div>
+            </div>
           </div>
           </div>
         </header>
@@ -132,6 +142,7 @@
   </div>
 
   
+  <script src="../javascript/user-menu.js"></script>
   <script src="../javascript/summary.js"></script>
 
 </body>
