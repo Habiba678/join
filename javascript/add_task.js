@@ -4,6 +4,7 @@ let selectedPriority = null;
 let pendingSubtasks = [];
 const selectedContacts = new Set();
 
+
 // ------------------ INIT ------------------
 document.addEventListener("DOMContentLoaded", () => {
   populateAssignedContacts();
@@ -174,27 +175,55 @@ function createTask() {
   const description = document.getElementById("description").value.trim();
   const dueDate = document.getElementById("date").value;
   const category = document.getElementById("category").value;
-
+  
   if (!title || !dueDate || !category) {
     openValidationModal();
+    
     return;
   }
+  
+  async function taskData() {
+    const dbTask = "https://join-da53b-default-rtdb.firebaseio.com/";
+    let id = Date.now().toString();
 
-  const task = {
-    id: Date.now().toString(),
-    title,
-    description,
-    dueDate,
-    category,
-    priority: selectedPriority,
-    status: getAddTaskStatus(),
-    subtasks: [...pendingSubtasks],
-    assigned: [...selectedContacts],
-  };
+    const response = await fetch(dbTask + ".json", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id,
+        title,
+        description,
+        dueDate,
+        category,
+        priority: selectedPriority,
+        status: getAddTaskStatus(),
+        subtasks: [...pendingSubtasks],
+        assigned: [...selectedContacts],
+      }),
+    });
 
-  const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-  tasks.push(task);
-  localStorage.setItem("tasks", JSON.stringify(tasks));
+    return await response.json();
+  }
+  taskData();
+
+
+  // für localstorage
+  // const task = {
+  //   id: Date.now().toString(),
+  //   title,
+  //   description,
+  //   dueDate,
+  //   category,
+  //   priority: selectedPriority,
+  //   status: getAddTaskStatus(),
+  //   subtasks: [...pendingSubtasks],
+  //   assigned: [...selectedContacts],
+  // };
+
+  // const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+  // localStorage.setItem("tasks", JSON.stringify(tasks));
 
   const overlay = document.getElementById("addTaskOverlayBackdrop");
   if (overlay) {
@@ -203,13 +232,29 @@ function createTask() {
     if (typeof updateEmptyStates === "function") updateEmptyStates();
     return;
   }
-
-  location.href = "./board.html";
+ 
+ location.href = "./board.html";
 }
+
+
+
+
+async function loadTasks() {
+  const dbTask = "https://join-da53b-default-rtdb.firebaseio.com/";
+
+  const response = await fetch(dbTask + ".json");
+  const data = await response.json();
+
+  console.log(data);
+  return data;
+}
+
+loadTasks();
 
 // ------------------ STORAGE ------------------
 function loadContactsFromStorage() {
   try {
+   
     return JSON.parse(localStorage.getItem("join_contacts_v1")) || [];
   } catch {
     return [];
