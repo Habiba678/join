@@ -52,8 +52,9 @@ function groupKey(name) {
 
 function loadContacts() {
   try {
-    let raw = localStorage.getItem(STORAGE_KEY);
-    contacts = raw ? JSON.parse(raw) : [];
+    contacts = (window.idbStorage && typeof window.idbStorage.getContactsSync === "function")
+      ? window.idbStorage.getContactsSync()
+      : [];
   } catch {
     contacts = [];
   }
@@ -78,7 +79,11 @@ function loadContacts() {
 
 function saveContacts() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(contacts));
+    if (window.idbStorage && typeof window.idbStorage.saveContacts === "function") {
+      window.idbStorage.saveContacts(contacts).catch(() => {});
+    } else {
+      // no-op fallback
+    }
   } catch {}
 }
 
@@ -453,4 +458,4 @@ function init() {
   document.addEventListener("submit", handleSubmit);
 }
 
-document.addEventListener("DOMContentLoaded", init);
+document.addEventListener("DOMContentLoaded", async function(){ await (window.idbStorage && window.idbStorage.ready ? window.idbStorage.ready : Promise.resolve()); init(); });

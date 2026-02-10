@@ -1,6 +1,8 @@
 const STORAGE_KEY = "tasks";
 const CONTACTS_STORAGE_KEY = "join_contacts_v1";
 const DB_TASK_URL = "https://join-da53b-default-rtdb.firebaseio.com/";
+// Expose for other modules that need to call the DB
+window.DB_TASK_URL = DB_TASK_URL;
 
 let openedTaskId = null;
 let isDragging = false;
@@ -12,6 +14,8 @@ let overlaySelectedPriority = "medium";
 let activeSearchQuery = "";
 
 document.addEventListener("DOMContentLoaded", async function () {
+  // Wait for IndexedDB wrapper to be ready (if available)
+  await (window.idbStorage && window.idbStorage.ready ? window.idbStorage.ready : Promise.resolve());
   initRedirects();
   initAddTaskOverlay();
   initSearch();
@@ -139,19 +143,42 @@ function closeAddTaskOverlay() {
 // ---------------- Storage ----------------
 function getTasks() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    return (window.idbStorage && typeof window.idbStorage.getTasksSync === "function")
+      ? window.idbStorage.getTasksSync()
+      : [];
   } catch (e) {
-    console.error("Storage parse error:", e);
+    console.error("Storage access error:", e);
     return [];
   }
 }
 
-function saveTasks(tasks) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+async function saveTasks(tasks) {
+  if (window.idbStorage && typeof window.idbStorage.saveTasks === "function") {
+    try {
+      await window.idbStorage.saveTasks(tasks);
+    } catch (e) {
+      console.error("Failed to save tasks to IDB:", e);
+    }
+  } else {
+    console.warn("idbStorage not available - tasks not persisted");
+  }
+
+  // Best-effort: sync canonical tasks to remote DB so other clients and fresh page loads see updates
+  (async function () {
+    try {
+      const url = (window.DB_TASK_URL || "https://join-da53b-default-rtdb.firebaseio.com/") + ".json";
+      await fetch(url, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(tasks),
+      });
+    } catch (err) {
+      console.warn("Failed to sync tasks to remote DB:", err);
+    }
+  })();
 }
 
-// Sync tasks from Firebase RTDB and save to localStorage
+// Sync tasks from Firebase RTDB and save to persistent storage (IndexedDB)
 async function syncTasksFromDB() {
   try {
     const resp = await fetch(DB_TASK_URL + ".json");
@@ -160,8 +187,9 @@ async function syncTasksFromDB() {
     if (!data) tasks = [];
     else if (Array.isArray(data)) tasks = data.filter(Boolean);
     else tasks = Object.entries(data).map(([k, v]) => ({ ...(v || {}), id: v && v.id ? v.id : k }));
-    saveTasks(tasks);
     console.log("Synced tasks from DB:", tasks.length);
+    // Persist canonical tasks to IndexedDB (cache updated by wrapper)
+    await saveTasks(tasks);
     return tasks;
   } catch (e) {
     console.error("Failed to sync tasks from DB", e);
@@ -171,11 +199,11 @@ async function syncTasksFromDB() {
 
 function loadContacts() {
   try {
-    const raw = localStorage.getItem(CONTACTS_STORAGE_KEY);
-    const list = raw ? JSON.parse(raw) : [];
-    return Array.isArray(list) ? list : [];
+    return (window.idbStorage && typeof window.idbStorage.getContactsSync === "function")
+      ? window.idbStorage.getContactsSync()
+      : [];
   } catch (e) {
-    console.error("Contacts parse error:", e);
+    console.error("Contacts access error:", e);
     return [];
   }
 }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .layout .contacts-page,
 .layout .contacts-page * {
   box-sizing: border-box;
@@ -9,6 +10,8 @@ html, body {
   background: #f6f7f8;
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
+=======
+>>>>>>> 8e70562b6b4cc9af10d37b8668c77d4e1b6286f6
 
 .layout .contacts-page button {
   font-family: inherit;
@@ -17,8 +20,12 @@ html, body {
 .layout {
   display: flex;
   min-height: 100vh;
+<<<<<<< HEAD
   max-width: 1440px;
   margin: 0 auto;
+=======
+  
+>>>>>>> 8e70562b6b4cc9af10d37b8668c77d4e1b6286f6
 }
 
 .cantainer {
@@ -40,7 +47,13 @@ html, body {
   width: 100%;
   display: flex;
   align-items: stretch;
+<<<<<<< HEAD
   min-height: calc(100vh - 96px);
+=======
+  height: 100%;
+  max-width: 1920px;
+  
+>>>>>>> 8e70562b6b4cc9af10d37b8668c77d4e1b6286f6
 }
 
 .contacts-sidebar {
