@@ -1,22 +1,8 @@
-* {
-  
-  box-sizing: border-box;
-}
-
-
-html, body {
-  height: 100%;
-  margin: 0;
-  scroll-behavior: none;
-  scrollbar-gutter: stable;
-  background: #f6f7f8;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-}
 
 .layout {
   display: flex;
   min-height: 100vh;
-  max-width: 1440px;
+  
 }
 
 .cantainer, .cantainer {
@@ -41,6 +27,7 @@ html, body {
   display: flex;
   align-items: stretch;
   height: 100%;
+  max-width: 1920px;
   
 }
 
