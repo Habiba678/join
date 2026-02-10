@@ -1,4 +1,6 @@
-function init() {
+async function init() {
+  // Ensure IndexedDB cache is ready
+  await (window.idbStorage && window.idbStorage.ready ? window.idbStorage.ready : Promise.resolve());
   greetingText();
   getTasksTotal();
   getTasksDone();
@@ -21,17 +23,29 @@ function greetingText() {
 }
 
 function getTasksTotal() {
-  const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-  let total_tasks = document.getElementById("todos-total");
-  let tasks_in_board = document.getElementById("task-in-board");
-  total_tasks.innerText = tasks.length;
-  tasks_in_board.innerText = tasks.length;
+  const tasks = (window.idbStorage && typeof window.idbStorage.getTasksSync === "function") ? window.idbStorage.getTasksSync() : [];
+  let filteredTasks = tasks.filter(task => task.title !== undefined);
+  let tasks_to_board = document.getElementById("task-in-board");
+  let todo_tasks = document.getElementById("todos-total");
+
+  let Todos = [];
+
+  for (let i = 0; i < tasks.length; i++) {
+    const element = tasks[i];
+    let status = element.status;
+
+    if (status == "todo") {
+      Todos.push(status);
+    }
+    todo_tasks.innerText = Todos.length;
+  }
+  tasks_to_board.innerText = filteredTasks.length;
 }
 
 function getTasksDone() {
   let done_tasks = document.getElementById("todos-done");
   let Todos_Done = [];
-  const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+  const tasks = (window.idbStorage && typeof window.idbStorage.getTasksSync === "function") ? window.idbStorage.getTasksSync() : [];
 
   for (let i = 0; i < tasks.length; i++) {
     const element = tasks[i];
@@ -47,7 +61,7 @@ function getTasksDone() {
 function getTasksProgress() {
   let pogress_tasks = document.getElementById("task-in-pogress");
   let Todos_pogress = [];
-  const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+  const tasks = (window.idbStorage && typeof window.idbStorage.getTasksSync === "function") ? window.idbStorage.getTasksSync() : [];
 
   for (let i = 0; i < tasks.length; i++) {
     const pogress = tasks[i];
@@ -63,7 +77,7 @@ function getTasksProgress() {
 function getAwaitFeedback() {
   let feedback_tasks = document.getElementById("task-in-feedback");
   let Todos_feedback = [];
-  const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+  const tasks = (window.idbStorage && typeof window.idbStorage.getTasksSync === "function") ? window.idbStorage.getTasksSync() : [];
 
   for (let i = 0; i < tasks.length; i++) {
     const feedback = tasks[i];
@@ -84,7 +98,7 @@ function getUrgrentTodo() {
   let Todos_urgent = [];
   let nearestUrgentDate = null;
   const months = ["January","February","March","April", "May","June","July","August","September","October","November","December",];
-  const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+  const tasks = (window.idbStorage && typeof window.idbStorage.getTasksSync === "function") ? window.idbStorage.getTasksSync() : [];
   for (let i = 0; i < tasks.length; i++) {
     const urgent = tasks[i];
     let priority = String(urgent.priority || "").toLowerCase();

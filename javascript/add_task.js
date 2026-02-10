@@ -239,8 +239,7 @@ async function createTask() {
     console.log("Loaded tasks from DB:", tasks.length, tasks.slice(0, 3));
 
     // Save canonical tasks locally for UI rendering
-    if (typeof saveTasks === "function") saveTasks(tasks);
-    else localStorage.setItem("tasks", JSON.stringify(tasks));
+    await saveTasks(tasks);
 
     // Ensure board is rendered with the freshly loaded tasks
     if (typeof renderBoardFromStorage === "function") renderBoardFromStorage();
