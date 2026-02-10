@@ -1,5 +1,6 @@
 const STORAGE_KEY = "tasks";
 const CONTACTS_STORAGE_KEY = "join_contacts_v1";
+const DB_TASK_URL = "https://join-da53b-default-rtdb.firebaseio.com/";
 
 let openedTaskId = null;
 let isDragging = false;
@@ -10,10 +11,18 @@ let overlayPendingSubtasks = [];
 let overlaySelectedPriority = "medium";
 let activeSearchQuery = "";
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
   initRedirects();
   initAddTaskOverlay();
   initSearch();
+
+  // Try to sync tasks from remote DB first (DB = source of truth)
+  try {
+    await syncTasksFromDB();
+  } catch (e) {
+    console.error("Initial sync failed, falling back to local storage", e);
+  }
+
   renderBoardFromStorage();
   initDragAndDrop();
   initOverlayEvents();
@@ -140,6 +149,24 @@ function getTasks() {
 
 function saveTasks(tasks) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+}
+
+// Sync tasks from Firebase RTDB and save to localStorage
+async function syncTasksFromDB() {
+  try {
+    const resp = await fetch(DB_TASK_URL + ".json");
+    const data = await resp.json();
+    let tasks = [];
+    if (!data) tasks = [];
+    else if (Array.isArray(data)) tasks = data.filter(Boolean);
+    else tasks = Object.entries(data).map(([k, v]) => ({ ...(v || {}), id: v && v.id ? v.id : k }));
+    saveTasks(tasks);
+    console.log("Synced tasks from DB:", tasks.length);
+    return tasks;
+  } catch (e) {
+    console.error("Failed to sync tasks from DB", e);
+    throw e;
+  }
 }
 
 function loadContacts() {
