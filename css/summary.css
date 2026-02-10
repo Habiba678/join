@@ -282,6 +282,10 @@ body {
   cursor: pointer;
 }
 
+.menu-item--mobile {
+  display: none;
+}
+
 .user-menu-item:hover {
   background: rgba(255, 255, 255, 0.12);
 }
@@ -709,6 +713,10 @@ body {
   margin-left: auto;
   position: static !important;
   right: auto !important;
+}
+
+.menu-item--mobile {
+  display: block;
 }
 
 

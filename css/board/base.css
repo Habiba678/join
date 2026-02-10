@@ -248,6 +248,10 @@ body {
   cursor: pointer;
 }
 
+.menu-item--mobile {
+  display: none;
+}
+
 .user-menu-item:hover {
   background: rgba(255, 255, 255, 0.12);
 }

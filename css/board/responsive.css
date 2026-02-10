@@ -104,6 +104,10 @@
     display: none;
   }
 
+  .menu-item--mobile {
+    display: block;
+  }
+
   /* ---------header section end----------------- */
   .board-section {
     padding: 0 24px;

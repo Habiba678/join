@@ -232,6 +232,10 @@ header {
   color: #29abe2;
 }
 
+.menu-item--mobile {
+  display: none;
+}
+
 .header-guest {
   width: 56px;
   height: 56px;
@@ -257,6 +261,12 @@ header {
 
   .header-title {
     max-width: 680px;
+  }
+}
+
+@media (max-width: 800px) {
+  .menu-item--mobile {
+    display: block;
   }
 }
 
