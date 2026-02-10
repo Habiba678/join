@@ -32,21 +32,10 @@ function contactActionsTemplate(c) {
 function contactDetailsTemplate(c) {
   return `
     <div class="contact-detail-topbar">
-      <button class="mobile-back-btn" id="mobileBackBtn" type="button">
-        <img src="../assets/icons/pfeil-links-blue.png">
+      <button class="mobile-back-btn" id="mobileBackBtn" type="button" aria-label="Back">
+        <img src="../assets/icons/pfeil-links-blue.png" alt="Back">
       </button>
-      <button class="mobile-menu-btn" id="mobileMenuBtn" type="button">
-        <img src="../assets/icons/three-dots.png">
-      </button>
-    </div>
-
-    <div class="mobile-actions-menu" id="mobileActionsMenu">
-      <button class="contact-action edit" data-action="edit" data-id="${c.id}">
-        <img src="../assets/icons/edit.svg"><span>Edit</span>
-      </button>
-      <button class="contact-action delete" data-action="delete" data-id="${c.id}">
-        <img src="../assets/icons/delete.svg"><span>Delete</span>
-      </button>
+      <div class="contact-detail-topbar-spacer"></div>
     </div>
 
     <div class="contact-detail-header">

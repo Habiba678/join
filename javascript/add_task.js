@@ -218,41 +218,55 @@ async function createTask() {
     console.error("Failed to save task remotely", e);
   }
 
-  // Save locally so the board can render immediately
+  // Load tasks from remote DB (DB is the single source of truth)
   try {
-    const tasks = typeof getTasks === "function" ? getTasks() : JSON.parse(localStorage.getItem("tasks") || "[]");
-    tasks.push(task);
+    const resp = await fetch(dbTask + ".json");
+    const data = await resp.json();
+    let tasks = [];
+
+    if (!data) {
+      tasks = [];
+    } else if (Array.isArray(data)) {
+      // Filter out any null/empty slots from array responses
+      tasks = data.filter(Boolean);
+    } else {
+      // Firebase RTDB returns an object map (key -> task).
+      // Keep the firebase key as fallback id in case the stored task object doesn't include an id.
+      tasks = Object.entries(data).map(([key, val]) => ({ ...(val || {}), id: val && val.id ? val.id : key }));
+    }
+
+    // Debug: ensure we indeed loaded tasks from DB
+    console.log("Loaded tasks from DB:", tasks.length, tasks.slice(0, 3));
+
+    // Save canonical tasks locally for UI rendering
     if (typeof saveTasks === "function") saveTasks(tasks);
     else localStorage.setItem("tasks", JSON.stringify(tasks));
-  } catch (e) {
-    console.error("Failed to save task locally", e);
-  }
 
-  const overlay = document.getElementById("addTaskOverlayBackdrop");
-  if (overlay) {
-    if (typeof closeAddTaskOverlay === "function") closeAddTaskOverlay();
+    // Ensure board is rendered with the freshly loaded tasks
     if (typeof renderBoardFromStorage === "function") renderBoardFromStorage();
     if (typeof updateEmptyStates === "function") updateEmptyStates();
+
+    const overlay = document.getElementById("addTaskOverlayBackdrop");
+    if (overlay) {
+      if (typeof closeAddTaskOverlay === "function") closeAddTaskOverlay();
+      return;
+    }
+
+    // If not an overlay flow, navigate back to board
+    location.href = "./board.html";
+  } catch (e) {
+    console.error("Failed to load tasks from remote DB; keeping overlay open for retry", e);
+    // If there is no overlay (we're on a standalone create page), still navigate back to board
+    const overlay = document.getElementById("addTaskOverlayBackdrop");
+    if (!overlay) {
+      location.href = "./board.html";
+    }
+    // Otherwise keep the overlay open so the user can retry/sync
     return;
   }
 
   location.href = "./board.html";
 }
-
-
-
-
-// async function loadTasks() {
-//   const dbTask = "https://join-da53b-default-rtdb.firebaseio.com/";
-
-//   const response = await fetch(dbTask + ".json");
-//   const data = await response.json();
-
-//   console.log(data);
-//   return data;
-// }
-
-
 
 // ------------------ STORAGE ------------------
 async function loadContactsFromStorage() {

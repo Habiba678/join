@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg" sizes="32x32" href="/assets/icons/logo.svg">
+  <link rel="stylesheet" href="../css/policy.css" />
+  <title>Help</title>
+</head>
+
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo">
+        <img src="../assets/icons/logo-white.svg" alt="Join" />
+      </div>
+
+      <nav class="menu">
+        <ul>
+          <li><a href="./summary.html"><img src="../assets/icons/summary-gray.svg" alt="" />Summary</a></li>
+          <li><a href="./add_task.html"><img src="../assets/icons/addTask-gray.svg" alt="" />Add Task</a></li>
+          <li><a href="./board.html"><img src="../assets/icons/board-gray.svg" alt="" />Board</a></li>
+          <li><a href="./contact.html"><img src="../assets/icons/contacts-gray.svg" alt="" />Contacts</a></li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="./privacy_policy.html">Privacy Policy</a>
+        <a href="./legal_notice.html">Legal notice</a>
+      </div>
+    </aside>
+
+    <div class="cantainer">
+      <div class="main">
+        <header class="header">
+          <div class="header-title">Kanban Project Management Tool</div>
+          <div class="header-right">
+            <div class="header-user-area">
+              <button class="header-user" id="headerUserBtn" type="button" aria-expanded="false"
+                aria-controls="userMenu" aria-label="Open user menu">
+                G
+              </button>
+              <div class="user-menu" id="userMenu" role="menu" aria-hidden="true">
+                <a class="user-menu-item" href="./legal_notice.html" role="menuitem">Legal Notice</a>
+                <a class="user-menu-item" href="./privacy_policy.html" role="menuitem">Privacy Policy</a>
+                <a class="user-menu-item menu-item--mobile" href="./help.html" role="menuitem">Help</a>
+                <a class="user-menu-item" href="../index.html" role="menuitem">Log out</a>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <section class="policy-content">
+          <button class="policy-back" type="button" onclick="history.back()" aria-label="Back">
+            <img src="../assets/icons/pfeil-links-blue.png" alt="Back">
+          </button>
+
+          <div class="policy-header">
+            <h1 class="policy-title">Help</h1>
+            <span class="policy-divider"></span>
+          </div>
+
+          <div class="policy-body">
+            <p class="policy-lead">
+              Welcome to the help page for Join, your guide to using our kanban project management tool. Here, we'll
+              provide an overview of what Join is, how it can benefit you, and how to use it.
+            </p>
+
+            <section class="policy-section">
+              <h2>What is Join?</h2>
+              <p>
+                Join is a kanban-based project management tool designed and built by a group of dedicated students as
+                part of their web development bootcamp at the Developer Akademie.
+              </p>
+              <p>
+                Kanban, a Japanese term meaning "billboard", is a highly effective method to visualize work, limit
+                work-in-progress, and maximize efficiency (or flow). Join leverages the principles of kanban to help
+                users manage their tasks and projects in an intuitive, visual interface.
+              </p>
+              <p>
+                It is important to note that Join is designed as an educational exercise and is not intended for
+                extensive business usage. While we strive to ensure the best possible user experience, we cannot
+                guarantee consistent availability, reliability, accuracy, or other aspects of quality regarding Join.
+              </p>
+            </section>
+
+            <section class="policy-section">
+              <h2>How to use it</h2>
+              <p>Here is a step-by-step guide on how to use Join:</p>
+              <ol class="policy-list">
+                <li>
+                  <strong>Exploring the Board</strong>
+                  <p>
+                    When you log in to Join, you'll find a default board. This board represents your project and
+                    contains four default lists: "To Do", "In Progress", "Await feedback" and "Done".
+                  </p>
+                </li>
+                <li>
+                  <strong>Creating Contacts</strong>
+                  <p>
+                    In Join, you can add contacts to collaborate on your projects. Go to the "Contacts" section, click
+                    on "New contact", and fill in the required information. Once added, these contacts can be assigned
+                    tasks and they can interact with the tasks on the board.
+                  </p>
+                </li>
+                <li>
+                  <strong>Adding Cards</strong>
+                  <p>
+                    Now that you've added your contacts, you can start adding cards. Cards represent individual tasks.
+                    Click the "+" button under the appropriate list to create a new card. Fill in the task details in
+                    the card, like task name, description, due date, assignees, etc.
+                  </p>
+                </li>
+                <li>
+                  <strong>Moving Cards</strong>
+                  <p>
+                    As the task moves from one stage to another, you can reflect that on the board by dragging and
+                    dropping the card from one list to another.
+                  </p>
+                </li>
+                <li>
+                  <strong>Deleting Cards</strong>
+                  <p>
+                    Once a task is completed, you can either move it to the "Done" list or delete it. Deleting a card
+                    will permanently remove it from the board. Please exercise caution when deleting cards, as this
+                    action is irreversible.
+                  </p>
+                </li>
+              </ol>
+              <p>
+                Remember that using Join effectively requires consistent updates from you and your team to ensure the
+                board reflects the current state of your project.
+              </p>
+              <p>
+                Have more questions about Join? Feel free to contact us at [Your Contact Email]. We're here to help you!
+              </p>
+              <p>Enjoy using Join!</p>
+            </section>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+  <script src="../javascript/user-menu.js" defer></script>
+</body>
+
+</html>

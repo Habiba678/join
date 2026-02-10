@@ -196,6 +196,7 @@ body {
   justify-content: center;
   border: 1.5px solid #3a3a334e;
   color: #A8A8A8;
+  text-decoration: none;
   font-size: 16px;
   font-weight: 600;
   line-height: 1;
@@ -279,6 +280,10 @@ body {
   border: none;
   text-align: left;
   cursor: pointer;
+}
+
+.menu-item--mobile {
+  display: none;
 }
 
 .user-menu-item:hover {
@@ -708,6 +713,10 @@ body {
   margin-left: auto;
   position: static !important;
   right: auto !important;
+}
+
+.menu-item--mobile {
+  display: block;
 }
 
 

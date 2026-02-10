@@ -96,6 +96,7 @@ document.addEventListener("click", (e) => {
   }
 });
 
+
 const _renderDetails = renderDetails;
 renderDetails = function () {
   _renderDetails();

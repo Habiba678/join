@@ -472,6 +472,29 @@
     padding: 10px 14px;
     justify-content: center;
   }
+  .contacts-more-btn {
+    display: flex !important;
+    position: fixed;
+    right: 20px;
+    bottom: 90px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #2a3647;
+    color: white;
+    border: none;
+    font-size: 22px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 1000;
+  }
+  
+  .contacts-more-btn:hover {
+    background-color: #29ABE2;
+  }
+  
 }
 
 @media (max-width: 360px) {

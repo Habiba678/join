@@ -148,7 +148,6 @@ html, body {
    
 }
 
-
 .contact-item .avatar {
   margin-left: 15px;
 }
@@ -599,8 +598,7 @@ input::placeholder {
           hue-rotate(165deg) brightness(95%) contrast(90%);
 }
 
-
-.contacts-back-btn,
+contacts-back-btn,
 #contactsBackBtn {
   display: none;
   background: transparent;
@@ -655,103 +653,25 @@ input::placeholder {
 }
 
 
-.mobile-back-btn,
-.mobile-menu-btn,
-#mobileActionsMenu,
-#contactsMoreBtn,
-.contact-more-btn {
+.contact-detail-topbar {
+display: none;
+align-items: center;
+justify-content: space-between;
+gap: 12px;
+width: 100%;
+}
+
+.contact-detail-topbar-spacer {
+flex: 1;
+}
+
+.contacts-more-item {
   display: none;
 }
 
 
-@media (max-width: 900px) {
-  .sidebar {
-    display: flex;
-  }
 
-  .layout {
-    max-width: 100%;
-    margin: 0;
-  }
 
-  .contacts-page {
-    display: block;
-  }
 
-  .contacts-sidebar {
-    width: 100%;
-    max-width: none;
-    min-width: 0;
-    box-shadow: none;
-    padding: 16px;
-  }
 
-  .contacts-main {
-    padding: 16px;
-  }
 
-  #contactsBackBtn {
-    display: inline-flex;
-    margin-left: auto;
-  }
-
-  #contactsMoreBtn {
-    display: flex;
-    position: fixed;
-    right: 20px;
-    bottom: 90px;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: #29abe2;
-    color: #fff;
-    border: none;
-    font-size: 22px;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    z-index: 2000;
-  }
-}
-
-@media (max-width: 700px) {
-  .modal {
-    width: calc(100px - 24px);
-    height: auto;
-    flex-direction: column;
-  }
-
-  .modal-left {
-    width: 100%;
-    border-radius: 30px 30px 0 0;
-    padding: 28px;
-  }
-
-  .modal-right {
-    width: 100%;
-    border-radius: 0 0 30px 30px;
-    padding: 22px;
-  }
-
-  .modal-person {
-    position: static;
-    margin: 14px auto 0;
-    box-shadow: none;
-  }
-
-  #addContactForm {
-    margin: 18px 0 0;
-    max-width: none;
-  }
-
-  .modal-actions {
-    flex-direction: column;
-  }
-
-  .btn-cancel,
-  .btn-create {
-    width: 100%;
-    justify-content: center;
-  }
-}

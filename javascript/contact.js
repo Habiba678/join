@@ -181,11 +181,8 @@ function openModal(mode, contact) {
   let m = getEl("addContactModal");
   if (!m) return;
 
-
   m.setAttribute("data-mode", String(mode || "").trim().toLowerCase());
-
-
-
+  
   applyModalAvatar(data);
 
   m.classList.remove("d-none");

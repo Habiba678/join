@@ -78,6 +78,8 @@
   flex-direction: column;
   flex: 1 1 auto;
   gap: 20px;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 /* due/priority rows */
@@ -192,4 +194,3 @@
   transform: rotate(45deg);
   margin-top: -1px;
 }
-

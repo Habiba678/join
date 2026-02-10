@@ -5,6 +5,30 @@
   padding: 72px 96px 96px;
 }
 
+.policy-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  margin-bottom: 24px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.policy-back:hover {
+  background: rgba(41, 171, 226, 0.12);
+}
+
+.policy-back img {
+  width: 20px;
+  height: 20px;
+}
+
 .policy-header {
   display: flex;
   align-items: baseline;

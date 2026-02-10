@@ -9,6 +9,8 @@
   flex-direction: column;
   flex: 1 1 auto;
   gap: 16px;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 .task-edit-row {
@@ -266,4 +268,3 @@
   line-height: 1;
   padding: 0 2px;
 }
-
