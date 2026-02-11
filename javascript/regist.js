@@ -1,7 +1,7 @@
 async function regData() {
   validateSingUpForm(full_name, email, password);
   const db = "https://join-da53b-default-rtdb.firebaseio.com/";
-  let conect = await fetch(db + ".json", {
+  let conect = await fetch(db + "register.json", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

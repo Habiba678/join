@@ -110,6 +110,7 @@ async function populateAssignedContacts() {
   dropdown.innerHTML = "";
   const contactsData = await loadContactsFromStorage();
   const list = Array.isArray(contactsData) ? contactsData : Object.values(contactsData || {});
+console.log(list);
 
   list.forEach((c) => {
     if (!c?.id || !c?.name) return;
@@ -128,9 +129,7 @@ async function populateAssignedContacts() {
 }
 
 function toggleContact(id) {
-  selectedContacts.has(id)
-    ? selectedContacts.delete(id)
-    : selectedContacts.add(id);
+  selectedContacts.has(id) ? selectedContacts.delete(id) : selectedContacts.add(id);
 
   populateAssignedContacts();
    renderSelectedContacts();
@@ -206,10 +205,10 @@ async function createTask() {
     assigned: [...selectedContacts],
   };
 
-  // Try to persist to remote DB, but don't block local UI if it fails
+  // Try to persist to remote DB as an upsert to tasks/{id}.json
   try {
-    const response = await fetch(dbTask + ".json", {
-      method: "POST",
+    const response = await fetch(dbTask + `tasks/${id}.json`, {
+      method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(task),
     });
@@ -220,28 +219,23 @@ async function createTask() {
 
   // Load tasks from remote DB (DB is the single source of truth)
   try {
-    const resp = await fetch(dbTask + ".json");
+    const resp = await fetch(dbTask + "tasks.json");
     const data = await resp.json();
     let tasks = [];
 
     if (!data) {
       tasks = [];
     } else if (Array.isArray(data)) {
-      // Filter out any null/empty slots from array responses
+
       tasks = data.filter(Boolean);
     } else {
-      // Firebase RTDB returns an object map (key -> task).
-      // Keep the firebase key as fallback id in case the stored task object doesn't include an id.
       tasks = Object.entries(data).map(([key, val]) => ({ ...(val || {}), id: val && val.id ? val.id : key }));
     }
 
-    // Debug: ensure we indeed loaded tasks from DB
     console.log("Loaded tasks from DB:", tasks.length, tasks.slice(0, 3));
 
-    // Save canonical tasks locally for UI rendering
     await saveTasks(tasks);
 
-    // Ensure board is rendered with the freshly loaded tasks
     if (typeof renderBoardFromStorage === "function") renderBoardFromStorage();
     if (typeof updateEmptyStates === "function") updateEmptyStates();
 
@@ -251,33 +245,96 @@ async function createTask() {
       return;
     }
 
-    // If not an overlay flow, navigate back to board
     location.href = "./board.html";
   } catch (e) {
     console.error("Failed to load tasks from remote DB; keeping overlay open for retry", e);
-    // If there is no overlay (we're on a standalone create page), still navigate back to board
+    
     const overlay = document.getElementById("addTaskOverlayBackdrop");
     if (!overlay) {
       location.href = "./board.html";
     }
-    // Otherwise keep the overlay open so the user can retry/sync
+   
     return;
   }
 
   location.href = "./board.html";
 }
 
-// ------------------ STORAGE ------------------
 async function loadContactsFromStorage() {
+  const dbTask = "https://join-da53b-default-rtdb.firebaseio.com/";
   try {
-    const dbTask = "https://join-da53b-default-rtdb.firebaseio.com/";
-    const response = await fetch(dbTask + ".json");
-    const data = await response.json();
+    // Try direct node first
+    try {
+      const response = await fetch(dbTask + "contacts.json");
+      const data = await response.json();
+      if (data != null) {
+        console.info("loadContactsFromStorage: loaded from /contacts.json");
+        if (Array.isArray(data)) return data.filter(Boolean);
+        return Object.values(data);
+      }
+    } catch (e) {
+      // continue to root fallback
+    }
 
-    // Firebase RTDB returns an object (key -> value). Convert to array for easier handling.
-    if (!data) return [];
-    if (Array.isArray(data)) return data;
-    return Object.values(data);
+    // Fallback: inspect DB root for an entry with id === 'contacts' or a property named 'contacts'
+    try {
+      const resp = await fetch(dbTask + ".json");
+      const root = await resp.json();
+      if (!root) return [];
+
+      // If root directly has a 'contacts' property
+      if (root.contacts !== undefined) {
+        const data = root.contacts;
+        console.info("loadContactsFromStorage: loaded from root.contacts");
+        if (Array.isArray(data)) return data.filter(Boolean);
+        return Object.values(data);
+      }
+
+      // If root is an array of entries with id properties, find the 'contacts' entry
+      if (Array.isArray(root)) {
+        const entry = root.find((e) => e && e.id === "contacts");
+        if (entry) {
+          const clone = Object.assign({}, entry);
+          delete clone.id;
+          if (clone.contacts !== undefined) {
+            const data = clone.contacts;
+            console.info("loadContactsFromStorage: loaded from root entry.contacts");
+            if (Array.isArray(data)) return data.filter(Boolean);
+            return Object.values(data);
+          }
+          // otherwise assume clone itself is a map of contacts
+          console.info("loadContactsFromStorage: loaded from root entry (as map)");
+          if (Array.isArray(clone)) return clone.filter(Boolean);
+          return Object.values(clone);
+        }
+      }
+
+      // If root is an object map, search values for an entry with id === 'contacts'
+      if (typeof root === "object") {
+        const vals = Object.values(root);
+        for (let i = 0; i < vals.length; i++) {
+          const e = vals[i];
+          if (e && e.id === "contacts") {
+            const clone = Object.assign({}, e);
+            delete clone.id;
+            if (clone.contacts !== undefined) {
+              const data = clone.contacts;
+              console.info("loadContactsFromStorage: loaded from object value.contacts");
+              if (Array.isArray(data)) return data.filter(Boolean);
+              return Object.values(data);
+            }
+            console.info("loadContactsFromStorage: loaded from object value (as map)");
+            if (Array.isArray(clone)) return clone.filter(Boolean);
+            return Object.values(clone);
+          }
+        }
+      }
+
+      return [];
+    } catch (e) {
+      console.error("Failed to inspect DB root for contacts", e);
+      return [];
+    }
   } catch (e) {
     console.error("Failed to load contacts", e);
     return [];

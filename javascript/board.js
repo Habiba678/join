@@ -27,6 +27,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     console.error("Initial sync failed, falling back to local storage", e);
   }
 
+  try {
+    await syncContactsFromDB();
+  } catch (e) {
+    console.warn("Initial contacts sync failed, continuing with local cache", e);
+  }
+
   renderBoardFromStorage();
   initDragAndDrop();
   initOverlayEvents();
@@ -166,11 +172,17 @@ async function saveTasks(tasks) {
   // Best-effort: sync canonical tasks to remote DB so other clients and fresh page loads see updates
   (async function () {
     try {
-      const url = (window.DB_TASK_URL || "https://join-da53b-default-rtdb.firebaseio.com/") + ".json";
+      const url = (window.DB_TASK_URL || "https://join-da53b-default-rtdb.firebaseio.com/") + "tasks.json";
+      // Convert tasks array into a map keyed by id to avoid array vs object inconsistencies
+      const map = {};
+      for (const t of (tasks || [])) {
+        const id = (t && t.id) ? String(t.id) : ("tmp_" + Date.now() + "_" + Math.random().toString(16).slice(2));
+        map[id] = t;
+      }
       await fetch(url, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(tasks),
+        body: JSON.stringify(map),
       });
     } catch (err) {
       console.warn("Failed to sync tasks to remote DB:", err);
@@ -179,10 +191,48 @@ async function saveTasks(tasks) {
 }
 
 // Sync tasks from Firebase RTDB and save to persistent storage (IndexedDB)
+async function fetchDBNode(nodeName) {
+  try {
+    const resp = await fetch(DB_TASK_URL + nodeName + ".json");
+    const data = await resp.json();
+    if (data != null) return data;
+  } catch (e) {}
+
+  try {
+    const r = await fetch(DB_TASK_URL + ".json");
+    const root = await r.json();
+    if (!root) return null;
+
+    if (Array.isArray(root)) {
+      const entry = root.find((e) => e && e.id === nodeName);
+      if (entry) {
+        const clone = Object.assign({}, entry);
+        delete clone.id;
+        if (clone.hasOwnProperty(nodeName)) return clone[nodeName];
+        const keys = Object.keys(clone);
+        if (keys.length) return clone;
+      }
+    } else if (typeof root === "object") {
+      const vals = Object.values(root);
+      for (let i = 0; i < vals.length; i++) {
+        const e = vals[i];
+        if (e && e.id === nodeName) {
+          const clone = Object.assign({}, e);
+          delete clone.id;
+          if (clone.hasOwnProperty(nodeName)) return clone[nodeName];
+          const keys = Object.keys(clone);
+          if (keys.length) return clone;
+        }
+      }
+      if (root[nodeName] !== undefined) return root[nodeName];
+    }
+  } catch (e) {}
+  return null;
+}
+
 async function syncTasksFromDB() {
   try {
-    const resp = await fetch(DB_TASK_URL + ".json");
-    const data = await resp.json();
+    const data = await fetchDBNode("tasks");
     let tasks = [];
     if (!data) tasks = [];
     else if (Array.isArray(data)) tasks = data.filter(Boolean);
@@ -193,6 +243,40 @@ async function syncTasksFromDB() {
     return tasks;
   } catch (e) {
     console.error("Failed to sync tasks from DB", e);
+    throw e;
+  }
+}
+// Sync contacts from Firebase RTDB into local IndexedDB cache
+async function syncContactsFromDB() {
+  try {
+    const data = await fetchDBNode("contacts");
+
+    let contacts = [];
+    if (!data) contacts = [];
+    else if (Array.isArray(data)) contacts = data.filter(Boolean);
+    else contacts = Object.entries(data).map(([k, v]) => ({ ...(v || {}), id: v && v.id ? v.id : k }));
+
+    console.log("Synced contacts from DB:", contacts.length);
+
+    // Persist to IDB so other modules (board, overlays) can access them via idbStorage
+    if (window.idbStorage && typeof window.idbStorage.saveContacts === "function") {
+      try {
+        await window.idbStorage.saveContacts(contacts);
+        // Verify saved content
+        try {
+          const local = window.idbStorage.getContactsSync ? window.idbStorage.getContactsSync() : null;
+          console.info("syncContactsFromDB: saved to IDB. Remote count:", contacts.length, "Local IDB count:", local ? local.length : "n/a");
+        } catch (readErr) {
+          console.warn("syncContactsFromDB: saved to IDB but failed to read back:", readErr);
+        }
+      } catch (err) {
+        console.warn("Failed to save contacts to IDB:", err);
+      }
+    }
+
+    return contacts;
+  } catch (e) {
+    console.error("Failed to sync contacts from DB", e);
     throw e;
   }
 }

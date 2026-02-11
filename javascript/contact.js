@@ -1,7 +1,32 @@
 const STORAGE_KEY = "join_contacts_v1";
+const dbTask = "https://join-da53b-default-rtdb.firebaseio.com/";
 
 let contacts = [];
 let selectedId = null;
+
+
+async function init() {
+  removeModalNow();
+  await loadContacts();
+
+  if (!selectedId && contacts.length) selectedId = contacts[0].id;
+
+  renderContactsList();
+  renderDetails();
+
+  if (isMobile()) showMobileList();
+
+  document.addEventListener("click", handleClick);
+  document.addEventListener("submit", handleSubmit);
+}
+
+document.addEventListener("DOMContentLoaded", async function () {
+  await (window.idbStorage && window.idbStorage.ready
+    ? window.idbStorage.ready
+    : Promise.resolve());
+  await init();
+});
+
 
 function normalize(str) {
   return (str || "").trim().replace(/\s+/g, " ");
@@ -50,13 +75,92 @@ function groupKey(name) {
   return (n[0] || "").toUpperCase();
 }
 
-function loadContacts() {
+async function fetchDBNode(nodeName) {
+  // Try direct node first (e.g. /contacts.json)
   try {
-    contacts = (window.idbStorage && typeof window.idbStorage.getContactsSync === "function")
-      ? window.idbStorage.getContactsSync()
-      : [];
+    const resp = await fetch(dbTask + nodeName + ".json");
+    const data = await resp.json();
+    if (data != null) return data;
+  } catch (e) {
+    // ignore and try fallback
+  }
+
+  // Fallback: fetch root and look for an entry with id === nodeName
+  try {
+    const r = await fetch(dbTask + ".json");
+    const root = await r.json();
+    if (!root) return null;
+
+    if (Array.isArray(root)) {
+      const entry = root.find((e) => e && e.id === nodeName);
+      if (entry) {
+        const clone = Object.assign({}, entry);
+        delete clone.id;
+        // If clone contains a single property named nodeName, return it
+        if (clone.hasOwnProperty(nodeName)) return clone[nodeName];
+        // Otherwise return remaining object (map of contacts)
+        const keys = Object.keys(clone);
+        if (keys.length) return clone;
+      }
+    } else if (typeof root === "object") {
+      // object map: values might contain entries with id property
+      const vals = Object.values(root);
+      for (let i = 0; i < vals.length; i++) {
+        const e = vals[i];
+        if (e && e.id === nodeName) {
+          const clone = Object.assign({}, e);
+          delete clone.id;
+          if (clone.hasOwnProperty(nodeName)) return clone[nodeName];
+          const keys = Object.keys(clone);
+          if (keys.length) return clone;
+        }
+      }
+      // as a last resort, check root[nodeName]
+      if (root[nodeName] !== undefined) return root[nodeName];
+    }
+  } catch (e) {
+    // ignore
+  }
+
+  return null;
+}
+
+async function loadContacts() {
+  let data = null;
+  try {
+    data = await fetchDBNode("contacts");
   } catch {
+    data = null;
+  }
+
+  if (!data) {
     contacts = [];
+  } else if (Array.isArray(data)) {
+    contacts = data.filter(Boolean);
+  } else if (typeof data === "object") {
+    // If object is a map of id -> contact, convert to array
+    if (Object.keys(data).length && Object.keys(data).every((k) => data[k] && data[k].id)) {
+      contacts = Object.values(data);
+    } else {
+      contacts = Object.entries(data).map(([key, val]) => ({ ...(val || {}), id: val && val.id ? val.id : key }));
+    }
+  } else {
+    contacts = [];
+  }
+
+  // Persist into local IndexedDB cache so other pages can access contacts via idbStorage
+  if (window.idbStorage && typeof window.idbStorage.saveContacts === "function") {
+    try {
+      await window.idbStorage.saveContacts(contacts);
+      try {
+        const local = window.idbStorage.getContactsSync ? window.idbStorage.getContactsSync() : null;
+        console.info("loadContacts: fetched from remote, saved to IDB. Remote count:", contacts.length, "Local IDB count:", local ? local.length : "n/a");
+      } catch (readErr) {
+        console.warn("loadContacts: saved to IDB but failed to read back:", readErr);
+      }
+    } catch (err) {
+      console.warn("Failed to save contacts to IDB:", err);
+    }
   }
 
   let used = new Set();
@@ -74,17 +178,42 @@ function loadContacts() {
     used.add(c.colorClass);
   }
 
-  if (changed) saveContacts();
-}
+  if (changed) await saveContacts();
+} 
 
-function saveContacts() {
+async function saveContacts() {
   try {
-    if (window.idbStorage && typeof window.idbStorage.saveContacts === "function") {
-      window.idbStorage.saveContacts(contacts).catch(() => {});
-    } else {
-      // no-op fallback
+    // Build map of contacts keyed by id and persist to Firebase
+    const map = {};
+    for (const c of contacts) {
+      if (!c.id) c.id = generateId();
+      map[c.id] = c;
     }
-  } catch {}
+
+    const response = await fetch(dbTask + "contacts.json", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(map),
+    });
+    await response.json();
+
+    // Also update local IDB cache if available
+    if (window.idbStorage && typeof window.idbStorage.saveContacts === "function") {
+      try {
+        await window.idbStorage.saveContacts(contacts);
+        try {
+          const local = window.idbStorage.getContactsSync ? window.idbStorage.getContactsSync() : null;
+          console.info("saveContacts: remote saved, IDB updated. Remote count:", contacts.length, "Local IDB count:", local ? local.length : "n/a");
+        } catch (readErr) {
+          console.warn("saveContacts: saved to IDB but failed to read back:", readErr);
+        }
+      } catch (err) {
+        console.warn("Failed to save contacts to IDB:", err);
+      }
+    }
+  } catch (e) {
+    console.error("Failed to save contacts remotely", e);
+  }
 }
 
 function getEl(id) {
@@ -442,20 +571,3 @@ function handleSubmit(e) {
 
   closeModal();
 }
-
-function init() {
-  removeModalNow();
-  loadContacts();
-
-  if (!selectedId && contacts.length) selectedId = contacts[0].id;
-
-  renderContactsList();
-  renderDetails();
-
-  if (isMobile()) showMobileList();
-
-  document.addEventListener("click", handleClick);
-  document.addEventListener("submit", handleSubmit);
-}
-
-document.addEventListener("DOMContentLoaded", async function(){ await (window.idbStorage && window.idbStorage.ready ? window.idbStorage.ready : Promise.resolve()); init(); });

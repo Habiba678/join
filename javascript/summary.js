@@ -1,6 +1,81 @@
+const DB_TASK_URL = window.DB_TASK_URL || "https://join-da53b-default-rtdb.firebaseio.com/";
+
+async function fetchDBNode(nodeName) {
+  try {
+    const resp = await fetch(DB_TASK_URL + nodeName + ".json");
+    const data = await resp.json();
+    if (data != null) return data;
+  } catch (e) {}
+
+  try {
+    const r = await fetch(DB_TASK_URL + ".json");
+    const root = await r.json();
+    if (!root) return null;
+
+    if (Array.isArray(root)) {
+      const entry = root.find((e) => e && e.id === nodeName);
+      if (entry) {
+        const clone = Object.assign({}, entry);
+        delete clone.id;
+        if (clone.hasOwnProperty(nodeName)) return clone[nodeName];
+        const keys = Object.keys(clone);
+        if (keys.length) return clone;
+      }
+    } else if (typeof root === "object") {
+      const vals = Object.values(root);
+      for (let i = 0; i < vals.length; i++) {
+        const e = vals[i];
+        if (e && e.id === nodeName) {
+          const clone = Object.assign({}, e);
+          delete clone.id;
+          if (clone.hasOwnProperty(nodeName)) return clone[nodeName];
+          const keys = Object.keys(clone);
+          if (keys.length) return clone;
+        }
+      }
+      if (root[nodeName] !== undefined) return root[nodeName];
+    }
+  } catch (e) {}
+  return null;
+}
+
+async function syncTasksFromDB() {
+  try {
+    const data = await fetchDBNode("tasks");
+    let tasks = [];
+    if (!data) tasks = [];
+    else if (Array.isArray(data)) tasks = data.filter(Boolean);
+    else tasks = Object.entries(data).map(([k, v]) => ({ ...(v || {}), id: v && v.id ? v.id : k }));
+
+    if (window.idbStorage && typeof window.idbStorage.saveTasks === "function") {
+      try {
+        await window.idbStorage.saveTasks(tasks);
+        try {
+          const local = window.idbStorage.getTasksSync ? window.idbStorage.getTasksSync() : null;
+          console.info("syncTasksFromDB: saved to IDB. Remote count:", tasks.length, "Local IDB count:", local ? local.length : "n/a");
+        } catch (readErr) {
+          console.warn("syncTasksFromDB: saved to IDB but failed to read back:", readErr);
+        }
+      } catch (err) {
+        console.warn("Failed to save tasks to IDB:", err);
+      }
+    }
+
+    return tasks;
+  } catch (e) {
+    console.warn("Failed to sync tasks from DB", e);
+    throw e;
+  }
+}
+
 async function init() {
   // Ensure IndexedDB cache is ready
   await (window.idbStorage && window.idbStorage.ready ? window.idbStorage.ready : Promise.resolve());
+  try {
+    await syncTasksFromDB();
+  } catch (e) {
+    console.warn("Initial tasks sync failed, continuing with local cache", e);
+  }
   greetingText();
   getTasksTotal();
   getTasksDone();
