@@ -1,4 +1,9 @@
 const DB_TASK_URL = window.DB_TASK_URL || "https://join-da53b-default-rtdb.firebaseio.com/";
+const BOARD_PAGE_URL = "./board.html";
+
+function goToBoard() {
+  window.location.href = BOARD_PAGE_URL;
+}
 
 async function fetchDBNode(nodeName) {
   try {
