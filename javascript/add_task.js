@@ -179,19 +179,17 @@ async function createTask() {
   const descriptionEl = document.getElementById("description");
   const dueDateEl = document.getElementById("date");
   const categoryEl = document.getElementById("category");
-
   const title = titleEl?.value.trim() || "";
   const description = descriptionEl?.value.trim() || "";
   const dueDate = dueDateEl?.value || "";
   const category = categoryEl?.value || "";
+  const dbTask = "https://join-da53b-default-rtdb.firebaseio.com/";
+  let id = Date.now().toString();
 
   if (!title || !dueDate || !category) {
     openValidationModal();
     return;
   }
-
-  const dbTask = "https://join-da53b-default-rtdb.firebaseio.com/";
-  let id = Date.now().toString();
 
   const task = {
     id,
@@ -205,7 +203,6 @@ async function createTask() {
     assigned: [...selectedContacts],
   };
 
-  // Try to persist to remote DB as an upsert to tasks/{id}.json
   try {
     const response = await fetch(dbTask + `tasks/${id}.json`, {
       method: "PUT",
@@ -216,26 +213,19 @@ async function createTask() {
   } catch (e) {
     console.error("Failed to save task remotely", e);
   }
-
-  // Load tasks from remote DB (DB is the single source of truth)
   try {
     const resp = await fetch(dbTask + "tasks.json");
     const data = await resp.json();
     let tasks = [];
-
     if (!data) {
       tasks = [];
     } else if (Array.isArray(data)) {
-
       tasks = data.filter(Boolean);
     } else {
       tasks = Object.entries(data).map(([key, val]) => ({ ...(val || {}), id: val && val.id ? val.id : key }));
     }
-
     console.log("Loaded tasks from DB:", tasks.length, tasks.slice(0, 3));
-
     await saveTasks(tasks);
-
     if (typeof renderBoardFromStorage === "function") renderBoardFromStorage();
     if (typeof updateEmptyStates === "function") updateEmptyStates();
 
@@ -244,19 +234,15 @@ async function createTask() {
       if (typeof closeAddTaskOverlay === "function") closeAddTaskOverlay();
       return;
     }
-
     location.href = "./board.html";
   } catch (e) {
     console.error("Failed to load tasks from remote DB; keeping overlay open for retry", e);
-    
     const overlay = document.getElementById("addTaskOverlayBackdrop");
     if (!overlay) {
       location.href = "./board.html";
     }
-   
     return;
   }
-
   location.href = "./board.html";
 }
 
@@ -276,13 +262,11 @@ async function loadContactsFromStorage() {
       // continue to root fallback
     }
 
-    // Fallback: inspect DB root for an entry with id === 'contacts' or a property named 'contacts'
     try {
       const resp = await fetch(dbTask + ".json");
       const root = await resp.json();
       if (!root) return [];
 
-      // If root directly has a 'contacts' property
       if (root.contacts !== undefined) {
         const data = root.contacts;
         console.info("loadContactsFromStorage: loaded from root.contacts");
@@ -290,7 +274,6 @@ async function loadContactsFromStorage() {
         return Object.values(data);
       }
 
-      // If root is an array of entries with id properties, find the 'contacts' entry
       if (Array.isArray(root)) {
         const entry = root.find((e) => e && e.id === "contacts");
         if (entry) {
@@ -302,14 +285,13 @@ async function loadContactsFromStorage() {
             if (Array.isArray(data)) return data.filter(Boolean);
             return Object.values(data);
           }
-          // otherwise assume clone itself is a map of contacts
+    
           console.info("loadContactsFromStorage: loaded from root entry (as map)");
           if (Array.isArray(clone)) return clone.filter(Boolean);
           return Object.values(clone);
         }
       }
 
-      // If root is an object map, search values for an entry with id === 'contacts'
       if (typeof root === "object") {
         const vals = Object.values(root);
         for (let i = 0; i < vals.length; i++) {
