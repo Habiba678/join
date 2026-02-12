@@ -7,10 +7,10 @@
   <link rel="stylesheet" href="../css/contact.css" />
   <link rel="stylesheet" href="../css/contact_responsiv.css" />
   <link rel="stylesheet" href="../css/summary.css" />
-  <link rel="stylesheet" href="../css/header.css">
-
+  
   <title>Contact</title>
 </head>
+
 <body>
   <div class="layout">
     <aside class="sidebar">
@@ -23,7 +23,7 @@
           <li><a href="./summary.html"><img src="../assets/icons/summary-gray.svg" alt="">Summary</a></li>
           <li><a href="./add_task.html"><img src="../assets/icons/addTask-gray.svg" alt="">Add Task</a></li>
           <li><a href="./board.html"><img src="../assets/icons/board-gray.svg" alt="">Board</a></li>
-          <li><a href="./contact.html"><img src="../assets/icons/contacts-gray.svg" alt="">Contacts</a></li>
+          <li><a class="active" href="./contact.html"><img src="../assets/icons/contacts-gray.svg" alt="">Contacts</a></li>
         </ul>
       </nav>
 
@@ -42,23 +42,22 @@
               <span class="header-title">Kanban Project Management Tool</span>
             </div>
 
-              <div class="header-right">
-                <a class="header-help" href="./help.html">?</a>
-                <div class="header-user-area">
-                  <button class="header-user" id="headerUserBtn" type="button" aria-expanded="false" aria-controls="userMenu"
-                    aria-label="Open user menu">
-                    G
-                  </button>
-                  <div class="user-menu" id="userMenu" role="menu" aria-hidden="true">
-                    <a class="user-menu-item" href="./legal_notice.html" role="menuitem">Legal Notice</a>
-                    <a class="user-menu-item" href="./privacy_policy.html" role="menuitem">Privacy Policy</a>
-                    <a class="user-menu-item menu-item--mobile" href="./help.html" role="menuitem">Help</a>
-                    <a class="user-menu-item" href="../index.html" role="menuitem">Log out</a>
-                  </div>
+            <div class="header-right">
+              <a class="header-help" href="./help.html">?</a>
+              <div class="header-user-area">
+                <button class="header-user" id="headerUserBtn" type="button" aria-expanded="false" aria-controls="userMenu"
+                  aria-label="Open user menu">
+                  G
+                </button>
+                <div class="user-menu" id="userMenu" role="menu" aria-hidden="true">
+                  <a class="user-menu-item" href="./legal_notice.html" role="menuitem">Legal Notice</a>
+                  <a class="user-menu-item" href="./privacy_policy.html" role="menuitem">Privacy Policy</a>
+                  <a class="user-menu-item menu-item--mobile" href="./help.html" role="menuitem">Help</a>
+                  <a class="user-menu-item" href="../index.html" role="menuitem">Log out</a>
                 </div>
               </div>
             </div>
-         
+          </div>
         </header>
 
         <div class="contacts-page">
@@ -68,7 +67,15 @@
               <img src="../assets/icons/personAdd-white.svg" class="contacts-add-icon" alt="">
             </button>
 
-            <div class="contacts-list" id="contactsList"></div>
+            <div class="contacts-scroll-wrap">
+              <div class="contacts-scroll" id="contactsScroll">
+                <div class="contacts-list" id="contactsList"></div>
+              </div>
+
+              <div class="contacts-scrollbar" aria-hidden="true">
+                <div class="contacts-scrollbar-thumb" id="contactsThumb"></div>
+              </div>
+            </div>
           </aside>
 
           <main class="contacts-main">
@@ -155,5 +162,6 @@
   <script src="../javascript/user-menu.js"></script>
   <script src="../javascript/contact.js"></script>
   <script src="../javascript/mobile.js"></script>
+  <script src="../javascript/scroll.js" defer></script>
 </body>
 </html>
