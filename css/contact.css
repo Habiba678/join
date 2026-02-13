@@ -1,22 +1,3 @@
-/* *, *::before, *::after {
-  box-sizing: border-box;
-}
-
-html, body {
-  height: 100%;
-  margin: 0;
-}
-
-body {
-  background: #f6f7f8;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-}
-
-.layout {
-  display: flex;
-  min-height: 100vh;
-  height: auto;
-} */
 
 .cantainer {
   flex: 1;
