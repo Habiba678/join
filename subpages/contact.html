@@ -1,167 +1,166 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/svg" sizes="32x32" href="/assets/icons/logo.svg">
-  <link rel="stylesheet" href="../css/contact.css" />
-  <link rel="stylesheet" href="../css/contact_responsiv.css" />
-  <link rel="stylesheet" href="../css/summary.css" />
-  
-  <title>Contact</title>
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg" sizes="32x32" href="/assets/icons/logo.svg" />
 
-<body>
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="logo">
-        <img src="../assets/icons/logo-white.svg" alt="Join" />
-      </div>
+    <link rel="stylesheet" href="../css/summary.css">
+    <link rel="stylesheet" href="../css/header.css">
 
-      <nav class="menu">
-        <ul>
-          <li><a href="./summary.html"><img src="../assets/icons/summary-gray.svg" alt="">Summary</a></li>
-          <li><a href="./add_task.html"><img src="../assets/icons/addTask-gray.svg" alt="">Add Task</a></li>
-          <li><a href="./board.html"><img src="../assets/icons/board-gray.svg" alt="">Board</a></li>
-          <li><a class="active" href="./contact.html"><img src="../assets/icons/contacts-gray.svg" alt="">Contacts</a></li>
-        </ul>
-      </nav>
+    <link rel="stylesheet" href="../css/contact.css" />
+    <link rel="stylesheet" href="../css/contact_responsiv.css" />
 
-      <div class="sidebar-footer">
-        <a href="./privacy_policy.html">Privacy Policy</a>
-        <a href="./legal_notice.html">Legal notice</a>
-      </div>
-    </aside>
+    <title>Contact</title>
+  </head>
 
-    <div class="cantainer">
-      <div class="main">
-        <header class="header">
-          <div class="content-wrepper-header">
-            <div class="header-left">
-              <img src="../assets/icons/logo.svg" class="header-logo" alt="Join Logo">
-              <span class="header-title">Kanban Project Management Tool</span>
-            </div>
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="logo">
+          <img src="../assets/icons/logo-white.svg" alt="Join" />
+        </div>
 
-            <div class="header-right">
-              <a class="header-help" href="./help.html">?</a>
-              <div class="header-user-area">
-                <button class="header-user" id="headerUserBtn" type="button" aria-expanded="false" aria-controls="userMenu"
-                  aria-label="Open user menu">
-                  G
-                </button>
-                <div class="user-menu" id="userMenu" role="menu" aria-hidden="true">
-                  <a class="user-menu-item" href="./legal_notice.html" role="menuitem">Legal Notice</a>
-                  <a class="user-menu-item" href="./privacy_policy.html" role="menuitem">Privacy Policy</a>
-                  <a class="user-menu-item menu-item--mobile" href="./help.html" role="menuitem">Help</a>
-                  <a class="user-menu-item" href="../index.html" role="menuitem">Log out</a>
+        <nav class="menu">
+          <ul>
+            <li><a href="./summary.html"><img src="../assets/icons/summary-gray.svg" alt="">Summary</a></li>
+            <li><a href="./add_task.html"><img src="../assets/icons/addTask-gray.svg" alt="">Add Task</a></li>
+            <li><a href="./board.html"><img src="../assets/icons/board-gray.svg" alt="">Board</a></li>
+            <li><a href="./contact.html"><img src="../assets/icons/contacts-gray.svg" alt="">Contacts</a></li>
+          </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+          <a href="./privacy_policy.html">Privacy Policy</a>
+          <a href="./legal_notice.html">Legal notice</a>
+        </div>
+      </aside>
+
+      <div class="cantainer">
+        <div class="main">
+          <header class="header">
+            <div class="content-wrepper-header">
+              <div class="header-left">
+                <img src="../assets/icons/logo.svg" class="header-logo" alt="Join Logo">
+                <span class="header-title">Kanban Project Management Tool</span>
+              </div>
+
+              <div class="header-right">
+                <a class="header-help" href="./help.html">?</a>
+                <div class="header-user-area">
+                  <button class="header-user" id="headerUserBtn" type="button"
+                    aria-expanded="false" aria-controls="userMenu" aria-label="Open user menu">
+                    G
+                  </button>
+
+                  <div class="user-menu" id="userMenu" role="menu" aria-hidden="true">
+                    <a class="user-menu-item" href="./legal_notice.html" role="menuitem">Legal Notice</a>
+                    <a class="user-menu-item" href="./privacy_policy.html" role="menuitem">Privacy Policy</a>
+                    <a class="user-menu-item menu-item--mobile" href="./help.html" role="menuitem">Help</a>
+                    <a class="user-menu-item" href="../index.html" role="menuitem">Log out</a>
+                  </div>
                 </div>
               </div>
             </div>
+          </header>
+
+          <div class="contacts-page">
+            <aside class="contacts-sidebar">
+              <button class="contacts-add-btn" id="openAddContact" type="button">
+                Add new contact
+                <img src="../assets/icons/personAdd-white.svg" class="contacts-add-icon" alt="">
+              </button>
+
+              <div class="contacts-scroll-wrap">
+                <div class="contacts-scroll" id="contactsScroll">
+                  <div class="contacts-list" id="contactsList"></div>
+                </div>
+              </div>
+            </aside>
+
+            <main class="contacts-main">
+              <div class="contacts-header">
+                <h1>Contacts</h1>
+                <div class="header-line"></div>
+                <span>Better with a team</span>
+
+                <button class="contacts-back-btn" id="mobileBackBtn" type="button" aria-label="Back">
+                  <img src="../assets/icons/pfeil-links-blue.png" alt="Back">
+                </button>
+              </div>
+
+              <div class="contact-details" id="contactDetails"></div>
+
+              <button class="contacts-more-btn d-none" id="mobileMenuBtn" type="button" aria-label="More">
+                <span class="dots">⋮</span>
+              </button>
+
+              <div class="contacts-more-menu d-none" id="mobileActionsMenu">
+                <button class="contacts-more-item contact-action" data-action="edit" data-id="" type="button">
+                  <img src="../assets/icons/edit.svg" alt=""> Edit
+                </button>
+                <button class="contacts-more-item contact-action" data-action="delete" data-id="" type="button">
+                  <img src="../assets/icons/delete.svg" alt=""> Delete
+                </button>
+              </div>
+            </main>
           </div>
-        </header>
-
-        <div class="contacts-page">
-          <aside class="contacts-sidebar">
-            <button class="contacts-add-btn" id="openAddContact" type="button">
-              Add new contact
-              <img src="../assets/icons/personAdd-white.svg" class="contacts-add-icon" alt="">
-            </button>
-
-            <div class="contacts-scroll-wrap">
-              <div class="contacts-scroll" id="contactsScroll">
-                <div class="contacts-list" id="contactsList"></div>
-              </div>
-
-              <div class="contacts-scrollbar" aria-hidden="true">
-                <div class="contacts-scrollbar-thumb" id="contactsThumb"></div>
-              </div>
-            </div>
-          </aside>
-
-          <main class="contacts-main">
-            <div class="contacts-header">
-              <h1>Contacts</h1>
-              <div class="header-line"></div>
-              <span>Better with a team</span>
-
-              <button class="contacts-back-btn" id="contactsBackBtn" type="button" aria-label="Back">
-                <img src="../assets/icons/pfeil-links-blue.png" alt="Back">
-              </button>
-            </div>
-
-            <div class="contact-details" id="contactDetails"></div>
-
-            <button class="contacts-more-btn d-none" id="contactsMoreBtn" type="button" aria-label="More">
-              <span class="dots">⋮</span>
-            </button>
-
-            <div class="contacts-more-menu d-none" id="contactsMoreMenu">
-              <button class="contacts-more-item" id="contactsMoreEdit" type="button">
-                <img src="../assets/icons/edit.svg" alt=""> Edit
-              </button>
-              <button class="contacts-more-item" id="contactsMoreDelete" type="button">
-                <img src="../assets/icons/delete.svg" alt=""> Delete
-              </button>
-            </div>
-          </main>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="modal-backdrop d-none" id="addContactModal">
-    <div class="modal">
-      <div class="modal-left">
-        <img src="../assets/icons/logo-white.svg" class="modal-logo" alt="">
-        <h2>Add contact</h2>
-        <p>Tasks are better with a team!</p>
-        <div class="modal-line"></div>
-      </div>
-
-      <div class="modal-right">
-        <button class="modal-close" id="closeAddContact" type="button">×</button>
-
-        <div class="modal-person">
-          <img src="../assets/icons/person.png" alt="">
+    <div class="modal-backdrop d-none" id="addContactModal">
+      <div class="modal">
+        <div class="modal-left">
+          <img src="../assets/icons/logo-white.svg" class="modal-logo" alt="">
+          <h2>Add contact</h2>
+          <p class="modal-subtitle">Tasks are better with a team!</p>
+          <div class="modal-line"></div>
         </div>
 
-        <form id="addContactForm">
-          <div class="input-wrapper">
-            <input id="contactName" type="text" placeholder="Name" required>
-            <img src="../assets/icons/person.png" class="input-icon" alt="">
+        <div class="modal-right">
+          <button class="modal-close" id="closeAddContact" type="button">×</button>
+
+          <div class="modal-person">
+            <img src="../assets/icons/person.png" alt="">
           </div>
 
-          <div class="input-wrapper">
-            <input id="contactEmail" type="email" placeholder="Email" required>
-            <img src="../assets/icons/mail.png" class="input-icon" alt="">
-          </div>
+          <form id="addContactForm">
+            <div class="input-wrapper">
+              <input id="contactName" type="text" placeholder="Name" required>
+              <img src="../assets/icons/person.png" class="input-icon" alt="">
+            </div>
 
-          <div class="input-wrapper">
-            <input id="contactPhone" type="text" placeholder="Phone">
-            <img src="../assets/icons/call.svg" class="input-icon" alt="">
-          </div>
+            <div class="input-wrapper">
+              <input id="contactEmail" type="email" placeholder="Email" required>
+              <img src="../assets/icons/mail.png" class="input-icon" alt="">
+            </div>
 
-          <div class="modal-actions">
-            <button type="button" class="btn-cancel" id="cancelAddContact">
-              Cancel
-              <img src="../assets/icons/iconoir_cancel.svg" alt="">
-            </button>
+            <div class="input-wrapper">
+              <input id="contactPhone" type="text" placeholder="Phone">
+              <img src="../assets/icons/call.svg" class="input-icon" alt="">
+            </div>
 
-            <button type="submit" class="btn-create">
-              Create contact
-              <img src="../assets/icons/check-white.svg" alt="">
-            </button>
-          </div>
-        </form>
+            <div class="modal-actions">
+              <button type="button" class="btn-cancel" id="cancelAddContact">
+                Cancel
+                <img src="../assets/icons/iconoir_cancel.svg" alt="">
+              </button>
+
+              <button type="submit" class="btn-create">
+                Create contact
+                <img src="../assets/icons/check-white.svg" alt="">
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script src="../templates/contact_template.js" defer></script>
-  <script src="../javascript/idb-storage.js" defer></script>
-  <script src="../javascript/user-menu.js"></script>
-  <script src="../javascript/contact.js"></script>
-  <script src="../javascript/mobile.js"></script>
-  <script src="../javascript/scroll.js" defer></script>
-</body>
+    <script src="../templates/contact_template.js" defer></script>
+    <script src="../javascript/idb-storage.js" defer></script>
+    <script src="../javascript/user-menu.js"></script>
+    <script src="../javascript/contact.js"></script>
+    <script src="../javascript/mobile.js"></script>
+  </body>
 </html>
