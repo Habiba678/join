@@ -9,7 +9,7 @@ function goToSignup() {
 }
 
 function goToSummary() {
-  window.location.href = "./subpages/summary.html";
+  window.location.href = "./subpages/summary_guest.html";
 }
 
 
