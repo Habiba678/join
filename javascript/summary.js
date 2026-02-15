@@ -87,7 +87,6 @@ async function init() {
   getAwaitFeedback();
   getUrgrentTodo();
   getCokkieCheck();
-
 }
 
 function greetingText() {
