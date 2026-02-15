@@ -1,104 +1,87 @@
-const MOBILE_BP = 900;
+(function () {
+  const BP = 680;
 
-window.isMobile = function () {
-  return window.matchMedia && window.matchMedia(`(max-width: 
-    ${MOBILE_BP}px)`).matches;
-};
-
-window.showMobileDetails = function () {
-  if (!window.isMobile()) return;
-  document.body.classList.add("show-contact-details");
-};
-
-window.showMobileList = function () {
-  document.body.classList.remove("show-contact-details");
-};
-
-document.addEventListener("click", (e) => {
-  const back = e.target.closest("#contactsBackBtn");
-  if (!back) return;
-  e.preventDefault();
-  window.showMobileList();
-});
-
-window.addEventListener("resize", () => {
-  if (!window.isMobile()) window.showMobileList();
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  if (window.isMobile()) window.showMobileList();
-});
-
-function toggleMoreMenu(forceOpen) {
-  const btn = document.getElementById("contactsMoreBtn");
-  const menu = document.getElementById("contactsMoreMenu");
-  if (!btn || !menu) return;
-
-  const shouldOpen = typeof forceOpen === "boolean"
-    ? forceOpen
-    : menu.classList.contains("d-none");
-
-  if (shouldOpen) {
-    menu.classList.remove("d-none");
-    btn.classList.remove("d-none");
-  } else {
-    menu.classList.add("d-none");
-  }
-}
-
-function closeMoreMenu() {
-  const menu = document.getElementById("contactsMoreMenu");
-  if (menu) menu.classList.add("d-none");
-}
-
-function updateMoreBtnVisibility() {
-  const btn = document.getElementById("contactsMoreBtn");
-  if (!btn) return;
-
-  if (selectedId) btn.classList.remove("d-none");
-  else btn.classList.add("d-none");
-
-  closeMoreMenu();
-}
-
-document.addEventListener("click", (e) => {
-  const moreBtn = e.target.closest("#contactsMoreBtn");
-  const menu = document.getElementById("contactsMoreMenu");
-  const insideMenu = e.target.closest("#contactsMoreMenu");
-
-  if (moreBtn) {
-    e.preventDefault();
-    toggleMoreMenu();
-    return;
+  function isMobile() {
+    return window.matchMedia && window.matchMedia(`(max-width: ${BP}px)`).matches;
   }
 
-  if (e.target.closest("#contactsMoreEdit")) {
-    e.preventDefault();
-    closeMoreMenu();
-    if (!selectedId) return;
-
-    const c = contacts.find(x => x.id === selectedId);
-    if (c) openModal("edit", c);
-    return;
+  function closeMenu() {
+    const menu = document.getElementById("mobileActionsMenu");
+    if (menu) menu.classList.remove("is-open");
   }
 
-  if (e.target.closest("#contactsMoreDelete")) {
-    e.preventDefault();
-    closeMoreMenu();
-    if (!selectedId) return;
-
-    deleteContact(selectedId);
-    return;
+  function syncMenuDataId() {
+    const menu = document.getElementById("mobileActionsMenu");
+    if (!menu) return;
+    const id = window.selectedId || "";
+    menu.querySelectorAll(".contact-action").forEach((btn) => {
+      btn.dataset.id = id;
+    });
   }
 
-  if (menu && !menu.classList.contains("d-none") && !insideMenu) {
-    closeMoreMenu();
+  function showDetails() {
+    if (!isMobile()) return;
+    document.body.classList.add("show-contact-details");
+    syncMenuDataId();
+    closeMenu();
   }
-});
 
+  function showList() {
+    document.body.classList.remove("show-contact-details");
+    closeMenu();
+  }
 
-const _renderDetails = renderDetails;
-renderDetails = function () {
-  _renderDetails();
-  updateMoreBtnVisibility();
-};
+  window.isMobile = isMobile;
+  window.showMobileDetails = showDetails;
+  window.showMobileList = showList;
+
+  const originalRenderDetails = window.renderDetails;
+  if (typeof originalRenderDetails === "function") {
+    window.renderDetails = function () {
+      originalRenderDetails();
+      syncMenuDataId();
+      if (isMobile() && window.selectedId) showDetails();
+    };
+  }
+
+  document.addEventListener("click", (e) => {
+    const back = e.target.closest("#mobileBackBtn");
+    if (back) {
+      e.preventDefault();
+      showList();
+      return;
+    }
+
+    const menuBtn = e.target.closest("#mobileMenuBtn");
+    const menu = document.getElementById("mobileActionsMenu");
+
+    if (menuBtn) {
+      e.preventDefault();
+      if (!menu) return;
+      syncMenuDataId();
+      menu.classList.toggle("is-open");
+      return;
+    }
+
+    if (e.target.closest("#mobileActionsMenu")) {
+      return;
+    }
+
+    closeMenu();
+  });
+
+  window.addEventListener("resize", () => {
+    if (!isMobile()) {
+      showList();
+      return;
+    }
+    if (window.selectedId) showDetails();
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    if (isMobile()) {
+      if (window.selectedId) showDetails();
+      else showList();
+    }
+  });
+})();
