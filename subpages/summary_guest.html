@@ -18,9 +18,9 @@
 
       <nav class="menu">
         <ul>
-          <li><a href="./summary.html"><img src="../assets/icons/summary-gray.svg" alt="">Summary</a></li>
+          <li><a href="./summary_guest.html"><img src="../assets/icons/summary-gray.svg" alt="">Summary</a></li>
           <li><a href="./add_task.html"><img src="../assets/icons/addTask-gray.svg" alt="">Add Task</a></li>
-          <li><a href="./board.html"><img src="../assets/icons/board-gray.svg" alt="">Board</a></li>
+          <li><a href="./board.html"><img src="../assets/icons/board-gray.svg" alt="">Guest</a></li>
           <li><a href="./contact.html"><img src="../assets/icons/contacts-gray.svg" alt="">Contacts</a></li>
           
         </ul>
@@ -37,27 +37,30 @@
 
 
         <header class="header">
-          <div class="header-left">
-            <img src="../assets/icons/logo.svg" class="header-logo">
-            <span class="header-title">Kanban Project Management Tool</span>
-          </div>
-  
-          <div class="header-right">
-            <a class="header-help" href="./help.html">?</a>
-            <div class="header-user-area">
-              <button class="header-user" id="headerUserBtn" type="button" aria-expanded="false"
-                aria-controls="userMenu" aria-label="Open user menu">
-                G
-              </button>
-              <div class="user-menu" id="userMenu" role="menu" aria-hidden="true">
-                <a class="user-menu-item" href="./legal_notice.html" role="menuitem">Legal Notice</a>
-                <a class="user-menu-item" href="./privacy_policy.html" role="menuitem">Privacy Policy</a>
-                <a class="user-menu-item menu-item--mobile" href="./help.html" role="menuitem">Help</a>
-                <a class="user-menu-item" href="#" onclick="logout()" role="menuitem">Log out</a>
+          <div class="content-wrepper-header">
+            <div class="header-left">
+              <img src="../assets/icons/logo.svg" class="header-logo">
+              <span class="header-title">Kanban Project Management Tool</span>
+            </div>
+        
+            <div class="header-right">
+              <a class="header-help" href="./help.html">?</a>
+              <div class="header-user-area">
+                <button class="header-user" id="headerUserBtn" type="button" aria-expanded="false" aria-controls="userMenu"
+                  aria-label="Open user menu">
+                  G
+                </button>
+                <div class="user-menu" id="userMenu" role="menu" aria-hidden="true">
+                  <a class="user-menu-item" href="./legal_notice.html" role="menuitem">Legal Notice</a>
+                  <a class="user-menu-item" href="./privacy_policy.html" role="menuitem">Privacy Policy</a>
+                  <a class="user-menu-item menu-item--mobile" href="./help.html" role="menuitem">Help</a>
+                  <a class="user-menu-item" href="#" onclick="logout()" role="menuitem">Log out</a>
+                </div>
               </div>
             </div>
           </div>
         </header>
+
 
 
         <div class="summary-section">
@@ -138,11 +141,8 @@
       </div>
     </div>
   </div>
-
-  
   <script>try{ sessionStorage.setItem('guest','1'); }catch(e){}</script>
   <script src="../javascript/user-menu.js"></script>
   <script src="../javascript/summary.js"></script>
-
 </body>
 </html>
