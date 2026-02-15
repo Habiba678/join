@@ -314,7 +314,7 @@
 }
 
 .d-none {
-  display: none !important;
+  display: none;
 }
 
 .avatar-color-0 { background:#FF7A00; }
