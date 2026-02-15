@@ -1,6 +1,4 @@
 (function(){
-  // Simple IndexedDB wrapper for tasks and contacts with an in-memory cache.
-  // Exposes: window.idbStorage.ready (Promise), getTasksSync(), saveTasks(tasks), getContactsSync(), saveContacts(list)
   const DB_NAME = "join_db_v1";
   const DB_VERSION = 1;
   const TASK_STORE = "tasks";
@@ -61,21 +59,35 @@
 
   async function init(){
     try{
-      // Guest mode: seed demo data in-memory and skip IndexedDB
+      // Guest mode: prefer sessionStorage-backed guest data so changes persist during the session
       if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('guest') === '1') {
-        cache.tasks = [
-          { id: "g1", title: "Demo: Set up project", description: "Welcome task for guests", dueDate: "", category: "user", priority: "medium", status: "todo", subtasks: [], assigned: [] },
-          { id: "g2", title: "Demo: Work in progress", description: "Example in-progress task", dueDate: "", category: "tech", priority: "urgent", status: "progress", subtasks: [{ title: "step 1", done: false }], assigned: ["c1"] },
-          { id: "g3", title: "Demo: Waiting feedback", description: "", dueDate: "", category: "user", priority: "low", status: "feedback", subtasks: [], assigned: ["c2"] },
-          { id: "g4", title: "Demo: Done task", description: "", dueDate: "", category: "tech", priority: "medium", status: "done", subtasks: [], assigned: [] }
-        ];
-        cache.contacts = [
-          { id: "c1", name: "Anna Bauer", email: "anna@example.com" },
-          { id: "c2", name: "Max Mustermann", email: "max@example.com" },
-          { id: "c3", name: "Sophie Klein", email: "sophie@example.com" }
-        ];
-        return;
+        try {
+          const sTasks = sessionStorage.getItem('guest_tasks');
+          const sContacts = sessionStorage.getItem('guest_contacts');
+          if (sTasks) cache.tasks = JSON.parse(sTasks);
+          if (sContacts) cache.contacts = JSON.parse(sContacts);
+          // If sessionStorage has nothing, seed demo data and persist into sessionStorage
+          if ((!sTasks || !sContacts) && (!cache.tasks.length || !cache.contacts.length)) {
+            cache.tasks = [
+              { id: "g1", title: "Demo: Set up project", description: "Welcome task for guests", dueDate: "", category: "user", priority: "medium", status: "todo", subtasks: [], assigned: [] },
+              { id: "g2", title: "Demo: Work in progress", description: "Example in-progress task", dueDate: "", category: "tech", priority: "urgent", status: "progress", subtasks: [{ title: "step 1", done: false }], assigned: ["c1"] },
+              { id: "g3", title: "Demo: Waiting feedback", description: "", dueDate: "", category: "user", priority: "low", status: "feedback", subtasks: [], assigned: ["c2"] },
+              { id: "g4", title: "Demo: Done task", description: "", dueDate: "", category: "tech", priority: "medium", status: "done", subtasks: [], assigned: [] }
+            ];
+            cache.contacts = [
+              { id: "c1", name: "Anna Bauer", email: "anna@example.com" },
+              { id: "c2", name: "Max Mustermann", email: "max@example.com" },
+              { id: "c3", name: "Sophie Klein", email: "sophie@example.com" }
+            ];
+            try { sessionStorage.setItem('guest_tasks', JSON.stringify(cache.tasks)); } catch (e) {}
+            try { sessionStorage.setItem('guest_contacts', JSON.stringify(cache.contacts)); } catch (e) {}
+          }
+          return;
+        } catch (e) {
+          console.warn('idb-storage: failed to load guest data from sessionStorage', e);
+        }
       }
+
       await openDb();
       cache.tasks = await readAll(TASK_STORE);
       cache.contacts = await readAll(CONTACT_STORE);
@@ -85,16 +97,14 @@
     }
   }
 
-  // Start initializing immediately and expose a ready Promise
   const ready = init();
-
   function getTasksSync(){ return Array.isArray(cache.tasks) ? cache.tasks.slice() : []; }
   function getContactsSync(){ return Array.isArray(cache.contacts) ? cache.contacts.slice() : []; }
 
   async function saveTasks(tasks){
-    // In guest mode persist only in-memory (do not touch IndexedDB / remote)
     if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('guest') === '1') {
       cache.tasks = Array.isArray(tasks) ? tasks.slice() : [];
+      try { sessionStorage.setItem('guest_tasks', JSON.stringify(cache.tasks)); } catch (e) { console.warn('saveTasks (guest): failed to write sessionStorage', e); }
       return;
     }
     await ready;
@@ -108,6 +118,7 @@
   async function saveContacts(list){
     if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('guest') === '1') {
       cache.contacts = Array.isArray(list) ? list.slice() : [];
+      try { sessionStorage.setItem('guest_contacts', JSON.stringify(cache.contacts)); } catch (e) { console.warn('saveContacts (guest): failed to write sessionStorage', e); }
       return;
     }
     await ready;
@@ -124,7 +135,6 @@
     saveTasks: saveTasks,
     getContactsSync: getContactsSync,
     saveContacts: saveContacts,
-    // convenience async loaders
     loadTasks: async function(){ await ready; return getTasksSync(); },
     loadContacts: async function(){ await ready; return getContactsSync(); }
   };

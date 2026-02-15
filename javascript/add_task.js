@@ -260,6 +260,15 @@ async function createTask() {
 }
 
 async function loadContactsFromStorage() {
+  // Guest mode: prefer guest contacts from idbStorage/sessionStorage
+  if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('guest') === '1') {
+    if (window.idbStorage && typeof window.idbStorage.getContactsSync === 'function') {
+      const c = window.idbStorage.getContactsSync();
+      if (Array.isArray(c) && c.length) return c;
+    }
+    try { return JSON.parse(sessionStorage.getItem('guest_contacts') || '[]'); } catch (e) { return []; }
+  }
+
   const dbTask = "https://join-da53b-default-rtdb.firebaseio.com/";
   try {
     // Try direct node first
