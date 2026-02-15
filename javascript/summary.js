@@ -74,7 +74,6 @@ async function syncTasksFromDB() {
 }
 
 async function init() {
-  // Ensure IndexedDB cache is ready
   await (window.idbStorage && window.idbStorage.ready ? window.idbStorage.ready : Promise.resolve());
   try {
     await syncTasksFromDB();
@@ -87,6 +86,8 @@ async function init() {
   getTasksProgress();
   getAwaitFeedback();
   getUrgrentTodo();
+  getCokkieCheck();
+
 }
 
 function greetingText() {
