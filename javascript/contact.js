@@ -4,7 +4,6 @@ const dbTask = "https://join-da53b-default-rtdb.firebaseio.com/";
 let contacts = [];
 let selectedId = null;
 
-
 async function init() {
   removeModalNow();
   await loadContacts();
@@ -14,7 +13,9 @@ async function init() {
   renderContactsList();
   renderDetails();
 
-  if (isMobile()) showMobileList();
+  if (window.isMobile && window.isMobile()) {
+    window.showMobileList && window.showMobileList();
+  }
 
   document.addEventListener("click", handleClick);
   document.addEventListener("submit", handleSubmit);
@@ -26,7 +27,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     : Promise.resolve());
   await init();
 });
-
 
 function normalize(str) {
   return (str || "").trim().replace(/\s+/g, " ");
@@ -76,16 +76,12 @@ function groupKey(name) {
 }
 
 async function fetchDBNode(nodeName) {
-  // Try direct node first (e.g. /contacts.json)
   try {
     const resp = await fetch(dbTask + nodeName + ".json");
     const data = await resp.json();
     if (data != null) return data;
-  } catch (e) {
-    // ignore and try fallback
-  }
+  } catch (e) {}
 
-  // Fallback: fetch root and look for an entry with id === nodeName
   try {
     const r = await fetch(dbTask + ".json");
     const root = await r.json();
@@ -96,14 +92,11 @@ async function fetchDBNode(nodeName) {
       if (entry) {
         const clone = Object.assign({}, entry);
         delete clone.id;
-        // If clone contains a single property named nodeName, return it
         if (clone.hasOwnProperty(nodeName)) return clone[nodeName];
-        // Otherwise return remaining object (map of contacts)
         const keys = Object.keys(clone);
         if (keys.length) return clone;
       }
     } else if (typeof root === "object") {
-      // object map: values might contain entries with id property
       const vals = Object.values(root);
       for (let i = 0; i < vals.length; i++) {
         const e = vals[i];
@@ -115,12 +108,9 @@ async function fetchDBNode(nodeName) {
           if (keys.length) return clone;
         }
       }
-      // as a last resort, check root[nodeName]
       if (root[nodeName] !== undefined) return root[nodeName];
     }
-  } catch (e) {
-    // ignore
-  }
+  } catch (e) {}
 
   return null;
 }
@@ -138,7 +128,6 @@ async function loadContacts() {
   } else if (Array.isArray(data)) {
     contacts = data.filter(Boolean);
   } else if (typeof data === "object") {
-    // If object is a map of id -> contact, convert to array
     if (Object.keys(data).length && Object.keys(data).every((k) => data[k] && data[k].id)) {
       contacts = Object.values(data);
     } else {
@@ -148,7 +137,6 @@ async function loadContacts() {
     contacts = [];
   }
 
-  // Persist into local IndexedDB cache so other pages can access contacts via idbStorage
   if (window.idbStorage && typeof window.idbStorage.saveContacts === "function") {
     try {
       await window.idbStorage.saveContacts(contacts);
@@ -179,11 +167,10 @@ async function loadContacts() {
   }
 
   if (changed) await saveContacts();
-} 
+}
 
 async function saveContacts() {
   try {
-    // Build map of contacts keyed by id and persist to Firebase
     const map = {};
     for (const c of contacts) {
       if (!c.id) c.id = generateId();
@@ -197,7 +184,6 @@ async function saveContacts() {
     });
     await response.json();
 
-    // Also update local IDB cache if available
     if (window.idbStorage && typeof window.idbStorage.saveContacts === "function") {
       try {
         await window.idbStorage.saveContacts(contacts);
@@ -218,37 +204,6 @@ async function saveContacts() {
 
 function getEl(id) {
   return document.getElementById(id);
-}
-
-function isMobile() {
-  return window.matchMedia && window.matchMedia("(max-width: 320px)").matches;
-}
-
-function showMobileDetails() {
-  let l = getEl("contactsList");
-  let d = getEl("contactDetails");
-  if (l) l.classList.add("d-none");
-  if (d) d.classList.remove("d-none");
-}
-
-function showMobileList() {
-  let l = getEl("contactsList");
-  let d = getEl("contactDetails");
-  if (d) d.classList.add("d-none");
-  if (l) l.classList.remove("d-none");
-  let menu = getEl("mobileActionsMenu");
-  if (menu) menu.classList.remove("is-open");
-}
-
-function toggleMobileMenu() {
-  let menu = getEl("mobileActionsMenu");
-  if (!menu) return;
-  menu.classList.toggle("is-open");
-}
-
-function closeMobileMenu() {
-  let menu = getEl("mobileActionsMenu");
-  if (menu) menu.classList.remove("is-open");
 }
 
 function removeModalNow() {
@@ -290,7 +245,7 @@ function applyModalAvatar(data) {
     });
     avatar = candidates[0] || null;
   }
-  
+
   Array.from(avatar.classList).forEach(function (cls) {
     if (cls.indexOf("avatar-color-") === 0) avatar.classList.remove(cls);
   });
@@ -316,7 +271,7 @@ function openModal(mode, contact) {
   if (!m) return;
 
   m.setAttribute("data-mode", String(mode || "").trim().toLowerCase());
-  
+
   applyModalAvatar(data);
 
   m.classList.remove("d-none");
@@ -373,7 +328,7 @@ function renderContactsList() {
         name: c.name,
         email: c.email,
         initials: getInitials(c.name),
-        colorClass: c.colorClass || colorClassFor(c.id || (c.email || c.name || ""))
+        colorClass: c.colorClass || colorClassFor(c.id || (c.email || c.name || "")),
       },
       c.id === selectedId
     );
@@ -401,11 +356,11 @@ function renderDetails() {
     email: c.email,
     phone: c.phone || "-",
     initials: getInitials(c.name),
-    colorClass: c.colorClass || colorClassFor(c.id || (c.email || c.name || ""))
+    colorClass: c.colorClass || colorClassFor(c.id || (c.email || c.name || "")),
   });
 
-  closeMobileMenu();
-  if (isMobile()) showMobileDetails();
+  window.closeMobileMenu && window.closeMobileMenu();
+  if (window.isMobile && window.isMobile()) window.showMobileDetails && window.showMobileDetails();
 }
 
 function createFromForm() {
@@ -427,7 +382,7 @@ function createFromForm() {
     name: name,
     email: email,
     phone: phone,
-    colorClass: pickUniqueColorClass(id, used)
+    colorClass: pickUniqueColorClass(id, used),
   };
 
   contacts.push(nc);
@@ -472,7 +427,8 @@ function deleteContact(id) {
   saveContacts();
   renderContactsList();
   renderDetails();
-  if (isMobile()) showMobileList();
+
+  if (window.isMobile && window.isMobile()) window.showMobileList && window.showMobileList();
 }
 
 function handleSecondary(btn) {
@@ -490,23 +446,16 @@ function handleClick(e) {
   if (e.target.closest("#openAddContact")) return openModal("create", null);
 
   if (e.target.closest("#mobileBackBtn")) {
-    if (isMobile()) showMobileList();
+    if (window.isMobile && window.isMobile()) window.showMobileList && window.showMobileList();
     return;
   }
 
   if (e.target.closest("#mobileMenuBtn")) {
-    if (isMobile()) toggleMobileMenu();
+    if (window.isMobile && window.isMobile()) window.toggleMobileMenu && window.toggleMobileMenu();
     return;
   }
 
-  if (isMobile()) {
-    let menu = getEl("mobileActionsMenu");
-    if (menu && menu.classList.contains("is-open")) {
-      let insideMenu = e.target.closest("#mobileActionsMenu");
-      let onMenuBtn = e.target.closest("#mobileMenuBtn");
-      if (!insideMenu && !onMenuBtn) closeMobileMenu();
-    }
-  }
+  window.handleOutsideMobileMenuClick && window.handleOutsideMobileMenuClick(e);
 
   let item = e.target.closest(".contact-item");
   if (item && item.dataset.id) {
@@ -516,7 +465,7 @@ function handleClick(e) {
     return;
   }
 
-  function closeModal(){
+  function closeModal() {
     let m = getEl("addContactModal");
     if (!m) return;
 
@@ -526,10 +475,10 @@ function handleClick(e) {
     let box = m.querySelector(".modal");
     if (!box) return removeModalNow();
 
-    box.addEventListener("transitionend", function(ev){
+    box.addEventListener("transitionend", function (ev) {
       if (ev.propertyName !== "transform") return;
       removeModalNow();
-    }, { once:true });
+    }, { once: true });
   }
 
   let act = e.target.closest(".contact-action");
@@ -538,11 +487,11 @@ function handleClick(e) {
     let a = act.dataset.action;
 
     if (a === "delete") {
-      closeMobileMenu();
+      window.closeMobileMenu && window.closeMobileMenu();
       return deleteContact(id);
     }
     if (a === "edit") {
-      closeMobileMenu();
+      window.closeMobileMenu && window.closeMobileMenu();
       let c = contacts.find(function (x) {
         return x.id === id;
       });

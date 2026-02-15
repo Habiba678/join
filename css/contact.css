@@ -329,14 +329,14 @@
 .avatar-color-9 { background:#0038FF; }
 .avatar-color-10 { background:#C3FF2B; }
 .avatar-color-11 { background:#FFE62B; }
-
 #addContactModal {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  display: none;
+  display: flex;
   justify-content: center;
   align-items: center;
+  pointer-events: none;
 }
 
 #addContactModal::before {
@@ -349,7 +349,6 @@
 }
 
 #addContactModal.is-open {
-  display: flex;
   pointer-events: auto;
 }
 
@@ -366,12 +365,13 @@
 }
 
 .modal {
-  width: min(940px, 92vw);
+  width: 940px;
   height: 440px;
   display: flex;
   margin-top: 130px;
   background: transparent;
   position: relative;
+  right: 8px;
   z-index: 1;
   transform: translate3d(200%, 18px, 0) scale(0.97);
   will-change: transform;
@@ -471,6 +471,13 @@
   opacity: 0.6;
 }
 
+#addContactModal[data-mode="edit"] .modal-subtitle,
+#addContactModal[date-mode="edit"] .modal-line
+{
+  display: none !important;
+}
+
+
 .modal-initials {
   font-size: 47px;
   font-weight: 700;
@@ -519,7 +526,6 @@ input::placeholder {
   display: flex;
   gap: 12px;
   margin-top: 16px;
-  flex-wrap: wrap;
 }
 
 .btn-cancel,
@@ -633,4 +639,3 @@ input::placeholder {
 .contacts-more-item {
   display: none;
 }
-
