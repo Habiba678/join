@@ -131,7 +131,7 @@ function openTaskOverlay(id) {
   setOverlayPriority(task);
   renderOverlayAssigned(task);
   renderOverlaySubtasks(task);
-  showOverlay();
+  showOverlay(task);
 }
 
 function findTaskById(id) {

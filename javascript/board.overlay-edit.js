@@ -114,17 +114,34 @@ function fillOverlayEditForm(task) {
   setOverlaySubtasksFromTask(task);
 }
 
-function saveOverlayEdits(id, els) {
+async function saveOverlayEdits(id, els) {
   const tasks = getTasks();
   const idx = findTaskIndexById(id, tasks);
   if (idx === -1) return;
   const values = readOverlayEditForm();
   if (!values) return;
   tasks[idx] = buildEditedTaskFromForm(tasks[idx], values);
-  saveTasks(tasks);
-  renderBoardFromStorage();
-  exitOverlayEditMode(els);
-  openTaskOverlay(id);
+
+  // Persist and ensure storage is updated before reading it again
+  await saveTasks(tasks);
+
+  // Exit edit mode and refresh the overlay view from the saved task
+  try {
+    exitOverlayEditMode(els);
+  } catch (e) {
+    /* ignore if els not provided */
+  }
+
+  const task = tasks[idx];
+  // Update view parts directly so overlay shows current data immediately
+  if (typeof setOverlayCategory === "function") setOverlayCategory(task);
+  if (typeof setOverlayTexts === "function") setOverlayTexts(task);
+  if (typeof setOverlayPriority === "function") setOverlayPriority(task);
+  if (typeof renderOverlayAssigned === "function") renderOverlayAssigned(task);
+  if (typeof renderOverlaySubtasks === "function") renderOverlaySubtasks(task);
+
+  // Refresh board cards
+  if (typeof renderBoardFromStorage === "function") renderBoardFromStorage();
 }
 
 function readOverlayEditForm() {
