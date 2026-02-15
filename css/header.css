@@ -1,4 +1,3 @@
-
 *, *::before, *::after { box-sizing: border-box; }
 
 html, body {
@@ -103,7 +102,7 @@ html, body {
 }
 
 .menu a:hover {
-  background-color: #091931;
+  background-color: #384b6692;
   color: #fff;
 }
 
@@ -111,7 +110,15 @@ html, body {
   filter: brightness(0) invert(1);
 }
 
-.menu a:hover::before,
+.menu a.active {
+  background-color: #091931;
+  color: #fff;
+}
+
+.menu a.active img {
+  filter: brightness(0) invert(1);
+}
+
 .menu a.active::before {
   content: "";
   position: absolute;
@@ -119,12 +126,7 @@ html, body {
   bottom: 0;
   left: 0;
   width: 4px;
-  background-color: #29ABE2;
-}
-
-.menu a.active {
   background-color: #091931;
-  color: #fff;
 }
 
 .sidebar-footer {
@@ -313,7 +315,7 @@ html, body {
 
   .sidebar-footer,
   .sidebar .logo {
-    display: none !important;
+    display: none;
   }
 
   .menu {
@@ -364,4 +366,3 @@ html, body {
   .menu a { padding: 8px 6px; gap: 4px; }
   .menu img { width: 20px; height: 20px; }
 }
-

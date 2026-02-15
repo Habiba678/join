@@ -142,3 +142,20 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("resize", closeMenu);
 });
 
+
+document.addEventListener("DOMContentLoaded", () => {
+  const links = document.querySelectorAll(".menu a[href]");
+  const current = location.pathname.split("/").pop();
+
+  links.forEach((a) => {
+    const target = new URL(a.getAttribute("href"), location.href).pathname.split("/").pop();
+    a.classList.toggle("active", target === current);
+  });
+
+  links.forEach((a) => {
+    a.addEventListener("click", () => {
+      links.forEach((x) => x.classList.remove("active"));
+      a.classList.add("active");
+    });
+  });
+});
