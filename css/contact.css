@@ -25,7 +25,6 @@
   gap: clamp(12px, 2vw, 24px);
 }
 
-
 .contacts-sidebar {
   flex: 0 1 clamp(300px, 34vw, 456px);
   width: auto;
@@ -118,9 +117,19 @@
   font-weight: 400;
   line-height: 1.2;
   color: #000000;
-  border-bottom: 1px solid #d1d1d1;
   position: relative;
-  left: 5px;
+  right: 5px;
+  border-bottom: 0;
+}
+
+.letter-group::after {
+  content: "";
+  position: absolute;
+  left: -5px;
+  right: 20px;
+  bottom: 0;
+  height: 1px;
+  background: #d1d1d1;
 }
 
 .contact-item {
@@ -134,7 +143,6 @@
   transition: background 120ms ease;
   min-width: 0;
   border-radius: 6px;
-  
 }
 
 .contact-item:hover {
@@ -153,7 +161,7 @@
   color: #ffffff;
   flex: 0 0 auto;
   position: relative;
-  right: 5px;
+  right: 10px;
 }
 
 .contact-text {
@@ -174,8 +182,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   position: relative;
-  left: 20px;
-  
+  left: 10px;
 }
 
 .contact-mail {
@@ -188,9 +195,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   position: relative;
-  left: 20px;
+  left: 10px;
 }
-
 
 .contacts-main {
   flex: 1 1 auto;
@@ -323,7 +329,6 @@
   display: none;
 }
 
-
 .avatar-color-0 { background:#FF7A00; }
 .avatar-color-1 { background:#FF5EB3; }
 .avatar-color-2 { background:#6E52FF; }
@@ -336,7 +341,6 @@
 .avatar-color-9 { background:#0038FF; }
 .avatar-color-10 { background:#C3FF2B; }
 .avatar-color-11 { background:#FFE62B; }
-
 
 #addContactModal {
   position: fixed;
@@ -647,6 +651,7 @@ input::placeholder {
   display: none;
 }
 
+/*später oben bringen */
 
 .contacts-scroll-wrap {
   flex: 1 1 auto;
@@ -697,5 +702,4 @@ input::placeholder {
   border-radius: 6px;
   position: relative;
   top: 5px;
-  
 }

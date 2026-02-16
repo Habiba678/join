@@ -101,10 +101,20 @@
     padding: 10px 12px 8px;
     font-size: 16px;
     color: #2a3647;
-    border-bottom: 1px solid #d1d1d1;
     background: transparent;
     position: relative;
-    left: 5px;
+    left: 10px;
+    border-bottom: 0;
+  }
+
+  .letter-group::after {
+    content: "";
+    position: absolute;
+    left: -15px;
+    right: 50px;
+    bottom: 0;
+    height: 1px;
+    background: #d1d1d1;
   }
 
   .contact-item {
@@ -125,7 +135,7 @@
     height: 42px;
     font-size: 16px;
     position: relative;
-    right: 10px;
+    right: 5px;
   }
 
   .contact-name,
@@ -134,10 +144,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
     min-width: 0;
-  }
-
-  .contact-mail {
-    font-size: 14px;
+    font-size: 16px;
+    position: relative;
+    left: 20px;
   }
 
   .contacts-main {
@@ -454,7 +463,6 @@
     color: #ffffff;
   }
 
-
   .modal-line {
     width: 90px;
     height: 3px;
@@ -492,106 +500,71 @@
   }
 
   #mobileMenuBtn,
-    .contact-more-btn,
-    .contacts-more-btn,
-    #contactsMoreBtn {
-      position: fixed;
-      right: 20px;
-      bottom: 120px;
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      z-index: 999999;
-      pointer-events: auto;
-    }
-  
-    #mobileActionsMenu,
-    #contactsMoreMenu {
-      position: fixed;
-      right: 18px;
-      bottom: 155px;
-      z-index: 1000000;
-      pointer-events: auto;
-    }
-  
-    .contacts-main,
-    .contacts-page,
-    .contacts-sidebar,
-    .contacts-scroll,
-    .contacts-scroll-wrap,
-    .contact-details {
-      pointer-events: auto;
-    }
-  
-      #addContactModal[data-mode="edit"] button[data-action="delete"] {
-        display: inline-flex;
-    }
-    
-
-      #addContactForm {
-        max-width: 100%;
-        margin: 50px 0 0;
-        gap: 12px;
-    }
-
-     .input-wrapper input {
-        height: 44px;
-        border-radius: 10px;
-        padding: 0 40px 0 14px;
-        font-size: 16px;
-    }
-
-    .input-icon {
-       right: 14px;
-       width: 18px;
-    }
-
-    .modal-actions {
-       margin-top: 30px;
-       display: flex;
-       justify-content: center;
-      gap: 12px;
-    }
-
-    .btn-cancel {
-      display: none;
-    }
-
-    .btn-create {
-      width: auto;
-      max-width: none;
-      height: 40px;
-      padding: 0 16px;
-      border-radius: 10px;
-      justify-content: center;
-  }
-}
-
-@media (max-width: 460px) {
-  .contacts-header h1 {
-    font-size: 32px;
+  .contact-more-btn,
+  .contacts-more-btn,
+  #contactsMoreBtn {
+    position: fixed;
+    right: 20px;
+    bottom: 120px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    z-index: 999999;
+    pointer-events: auto;
   }
 
-  .contact-action {
-    font-size: 13px;
+  #mobileActionsMenu,
+  #contactsMoreMenu {
+    position: fixed;
+    right: 18px;
+    bottom: 155px;
+    z-index: 1000000;
+    pointer-events: auto;
   }
 
-  .contacts-scroll {
-    max-height: calc(100vh - 210px);
-  }
-}
-
-@media (max-width: 320px) {
-  .contacts-header h1 {
-    font-size: 28px;
+  #addContactModal[data-mode="edit"] button[data-action="delete"] {
+    display: inline-flex;
   }
 
-  .contacts-scroll {
-    max-height: calc(100vh - 200px);
+  #addContactForm {
+    max-width: 100%;
+    margin: 50px 0 0;
+    gap: 12px;
   }
-}
 
-@media (max-width: 680px) {
+  .input-wrapper input {
+    height: 44px;
+    border-radius: 10px;
+    padding: 0 40px 0 14px;
+    font-size: 16px;
+  }
+
+  .input-icon {
+    right: 14px;
+    width: 18px;
+  }
+
+  .modal-actions {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .btn-cancel {
+    display: none;
+  }
+
+  .btn-create {
+    width: auto;
+    max-width: none;
+    height: 40px;
+    padding: 0 16px;
+    border-radius: 10px;
+    justify-content: center;
+  }
+
+
   #mobileMenuBtn,
   .contact-more-btn,
   .contacts-more-btn,
@@ -627,5 +600,29 @@
   .d-none {
     display: none;
     pointer-events: none;
+  }
+}
+
+@media (max-width: 460px) {
+  .contacts-header h1 {
+    font-size: 32px;
+  }
+
+  .contact-action {
+    font-size: 13px;
+  }
+
+  .contacts-scroll {
+    max-height: calc(100vh - 210px);
+  }
+}
+
+@media (max-width: 320px) {
+  .contacts-header h1 {
+    font-size: 28px;
+  }
+
+  .contacts-scroll {
+    max-height: calc(100vh - 200px);
   }
 }
