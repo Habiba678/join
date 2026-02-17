@@ -74,8 +74,13 @@ body {
 }
 
 .menu a:hover {
+  background-color: #384b6692;
+  color: #ffffff;
+}
+
+.menu a.active {
   background-color: #091931;
-  color: white;
+  color: #ffffff;
 }
 
 .menu img {
@@ -88,6 +93,20 @@ body {
 
 .menu a:hover img {
   filter: brightness(0) invert(1);
+}
+
+.menu a.active img {
+  filter: brightness(0) invert(1);
+}
+
+.menu a.active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  background-color: #091931;
 }
 
 .sidebar-footer {

@@ -37,6 +37,8 @@
                   <a href="../index.html"><img src="../assets/icons/pfeil-links-blue.png"></a>  
                     <h1>Sing up</h1>
                 </section>
+                <!-- Registrierungs-Meldung -->
+                <p id="reg-notice" class="reg-notice" style="display:none; margin:12px 0; font-weight:600"></p>
                     <input onchange="validateFullname()" id="name" type="text" name="namen" placeholder="Name">
                     <input onchange="validateEmail()" class="" id="mail" type="mail" name="mail" placeholder="Email">
                     <input onchange="validatePassword()" class="" id="password" type="password" name="singup-password" id="singup-password" placeholder="Password" autocomplete="off">
@@ -49,13 +51,13 @@
                         <a class="" href="./privacy_policy.html"><span>I acceept the</span> Privacy Politcy</a>
                         <span class="accept-police" id="accept-police">I acceept the Privacy Politcy</span>
                     </div>
-                    <button class="disebles-singup-button" id="singup-button" onclick="regData()">Sing up</button>
+                    <button type="button" class="disebles-singup-button" id="singup-button" onclick="regData()">Sing up</button>
                 </section>
             </form>
         </main>
         <footer>
             <section class="footer-content">
-                <a class="links" href="./privacy_policy.html">Privacy Politcy</a><a class="links" href="./legal_notice.html">Legal notice</a>
+                <a class="links" href="./privacy_policy.html">Privacy Policy</a><a class="links" href="./legal_notice.html">Legal notice</a>
             </section>
         </footer>
         </div>

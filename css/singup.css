@@ -1,9 +1,8 @@
 /* styling logo sing up pages */
 .logo {
-    margin: 0;
+    margin: 0 0  0 24px;
     position: relative;
     top: 20px;
-    left: 24px;
     transform: translate(0, 0);
 }
 

@@ -250,3 +250,20 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+@media (max-width: 320px) {
+  .search-bar {
+      display: flex;
+      align-items: center;
+      position: relative;
+      width: 217px;
+      max-width: 220px;
+    }
+
+  .search-input {
+    width: 217px;
+    max-width: 220px;
+  }
+
+}

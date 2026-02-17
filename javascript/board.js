@@ -153,9 +153,9 @@ function closeAddTaskOverlay() {
 // ---------------- Storage ----------------
 function getTasks() {
   try {
-    return (window.idbStorage && typeof window.idbStorage.getTasksSync === "function")
-      ? window.idbStorage.getTasksSync()
-      : [];
+    
+    return (window.idbStorage && typeof window.idbStorage.getTasksSync === "function") ? window.idbStorage.getTasksSync() : [];
+    
   } catch (e) {
     console.error("Storage access error:", e);
     return [];
@@ -173,12 +173,10 @@ async function saveTasks(tasks) {
     console.warn("idbStorage not available - tasks not persisted");
   }
 
-  // Best-effort: sync canonical tasks to remote DB so other clients and fresh page loads see updates
   if (!(typeof sessionStorage !== 'undefined' && sessionStorage.getItem('guest') === '1')) {
     (async function () {
       try {
         const url = (window.DB_TASK_URL || "https://join-da53b-default-rtdb.firebaseio.com/") + "tasks.json";
-        // Convert tasks array into a map keyed by id to avoid array vs object inconsistencies
         const map = {};
         for (const t of (tasks || [])) {
           const id = (t && t.id) ? String(t.id) : ("tmp_" + Date.now() + "_" + Math.random().toString(16).slice(2));
@@ -189,6 +187,7 @@ async function saveTasks(tasks) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(map),
         });
+        renderBoardFromStorage();
       } catch (err) {
         console.warn("Failed to sync tasks to remote DB:", err);
       }
@@ -238,6 +237,7 @@ async function fetchDBNode(nodeName) {
   return null;
 }
 
+
 async function syncTasksFromDB() {
   try {
     const data = await fetchDBNode("tasks");
@@ -245,8 +245,6 @@ async function syncTasksFromDB() {
     if (!data) tasks = [];
     else if (Array.isArray(data)) tasks = data.filter(Boolean);
     else tasks = Object.entries(data).map(([k, v]) => ({ ...(v || {}), id: v && v.id ? v.id : k }));
-    console.log("Synced tasks from DB:", tasks.length);
-    // Persist canonical tasks to IndexedDB (cache updated by wrapper)
     await saveTasks(tasks);
     return tasks;
   } catch (e) {
@@ -254,7 +252,8 @@ async function syncTasksFromDB() {
     throw e;
   }
 }
-// Sync contacts from Firebase RTDB into local IndexedDB cache
+
+
 async function syncContactsFromDB() {
   try {
     const data = await fetchDBNode("contacts");
@@ -264,16 +263,12 @@ async function syncContactsFromDB() {
     else if (Array.isArray(data)) contacts = data.filter(Boolean);
     else contacts = Object.entries(data).map(([k, v]) => ({ ...(v || {}), id: v && v.id ? v.id : k }));
 
-    console.log("Synced contacts from DB:", contacts.length);
-
-    // Persist to IDB so other modules (board, overlays) can access them via idbStorage
     if (window.idbStorage && typeof window.idbStorage.saveContacts === "function") {
       try {
         await window.idbStorage.saveContacts(contacts);
-        // Verify saved content
         try {
           const local = window.idbStorage.getContactsSync ? window.idbStorage.getContactsSync() : null;
-          console.info("syncContactsFromDB: saved to IDB. Remote count:", contacts.length, "Local IDB count:", local ? local.length : "n/a");
+          return local || contacts;
         } catch (readErr) {
           console.warn("syncContactsFromDB: saved to IDB but failed to read back:", readErr);
         }

@@ -63,28 +63,46 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const btn = document.getElementById("headerUserBtn");
   const menu = document.getElementById("userMenu");
-  if (!btn || !menu) return;
 
-  function setOpen(open) {
-    menu.classList.toggle("is-open", open);
-    btn.setAttribute("aria-expanded", open ? "true" : "false");
-    menu.setAttribute("aria-hidden", open ? "false" : "true");
+  if (btn && menu) {
+    function setOpen(open) {
+      menu.classList.toggle("is-open", open);
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      menu.setAttribute("aria-hidden", open ? "false" : "true");
+    }
+
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      setOpen(!menu.classList.contains("is-open"));
+    });
+
+    menu.addEventListener("click", function (e) {
+      e.stopPropagation();
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!e.target.closest(".header-user-area")) setOpen(false);
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") setOpen(false);
+    });
   }
 
-  btn.addEventListener("click", function (e) {
-    e.stopPropagation();
-    setOpen(!menu.classList.contains("is-open"));
+  const links = document.querySelectorAll(".menu a[href]");
+  if (!links.length) return;
+
+  const current = location.pathname.split("/").pop() || "index.html";
+
+  links.forEach((a) => {
+    const target = new URL(a.getAttribute("href"), location.href).pathname.split("/").pop();
+    a.classList.toggle("active", target === current);
   });
 
-  menu.addEventListener("click", function (e) {
-    e.stopPropagation();
-  });
-
-  document.addEventListener("click", function (e) {
-    if (!e.target.closest(".header-user-area")) setOpen(false);
-  });
-
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape") setOpen(false);
+  links.forEach((a) => {
+    a.addEventListener("click", () => {
+      links.forEach((x) => x.classList.remove("active"));
+      a.classList.add("active");
+    });
   });
 });

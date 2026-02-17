@@ -22,7 +22,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // ------------------ PRIORITY ------------------
 function initPriorityButtons() {
-  const buttons = getAddTaskRoot().querySelectorAll(".priority-section .priority-btn");
+  const buttons = getAddTaskRoot().querySelectorAll(
+    ".priority-section .priority-btn",
+  );
 
   buttons.forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -88,7 +90,7 @@ function addSubtasksFromInput() {
   renderSubtasks();
 }
 
- function renderSubtasks() {
+function renderSubtasks() {
   const list = document.getElementById("subtasksList");
   if (!list) return;
 
@@ -109,8 +111,9 @@ async function populateAssignedContacts() {
 
   dropdown.innerHTML = "";
   const contactsData = await loadContactsFromStorage();
-  const list = Array.isArray(contactsData) ? contactsData : Object.values(contactsData || {});
-console.log(list);
+  const list = Array.isArray(contactsData)
+    ? contactsData
+    : Object.values(contactsData || {});
 
   list.forEach((c) => {
     if (!c?.id || !c?.name) return;
@@ -129,11 +132,15 @@ console.log(list);
 }
 
 function toggleContact(id) {
-  selectedContacts.has(id) ? selectedContacts.delete(id) : selectedContacts.add(id);
+  selectedContacts.has(id)
+    ? selectedContacts.delete(id)
+    : selectedContacts.add(id);
 
   populateAssignedContacts();
-   renderSelectedContacts();
+  renderSelectedContacts();
 }
+
+
 async function renderSelectedContacts() {
   const text = document.getElementById("assignedText");
   if (!text) return;
@@ -144,7 +151,9 @@ async function renderSelectedContacts() {
   }
 
   const contactsData = await loadContactsFromStorage();
-  const list = Array.isArray(contactsData) ? contactsData : Object.values(contactsData || {});
+  const list = Array.isArray(contactsData)
+    ? contactsData
+    : Object.values(contactsData || {});
 
   text.innerHTML = [...selectedContacts]
     .map((id) => {
@@ -175,46 +184,22 @@ function initAssignedDropdown() {
 
 // ------------------ TASK CREATE ------------------
 async function createTask() {
-  const titleEl = document.getElementById("titel");
-  const descriptionEl = document.getElementById("description");
-  const dueDateEl = document.getElementById("date");
-  const categoryEl = document.getElementById("category");
-  const title = titleEl?.value.trim() || "";
-  const description = descriptionEl?.value.trim() || "";
-  const dueDate = dueDateEl?.value || "";
-  const category = categoryEl?.value || "";
-  const dbTask = "https://join-da53b-default-rtdb.firebaseio.com/";
-  let id = Date.now().toString();
+ const titleEl = document.getElementById("titel");
+ const descriptionEl = document.getElementById("description");
+ const dueDateEl = document.getElementById("date");
+ const categoryEl = document.getElementById("category");
+ const title = titleEl?.value.trim() || "";
+ const description = descriptionEl?.value.trim() || "";
+ const dueDate = dueDateEl?.value || "";
+ const category = categoryEl?.value || "";
+ const dbTask = "https://join-da53b-default-rtdb.firebaseio.com/";
+ let id = Date.now().toString();
 
-  if (!title || !dueDate || !category) {
-    openValidationModal();
-    return;
-  }
+  if (!title || !dueDate || !category) { openValidationModal(); return;}
 
   const task = {
-    id,
-    title,
-    description,
-    dueDate,
-    category,
-    priority: selectedPriority,
-    status: getAddTaskStatus(),
-    subtasks: [...pendingSubtasks],
-    assigned: [...selectedContacts],
+    id, title, description, dueDate, category, priority: selectedPriority, status: getAddTaskStatus(),subtasks: [...pendingSubtasks], assigned: [...selectedContacts],
   };
-
-  // Guest mode: store locally only and avoid any remote network calls
-  if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('guest') === '1') {
-    const existing = (window.idbStorage && typeof window.idbStorage.getTasksSync === 'function') ? window.idbStorage.getTasksSync() : [];
-    existing.push(task);
-    if (window.idbStorage && typeof window.idbStorage.saveTasks === 'function') await window.idbStorage.saveTasks(existing);
-    else if (typeof saveTasks === 'function') await saveTasks(existing);
-    if (typeof renderBoardFromStorage === 'function') renderBoardFromStorage();
-    if (typeof updateEmptyStates === 'function') updateEmptyStates();
-    const overlay = document.getElementById("addTaskOverlayBackdrop");
-    if (overlay) { if (typeof closeAddTaskOverlay === "function") closeAddTaskOverlay(); return; }
-    location.href = "./board.html";
-  }
 
   try {
     const response = await fetch(dbTask + `tasks/${id}.json`, {
@@ -223,19 +208,30 @@ async function createTask() {
       body: JSON.stringify(task),
     });
     await response.json();
-  } catch (e) {
-    console.error("Failed to save task remotely", e);
+  } catch (e) {console.error("Failed to save task remotely", e);}
+  // Guest mode: store locally only and avoid any remote network calls
+  if (
+    typeof sessionStorage !== "undefined" &&
+    sessionStorage.getItem("guest") === "1"
+  ) {
+    const existing =
+      window.idbStorage && typeof window.idbStorage.getTasksSync === "function"? window.idbStorage.getTasksSync(): [];
+    existing.push(task);
+    if (window.idbStorage && typeof window.idbStorage.saveTasks === "function")
+      await window.idbStorage.saveTasks(existing);
+    else if (typeof saveTasks === "function") await saveTasks(existing);
+    if (typeof renderBoardFromStorage === "function") renderBoardFromStorage();
+    if (typeof updateEmptyStates === "function") updateEmptyStates();
+    const overlay = document.getElementById("addTaskOverlayBackdrop");
+    if (overlay) { if (typeof closeAddTaskOverlay === "function") closeAddTaskOverlay(); return;}
+    location.href = "./board.html";
   }
+
   try {
     const resp = await fetch(dbTask + "tasks.json");
     const data = await resp.json();
     let tasks = [];
-    if (!data) {
-      tasks = [];
-    } else if (Array.isArray(data)) {
-      tasks = data.filter(Boolean);
-    } else {
-      tasks = Object.entries(data).map(([key, val]) => ({ ...(val || {}), id: val && val.id ? val.id : key }));
+    if (!data) { tasks = []; } else if (Array.isArray(data)) { tasks = data.filter(Boolean);} else { tasks = Object.entries(data).map(([key, val]) => ({...(val || {}), id: val && val.id ? val.id : key,}));
     }
     console.log("Loaded tasks from DB:", tasks.length, tasks.slice(0, 3));
     await saveTasks(tasks);
@@ -245,19 +241,16 @@ async function createTask() {
     const overlay = document.getElementById("addTaskOverlayBackdrop");
     if (overlay) {
       if (typeof closeAddTaskOverlay === "function") closeAddTaskOverlay();
-      return;
-    }
-    location.href = "./board.html";
+      return; }  location.href = "./board.html";
   } catch (e) {
-    console.error("Failed to load tasks from remote DB; keeping overlay open for retry", e);
+    console.error( "Failed to load tasks from remote DB; keeping overlay open for retry",e,);
     const overlay = document.getElementById("addTaskOverlayBackdrop");
-    if (!overlay) {
-      location.href = "./board.html";
-    }
+    if (!overlay) {location.href = "./board.html";}
     return;
   }
   location.href = "./board.html";
 }
+
 
 async function loadContactsFromStorage() {
   const dbTask = "https://join-da53b-default-rtdb.firebaseio.com/";
@@ -267,12 +260,14 @@ async function loadContactsFromStorage() {
       const response = await fetch(dbTask + "contacts.json");
       const data = await response.json();
       if (data != null) {
-        console.info("loadContactsFromStorage: loaded from /contacts.json");
         if (Array.isArray(data)) return data.filter(Boolean);
         return Object.values(data);
       }
     } catch (e) {
-      // continue to root fallback
+      console.error(
+        "Failed to load contacts from direct node, trying root inspection",
+        e,
+      );
     }
 
     try {
@@ -294,12 +289,15 @@ async function loadContactsFromStorage() {
           delete clone.id;
           if (clone.contacts !== undefined) {
             const data = clone.contacts;
-            console.info("loadContactsFromStorage: loaded from root entry.contacts");
+            console.info(
+              "loadContactsFromStorage: loaded from root entry.contacts",
+            );
             if (Array.isArray(data)) return data.filter(Boolean);
             return Object.values(data);
           }
-    
-          console.info("loadContactsFromStorage: loaded from root entry (as map)");
+          console.info(
+            "loadContactsFromStorage: loaded from root entry (as map)",
+          );
           if (Array.isArray(clone)) return clone.filter(Boolean);
           return Object.values(clone);
         }
@@ -314,17 +312,20 @@ async function loadContactsFromStorage() {
             delete clone.id;
             if (clone.contacts !== undefined) {
               const data = clone.contacts;
-              console.info("loadContactsFromStorage: loaded from object value.contacts");
+              console.info(
+                "loadContactsFromStorage: loaded from object value.contacts",
+              );
               if (Array.isArray(data)) return data.filter(Boolean);
               return Object.values(data);
             }
-            console.info("loadContactsFromStorage: loaded from object value (as map)");
+            console.info(
+              "loadContactsFromStorage: loaded from object value (as map)",
+            );
             if (Array.isArray(clone)) return clone.filter(Boolean);
             return Object.values(clone);
           }
         }
       }
-
       return [];
     } catch (e) {
       console.error("Failed to inspect DB root for contacts", e);
