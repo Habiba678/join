@@ -6,8 +6,8 @@
     border-radius: 12px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     gap: 24px;
-    width: 589px;
-    height: 630px;
+    width: 489px;
+    height: 445px;
     background: white;
 }
 
@@ -40,7 +40,7 @@
 
 .main-form input {
     height: 42px;
-    width: 80%;
+    width: 88%;
     border: unset;
     border: 1px solid gray;
     border-radius: 8px;
