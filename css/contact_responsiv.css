@@ -35,7 +35,7 @@
 @media (max-width: 680px) {
   .contacts-page {
     display: block;
-    min-height: 100vh;
+    min-height: calc(100vh - 100px);
     background: #f6f7f8;
     padding-bottom: 110px;
   }
@@ -96,7 +96,6 @@
     
   }
 
-  
 
 
   .letter-group {

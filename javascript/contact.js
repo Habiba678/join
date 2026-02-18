@@ -7,16 +7,11 @@ let selectedId = null;
 async function init() {
   removeModalNow();
   await loadContacts();
-
   selectedId = null;
-
   renderContactsList();
   renderDetails();
 
-  if (window.isMobile && window.isMobile()) {
-    window.showMobileList && window.showMobileList();
-  }
-
+  if (window.isMobile && window.isMobile()) window.showMobileList && window.showMobileList();
   document.addEventListener("click", handleClick);
   document.addEventListener("submit", handleSubmit);
 }
@@ -129,19 +124,12 @@ async function loadContacts() {
     data = null;
   }
 
-  if (!data) {
-    contacts = [];
-  } else if (Array.isArray(data)) {
-    contacts = data.filter(Boolean);
-  } else if (typeof data === "object") {
-    if (Object.keys(data).length && Object.keys(data).every((k) => data[k] && data[k].id)) {
-      contacts = Object.values(data);
-    } else {
-      contacts = Object.entries(data).map(([key, val]) => ({ ...(val || {}), id: val && val.id ? val.id : key }));
-    }
-  } else {
-    contacts = [];
-  }
+  if (!data) contacts = [];
+  else if (Array.isArray(data)) contacts = data.filter(Boolean);
+  else if (typeof data === "object") {
+    if (Object.keys(data).length && Object.keys(data).every((k) => data[k] && data[k].id)) contacts = Object.values(data);
+    else contacts = Object.entries(data).map(([key, val]) => ({ ...(val || {}), id: val && val.id ? val.id : key }));
+  } else contacts = [];
 
   if (window.idbStorage && typeof window.idbStorage.saveContacts === "function") {
     try {
@@ -155,12 +143,10 @@ async function loadContacts() {
   for (let i = 0; i < contacts.length; i++) {
     let c = contacts[i];
     let seed = c.id || (c.email || c.name || "");
-
     if (!c.colorClass || used.has(c.colorClass)) {
       c.colorClass = pickUniqueColorClass(seed, used);
       changed = true;
     }
-
     used.add(c.colorClass);
   }
 
@@ -242,7 +228,6 @@ function applyModalAvatar(data) {
     });
     avatar = candidates[0] || null;
   }
-
   if (!avatar) return;
 
   Array.from(avatar.classList).forEach(function (cls) {
@@ -256,9 +241,9 @@ function applyModalAvatar(data) {
   probe.style.left = "-9999px";
   probe.style.top = "-9999px";
   document.body.appendChild(probe);
+
   let bg = getComputedStyle(probe).backgroundColor || "";
   probe.remove();
-
   if (bg) avatar.style.backgroundColor = bg;
 }
 
@@ -266,11 +251,11 @@ function openModal(mode, contact) {
   removeModalNow();
   let data = buildModalData(mode, contact);
   document.body.insertAdjacentHTML("beforeend", contactModalTemplate(mode, data));
+
   let m = getEl("addContactModal");
   if (!m) return;
 
   m.setAttribute("data-mode", String(mode || "").trim().toLowerCase());
-
   applyModalAvatar(data);
 
   m.classList.remove("d-none");
@@ -314,7 +299,6 @@ function showContactSuccessBox(text) {
   box.id = "contactSuccessBox";
   box.className = "contact-successbox";
   box.textContent = msg;
-
   document.body.appendChild(box);
 
   requestAnimationFrame(function () {
@@ -402,21 +386,18 @@ function createFromForm() {
   let name = normalize(n ? n.value : "");
   let email = normalize(e ? e.value : "").toLowerCase();
   let phone = normalize(p ? p.value : "");
-
   if (!name || !email) return;
 
-  let used = new Set(contacts.map(function (c) {
-    return c.colorClass;
-  }).filter(Boolean));
+  let used = new Set(
+    contacts
+      .map(function (c) {
+        return c.colorClass;
+      })
+      .filter(Boolean)
+  );
 
   let id = generateId();
-  let nc = {
-    id: id,
-    name: name,
-    email: email,
-    phone: phone,
-    colorClass: pickUniqueColorClass(id, used),
-  };
+  let nc = { id: id, name: name, email: email, phone: phone, colorClass: pickUniqueColorClass(id, used) };
 
   contacts.push(nc);
   selectedId = nc.id;
@@ -424,7 +405,6 @@ function createFromForm() {
   saveContacts();
   renderContactsList();
   renderDetails();
-
   closeModal();
   showContactSuccessBox("Contact successfully created");
 }
@@ -442,7 +422,6 @@ function saveEdit(editId) {
   let name = normalize(n ? n.value : "");
   let email = normalize(e ? e.value : "").toLowerCase();
   let phone = normalize(p ? p.value : "");
-
   if (!name || !email) return;
 
   contacts[idx] = { ...contacts[idx], name: name, email: email, phone: phone };
@@ -451,7 +430,6 @@ function saveEdit(editId) {
   saveContacts();
   renderContactsList();
   renderDetails();
-
   closeModal();
   showContactSuccessBox("Contact successfully edited");
 }
@@ -468,7 +446,6 @@ function deleteContact(id) {
   renderDetails();
 
   if (window.isMobile && window.isMobile()) window.showMobileList && window.showMobileList();
-
   showContactSuccessBox("Contact successfully deleted");
 }
 
@@ -515,6 +492,7 @@ function handleClick(e) {
       window.closeMobileMenu && window.closeMobileMenu();
       return deleteContact(id);
     }
+
     if (a === "edit") {
       window.closeMobileMenu && window.closeMobileMenu();
       let c = contacts.find(function (x) {

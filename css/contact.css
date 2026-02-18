@@ -31,7 +31,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  min-height: 0;
+  min-height: calc(100vh - 100px);
   height: 100vh;
   background-color: #ffffff;
   border-right: 1px solid #e0e0e009;
@@ -393,7 +393,7 @@
 
 #addContactModal.is-open .modal {
   transform: translate3d(0, 0, 0) scale(0.97);
-  transition-duration: 700ms;
+  transition-duration: 1800ms;
 }
 
 #addContactModal.is-closing .modal {
