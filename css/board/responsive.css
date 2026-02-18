@@ -1,5 +1,5 @@
 /* RESPONSIVE*/
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .layout {
     min-width: 0;
     justify-content: flex-start;
@@ -251,19 +251,17 @@
   }
 }
 
-
 @media (max-width: 320px) {
   .search-bar {
-      display: flex;
-      align-items: center;
-      position: relative;
-      width: 217px;
-      max-width: 220px;
-    }
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 217px;
+    max-width: 220px;
+  }
 
   .search-input {
     width: 217px;
     max-width: 220px;
   }
-
 }
