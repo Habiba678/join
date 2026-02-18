@@ -61,21 +61,6 @@
 
   async function init(){
     try{
-      // Guest mode: seed demo data in-memory and skip IndexedDB
-      if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('guest') === '1') {
-        cache.tasks = [
-          { id: "g1", title: "Demo: Set up project", description: "Welcome task for guests", dueDate: "", category: "user", priority: "medium", status: "todo", subtasks: [], assigned: [] },
-          { id: "g2", title: "Demo: Work in progress", description: "Example in-progress task", dueDate: "", category: "tech", priority: "urgent", status: "progress", subtasks: [{ title: "step 1", done: false }], assigned: ["c1"] },
-          { id: "g3", title: "Demo: Waiting feedback", description: "", dueDate: "", category: "user", priority: "low", status: "feedback", subtasks: [], assigned: ["c2"] },
-          { id: "g4", title: "Demo: Done task", description: "", dueDate: "", category: "tech", priority: "medium", status: "done", subtasks: [], assigned: [] }
-        ];
-        cache.contacts = [
-          { id: "c1", name: "Anna Bauer", email: "anna@example.com" },
-          { id: "c2", name: "Max Mustermann", email: "max@example.com" },
-          { id: "c3", name: "Sophie Klein", email: "sophie@example.com" }
-        ];
-        return;
-      }
       await openDb();
       cache.tasks = await readAll(TASK_STORE);
       cache.contacts = await readAll(CONTACT_STORE);
@@ -92,11 +77,6 @@
   function getContactsSync(){ return Array.isArray(cache.contacts) ? cache.contacts.slice() : []; }
 
   async function saveTasks(tasks){
-    // In guest mode persist only in-memory (do not touch IndexedDB / remote)
-    if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('guest') === '1') {
-      cache.tasks = Array.isArray(tasks) ? tasks.slice() : [];
-      return;
-    }
     await ready;
     try{
       await clearStore(TASK_STORE);
@@ -106,10 +86,6 @@
   }
 
   async function saveContacts(list){
-    if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('guest') === '1') {
-      cache.contacts = Array.isArray(list) ? list.slice() : [];
-      return;
-    }
     await ready;
     try{
       await clearStore(CONTACT_STORE);

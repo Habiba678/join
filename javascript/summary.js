@@ -54,9 +54,7 @@ async function syncTasksFromDB() {
 
 async function init() {
   await (window.idbStorage && window.idbStorage.ready ? window.idbStorage.ready : Promise.resolve());
-  if (!(typeof sessionStorage !== 'undefined' && sessionStorage.getItem('guest') === '1')) {
-    try { await syncTasksFromDB(); } catch (e) { console.warn("Initial tasks sync failed, continuing with local cache", e); }
-  } else {console.info('Guest mode: using demo/local tasks');}
+  try { await syncTasksFromDB(); } catch (e) { console.warn("Initial tasks sync failed, continuing with local cache", e); }
   greetingText(); getTasksTotal(); getTasksDone();getTasksProgress();getAwaitFeedback();getUrgrentTodo();getCokkieCheck();
 }
 

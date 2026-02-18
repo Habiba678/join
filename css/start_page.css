@@ -200,12 +200,6 @@ h1::after {
   color: white;
 }
 
-/* Guest Log In */
-.login-form .button-group .guest-btn {
-  background-color: white;
-  color: #2a3647;
-  border: 1px solid #2a3647;
-}
 
 .login-form .button-group button:hover {
   opacity: 0.9;

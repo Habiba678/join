@@ -209,23 +209,7 @@ async function createTask() {
     });
     await response.json();
   } catch (e) {console.error("Failed to save task remotely", e);}
-  // Guest mode: store locally only and avoid any remote network calls
-  if (
-    typeof sessionStorage !== "undefined" &&
-    sessionStorage.getItem("guest") === "1"
-  ) {
-    const existing =
-      window.idbStorage && typeof window.idbStorage.getTasksSync === "function"? window.idbStorage.getTasksSync(): [];
-    existing.push(task);
-    if (window.idbStorage && typeof window.idbStorage.saveTasks === "function")
-      await window.idbStorage.saveTasks(existing);
-    else if (typeof saveTasks === "function") await saveTasks(existing);
-    if (typeof renderBoardFromStorage === "function") renderBoardFromStorage();
-    if (typeof updateEmptyStates === "function") updateEmptyStates();
-    const overlay = document.getElementById("addTaskOverlayBackdrop");
-    if (overlay) { if (typeof closeAddTaskOverlay === "function") closeAddTaskOverlay(); return;}
-    location.href = "./board.html";
-  }
+
 
   try {
     const resp = await fetch(dbTask + "tasks.json");

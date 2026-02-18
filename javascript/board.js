@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   initAddTaskOverlay();
   initSearch();
 
-  if (!(typeof sessionStorage !== 'undefined' && sessionStorage.getItem('guest') === '1')) {
     // Try to sync tasks from remote DB first (DB = source of truth)
     try {
       await syncTasksFromDB();
@@ -33,9 +32,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     } catch (e) {
       console.warn("Initial contacts sync failed, continuing with local cache", e);
     }
-  } else {
-    console.info("Guest mode: skipping remote sync");
-  }
 
   renderBoardFromStorage();
   initDragAndDrop();
@@ -173,28 +169,24 @@ async function saveTasks(tasks) {
     console.warn("idbStorage not available - tasks not persisted");
   }
 
-  if (!(typeof sessionStorage !== 'undefined' && sessionStorage.getItem('guest') === '1')) {
-    (async function () {
-      try {
-        const url = (window.DB_TASK_URL || "https://join-da53b-default-rtdb.firebaseio.com/") + "tasks.json";
-        const map = {};
-        for (const t of (tasks || [])) {
-          const id = (t && t.id) ? String(t.id) : ("tmp_" + Date.now() + "_" + Math.random().toString(16).slice(2));
-          map[id] = t;
-        }
-        await fetch(url, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(map),
-        });
-        renderBoardFromStorage();
-      } catch (err) {
-        console.warn("Failed to sync tasks to remote DB:", err);
+  (async function () {
+    try {
+      const url = (window.DB_TASK_URL || "https://join-da53b-default-rtdb.firebaseio.com/") + "tasks.json";
+      const map = {};
+      for (const t of (tasks || [])) {
+        const id = (t && t.id) ? String(t.id) : ("tmp_" + Date.now() + "_" + Math.random().toString(16).slice(2));
+        map[id] = t;
       }
-    })();
-  } else {
-    console.info("Guest mode: skipped remote task sync");
-  }
+      await fetch(url, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(map),
+      });
+      renderBoardFromStorage();
+    } catch (err) {
+      console.warn("Failed to sync tasks to remote DB:", err);
+    }
+  })();
 }
 
 // Sync tasks from Firebase RTDB and save to persistent storage (IndexedDB)

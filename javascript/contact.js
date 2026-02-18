@@ -114,13 +114,7 @@ async function fetchDBNode(nodeName) {
 }
 
 async function loadContacts() {
-  if (typeof sessionStorage !== "undefined" && sessionStorage.getItem("guest") === "1") {
-    contacts =
-      window.idbStorage && typeof window.idbStorage.getContactsSync === "function"
-        ? window.idbStorage.getContactsSync()
-        : [];
-    return;
-  }
+
 
   let data = null;
   try {
@@ -168,14 +162,7 @@ async function loadContacts() {
 }
 
 async function saveContacts() {
-  if (typeof sessionStorage !== "undefined" && sessionStorage.getItem("guest") === "1") {
-    if (window.idbStorage && typeof window.idbStorage.saveContacts === "function") {
-      try {
-        await window.idbStorage.saveContacts(contacts);
-      } catch (err) {}
-    }
-    return;
-  }
+
 
   try {
     const map = {};
