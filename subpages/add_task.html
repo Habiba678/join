@@ -73,13 +73,13 @@
                             <div class="form_1">
                                 <form class="form-details">
                                     <label for="titel">Title <span class="label-star">*</span></label>
-                                    <input type="text" id="titel" placeholder="Enter a title">
+                                    <input type="text" name="titel" id="titel" placeholder="Enter a title">
 
                                     <label for="description">Description</label>
-                                    <textarea id="description" placeholder="Enter a description"></textarea>
+                                    <textarea id="description" name="description" placeholder="Enter a description"></textarea>
 
                                     <label for="date">Due date <span class="label-star">*</span></label>
-                                    <input type="date" id="date">
+                                    <input type="date" name="date" id="date">
                                 </form>
                             </div>
 
@@ -89,9 +89,9 @@
                             <div class="form_2">
                                 <form class="form-details">
 
-                                    <label>Priority</label>
+                                    <p>Priority</p>
                                     <div class="priority-section">
-                                        <li class="priority-btn urgent">
+                                        <li name="priority" value="urgent" class="priority-btn urgent">
                                             Urgent <img class="btn-icon" src="../assets/icons/Prio alta.svg">
                                         </li>
                                         <li class="priority-btn medium">
@@ -102,7 +102,7 @@
                                         </li>
                                     </div>
 
-                                    <label for="assigned">Assigned to</label>
+                                    <p>Assigned to</p>
                                     <div class="multi-select">
                                         <div class="multi-select-input" id="assignedInput">
                                             <span id="assignedText">Select contacts to assign</span>

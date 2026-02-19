@@ -364,7 +364,7 @@ label .label-star {
   }
 }
 
-@media (max-width: 350px) {
+@media (max-width: 376px) {
   .priority-section {
     justify-content: center;
     flex-direction: column;
