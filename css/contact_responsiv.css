@@ -37,15 +37,13 @@
     display: block;
     min-height: calc(100vh - 100px);
     background: #f6f7f8;
-    padding-bottom: 110px;
   }
 
   .contacts-sidebar {
-    width: 100%;
     max-width: 100%;
     min-width: 0;
-    height: auto;
-    padding: 16px 16px 110px;
+    height: calc(100vh - 100px);
+    padding: 16px 16px 0px;
     background: #fff;
     box-shadow: none;
     border: 0;
@@ -93,7 +91,6 @@
     margin: 0;
     padding: 0;
     position: static;
-    
   }
 
 
@@ -156,9 +153,9 @@
     display: none;
     width: 100%;
     max-width: 100%;
-    min-height: 100vh;
+    min-height: calc(100vh - 100px);
     height: auto;
-    padding: 16px 16px 110px;
+    padding: 16px 16px 0px;
     background: #f6f7f8;
     box-sizing: border-box;
   }

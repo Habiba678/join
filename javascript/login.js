@@ -83,9 +83,9 @@ function showRegistrationMessageFromQuery(duration = 4000) {
     const params = new URLSearchParams(window.location.search);
     const msg = params.get("msg") || params.get("message");
     if (!msg) return;  const el = document.getElementById("reg-msg");
-    if (!el) return; el.textContent = decodeURIComponent(msg);
-    Object.assign(el.style, {display: "block", position: "relative", top: "20%", color: "#45d328",transition: "opacity 0.5s ease",opacity: "1",});
-    setTimeout(() => { el.style.opacity = "0";
+  if (!el) return; el.textContent = decodeURIComponent(msg);
+   Object.assign(el.style, {display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto", color: "#ffffff", height: "55px", width: "320px", borderRadius: "8px", backgroundColor: "rgb(26, 26, 26)",transition: "opacity 0.5s ease",opacity: "1",});
+   setTimeout(() => { el.style.opacity = "0";
     setTimeout(() => { el.style.display = "none"; el.textContent = ""; }, 500);
     }, duration);
     window.history.replaceState({}, "", window.location.pathname + window.location.hash);

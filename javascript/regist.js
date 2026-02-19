@@ -31,7 +31,7 @@ async function regData() {
 
 function registrationSuccessRedirect() {
   // Weiterleitung zu index.html; index zeigt dort die Erfolgsmeldung an
-  window.location.href = "../index.html?msg=" + encodeURIComponent("Erfolgreich registriert! Bitte logge dich ein.");
+  window.location.href = "../index.html?msg=" + encodeURIComponent("You Signed Up successfully.");
 }
 
 function showRegNotice(message, type = "info", duration = 4000) {
@@ -39,7 +39,13 @@ function showRegNotice(message, type = "info", duration = 4000) {
   if (!el) return;
   el.textContent = message;
   el.style.display = "block";
-  el.style.color = type === "error" ? "#d32828" : "#2a9d2a";
+  el.style.backgroundColor = type === "error" ? "rgb(26, 26, 26)" : "#d4edda";
+  el.style.width = "80%";
+  el.style.height = "55px";
+  el.style.position = "relative";
+  el.style.top = "-130px";
+  el.style.textAlign = "center";
+  el.style.color = type === "error" ? "#d32828" : "#ffffff";
   el.style.transition = "opacity 0.4s ease";
   el.style.opacity = "1";
   if (duration > 0) {

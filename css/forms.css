@@ -18,8 +18,8 @@
     width: 100%;
 }
 
-.form-header img{
-  margin-right: 25%;
+.form-header img {
+    margin-right: 25%;
 }
 
 .form-header h1 {
@@ -32,10 +32,10 @@
     position: absolute;
     height: 3px;
     background-color: rgb(94, 192, 233);
-    width: 95px;   
+    width: 95px;
     margin-top: 5px;
     margin-left: 10px;
-    
+
 }
 
 .main-form input {
@@ -57,7 +57,7 @@ input[type=text] {
     font-weight: 400;
     background-color: white;
     background-image: url('../assets/icons/person.png');
-background-position: right 10px center;
+    background-position: right 10px center;
     background-repeat: no-repeat;
     padding: 8px;
 }
@@ -82,7 +82,7 @@ input[type=password] {
     padding: 8px;
 }
 
-.form-footer{
+.form-footer {
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -92,13 +92,13 @@ input[type=password] {
     margin-bottom: 15px;
 }
 
-.isValidate{
+.isValidate {
     border: 1px solid greenyellow !important;
     background-image: url('../assets/icons/visibility_off.svg') !important;
     cursor: pointer;
 }
 
-.isInvaled{
+.isInvaled {
     border: 1px solid rgb(255, 47, 47) !important;
 }
 
@@ -121,4 +121,19 @@ input[type=password] {
 
 input[type=password]:hover {
     background-position: right 10px center;
+}
+#login-message{
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin: 0 auto;
+    height: 55px;
+}
+@media (max-width: 500px) {
+    .main-form {
+        width: 80%;
+        height: auto;
+        padding: 20px;
+        gap: 8px;
+    }
 }
