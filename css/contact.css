@@ -31,8 +31,8 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - 100px);
-  height: 100vh;
+  height: calc(100vh - 100px);
+  min-height: 100vh;
   background-color: #ffffff;
   border-right: 1px solid #e0e0e009;
   box-shadow: 4px 0 8px rgba(0, 0, 0, 0.08);

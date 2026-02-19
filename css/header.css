@@ -5,6 +5,7 @@ html, body {
   margin: 0;
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background: #F6F7F8;
+  scrollbar-width: none;
 }
 
 .d-none { display: none !important; }
@@ -135,6 +136,9 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+ 
+ 
+  
 }
 
 .sidebar-footer a {
