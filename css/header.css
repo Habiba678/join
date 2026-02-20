@@ -50,6 +50,7 @@ html, body {
   display: flex;
   flex-direction: column;
   padding: 64px 0 40px 0;
+ 
 }
 
 .logo {
@@ -137,7 +138,8 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  
+ 
+ 
  
  
   
@@ -148,6 +150,7 @@ html, body {
   line-height: 120%;
   color: #A8A8A8;
   text-decoration: none;
+ 
 }
 
 .sidebar-footer a:hover {
