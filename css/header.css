@@ -11,6 +11,7 @@ html, body {
 
 .d-none { display: none !important; }
 
+
 .layout {
   display: flex;
   min-height: 100vh;
@@ -132,15 +133,14 @@ html, body {
   background-color: #091931;
 }
 
+
 .sidebar-footer {
   margin-top: auto;
   margin-left: 52px;
   display: flex;
   flex-direction: column;
   gap: 8px;
- 
- 
- 
+  
  
   
 }
