@@ -13,6 +13,7 @@
     background: white;
 }
 
+
 .multi-select-dropdown {
     position: absolute;
     top: 100%;
@@ -83,9 +84,11 @@ label {
     margin: 12px 0 4px;
 }
 
-select:hover {border-color: #999;}
+select:hover {border: 1px solid #5ec0e9;
+    outline: none;}
 
-.multi-select-input:hover{border-color: #999;}
+.multi-select-input:hover{border: 1px solid #5ec0e9;
+    outline: none;}
 
 option {
     color: #666;

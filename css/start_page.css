@@ -171,7 +171,15 @@ h1::after {
   height: 42px;
   padding: 10px;
   border-radius: 8px;
-  border: 1px solid #ccc;
+  outline: none;
+  border: 2px solid #ccc;
+}
+
+.login-form input:focus {
+  height: 42px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #5ec0e9;
 }
 
 .login-form button {height: 42px;}
