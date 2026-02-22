@@ -3,9 +3,14 @@
 html, body {
   height: 100%;
   margin: 0;
+  padding: 0;
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background: #F6F7F8;
   scrollbar-width: none;
+  overscroll-behavior: none !important;
+  touch-action: none;
+  
+  
   
 }
 
@@ -14,10 +19,10 @@ html, body {
 
 .layout {
   display: flex;
-  min-height: 100vh;
+  min-height: 100dvh;
   width: 100%;
-  max-width: none;
-  margin: 0;
+  
+ 
 }
 
 .cantainer, .container {
@@ -51,7 +56,9 @@ html, body {
   display: flex;
   flex-direction: column;
   padding: 64px 0 40px 0;
- 
+
+  
+  
 }
 
 .logo {
@@ -140,6 +147,8 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  
+  
   
  
   
@@ -388,3 +397,5 @@ html, body {
   .menu a { padding: 8px 6px; gap: 4px; }
   .menu img { width: 20px; height: 20px; }
 }
+
+

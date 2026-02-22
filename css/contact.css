@@ -1,5 +1,6 @@
 *, *::before, *::after {
   box-sizing: border-box;
+  scroll-behavior: none;
 }
 
 .cantainer, .container {
@@ -31,8 +32,8 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 100px);
-  min-height: calc(100vh - 100px);
+  height: 100vh;
+  min-height: 0;
   background-color: #ffffff;
   border-right: 1px solid #e0e0e009;
   box-shadow: 4px 0 8px rgba(0, 0, 0, 0.08);
@@ -393,7 +394,7 @@
 
 #addContactModal.is-open .modal {
   transform: translate3d(0, 0, 0) scale(0.97);
-  transition-duration: 1800ms;
+  transition-duration: 700ms;
 }
 
 #addContactModal.is-closing .modal {
@@ -759,6 +760,5 @@ input::placeholder {
   max-width: 400px;
   text-align: center;
 }
-
 
 

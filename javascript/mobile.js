@@ -86,6 +86,27 @@ window.handleOutsideMobileMenuClick = function (e) {
   if (!insideMenu && !onBtn) window.closeMobileMenu();
 };
 
+function handleMobileButtonsClick(e) {
+  if (!window.isMobile()) return;
+
+  if (e.target.closest("#mobileBackBtn")) {
+    e.preventDefault();
+    window.showMobileList();
+    return;
+  }
+
+  if (e.target.closest("#mobileMenuBtn")) {
+    e.preventDefault();
+    window.toggleMobileMenu();
+    return;
+  }
+}
+
+document.addEventListener("click", function (e) {
+  handleMobileButtonsClick(e);
+  window.handleOutsideMobileMenuClick && window.handleOutsideMobileMenuClick(e);
+});
+
 window.addEventListener("resize", () => {
   if (!window.isMobile()) window.showMobileList();
 });
@@ -141,7 +162,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.addEventListener("resize", closeMenu);
 });
-
 
 document.addEventListener("DOMContentLoaded", () => {
   const links = document.querySelectorAll(".menu a[href]");
