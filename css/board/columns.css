@@ -234,8 +234,20 @@
   margin-left: 0;
 }
 
+.avatar-color-0 { background:#FF7A00; }
+.avatar-color-1 { background:#FF5EB3; }
+.avatar-color-2 { background:#6E52FF; }
+.avatar-color-3 { background:#9327FF; }
+.avatar-color-4 { background:#00BEE8; }
+.avatar-color-5 { background:#1FD7C1; }
+.avatar-color-6 { background:#FFBB2B; }
+.avatar-color-7 { background:#FF4646; }
+.avatar-color-8 { background:#FC71FF; }
+.avatar-color-9 { background:#0038FF; }
+.avatar-color-10 { background:#C3FF2B; }
+.avatar-color-11 { background:#FFE62B; }
+
 .card-priority-icon.medium {
   width: 20px;
   opacity: 0.9;
 }
-

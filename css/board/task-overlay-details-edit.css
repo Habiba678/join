@@ -134,6 +134,19 @@
   justify-content: center;
 }
 
+.task-overlay-edit .contact-avatar.avatar-color-0 { background:#FF7A00; }
+.task-overlay-edit .contact-avatar.avatar-color-1 { background:#FF5EB3; }
+.task-overlay-edit .contact-avatar.avatar-color-2 { background:#6E52FF; }
+.task-overlay-edit .contact-avatar.avatar-color-3 { background:#9327FF; }
+.task-overlay-edit .contact-avatar.avatar-color-4 { background:#00BEE8; }
+.task-overlay-edit .contact-avatar.avatar-color-5 { background:#1FD7C1; }
+.task-overlay-edit .contact-avatar.avatar-color-6 { background:#FFBB2B; }
+.task-overlay-edit .contact-avatar.avatar-color-7 { background:#FF4646; }
+.task-overlay-edit .contact-avatar.avatar-color-8 { background:#FC71FF; }
+.task-overlay-edit .contact-avatar.avatar-color-9 { background:#0038FF; }
+.task-overlay-edit .contact-avatar.avatar-color-10 { background:#C3FF2B; }
+.task-overlay-edit .contact-avatar.avatar-color-11 { background:#FFE62B; }
+
 .task-overlay-edit .contact-option input[type="checkbox"] {
   pointer-events: none;
   width: 20px;

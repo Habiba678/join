@@ -44,9 +44,11 @@
     border: unset;
     border: 1px solid gray;
     border-radius: 8px;
-    border: 1px solid #ccc;
 }
-
+.main-form input:focus{
+    outline: none;
+    border: 1px solid #5ec0e9;
+}
 .main-form input[type="checkbox"] {
     height: 16px;
     width: 16px;

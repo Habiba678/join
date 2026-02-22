@@ -144,6 +144,19 @@ body.no-scroll {
   justify-content: center;
 }
 
+.add-task-overlay .contact-avatar.avatar-color-0 { background:#FF7A00; }
+.add-task-overlay .contact-avatar.avatar-color-1 { background:#FF5EB3; }
+.add-task-overlay .contact-avatar.avatar-color-2 { background:#6E52FF; }
+.add-task-overlay .contact-avatar.avatar-color-3 { background:#9327FF; }
+.add-task-overlay .contact-avatar.avatar-color-4 { background:#00BEE8; }
+.add-task-overlay .contact-avatar.avatar-color-5 { background:#1FD7C1; }
+.add-task-overlay .contact-avatar.avatar-color-6 { background:#FFBB2B; }
+.add-task-overlay .contact-avatar.avatar-color-7 { background:#FF4646; }
+.add-task-overlay .contact-avatar.avatar-color-8 { background:#FC71FF; }
+.add-task-overlay .contact-avatar.avatar-color-9 { background:#0038FF; }
+.add-task-overlay .contact-avatar.avatar-color-10 { background:#C3FF2B; }
+.add-task-overlay .contact-avatar.avatar-color-11 { background:#FFE62B; }
+
 .add-task-overlay .contact-option input[type="checkbox"] {
   pointer-events: none;
   width: 21px;
@@ -333,4 +346,3 @@ body.no-scroll {
 .add-task-overlay .form-details > label:first-child {
   margin-top: 0;
 }
-

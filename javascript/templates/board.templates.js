@@ -140,16 +140,17 @@ function buildCardFooterHtml(task) {
 }
 
 function buildAssignedAvatarsHtml(task) {
-  const list = getAssignedListForCard(task);
+  const list = getAssignedContactsForCard(task);
   if (!list.length) return "";
   let html = "";
   for (let i = 0; i < list.length; i++) {
-    const name = String(list[i]);
+    const contact = list[i] || {};
+    const name = String(contact.name || contact.id || "");
     const initials = getInitials(name);
-    const color = getAvatarColor(initials);
+    const colorClass = getContactColorClass(contact);
     html +=
-      '<span class="card-avatar" style="background:' +
-      color +
+      '<span class="card-avatar ' +
+      escapeHtml(colorClass) +
       '">' +
       escapeHtml(initials) +
       "</span>";
@@ -157,8 +158,69 @@ function buildAssignedAvatarsHtml(task) {
   return html;
 }
 
-function getAssignedListForCard(task) {
-  return resolveAssignedList(task);
+function getAssignedContactsForCard(task) {
+  return resolveAssignedContacts(task);
+}
+
+function resolveAssignedContacts(task) {
+  let assignedArr = [];
+  if (Array.isArray(task.assigned)) assignedArr = task.assigned;
+  else if (task.assigned) assignedArr = [task.assigned];
+  if (!assignedArr.length) return [];
+
+  const contacts =
+    typeof loadContacts === "function" ? loadContacts() : [];
+  const byId = getContactsById(contacts);
+  const byName = getContactsByName(contacts);
+  const result = [];
+
+  for (let i = 0; i < assignedArr.length; i++) {
+    const value = assignedArr[i];
+    const key = String(value || "").trim();
+    if (!key) continue;
+    const contact = byId.get(key) || byName.get(key.toLowerCase());
+    result.push(contact ? contact : { id: key, name: key });
+  }
+  return result;
+}
+
+function getContactsById(contacts) {
+  if (typeof buildContactsById === "function") return buildContactsById(contacts);
+  const map = new Map();
+  for (let i = 0; i < contacts.length; i++) {
+    const c = contacts[i];
+    if (c && c.id) map.set(String(c.id), c);
+  }
+  return map;
+}
+
+function getContactsByName(contacts) {
+  const map = new Map();
+  for (let i = 0; i < contacts.length; i++) {
+    const c = contacts[i];
+    const name = String(c && c.name ? c.name : "").trim();
+    if (!name) continue;
+    const key = name.toLowerCase();
+    if (!map.has(key)) map.set(key, c);
+  }
+  return map;
+}
+
+function hashStringLocal(str) {
+  let h = 0;
+  const s = String(str || "");
+  for (let i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
+  return Math.abs(h);
+}
+
+function colorClassForSeed(seed) {
+  return "avatar-color-" + (hashStringLocal(seed) % 12);
+}
+
+function getContactColorClass(contact) {
+  if (contact && contact.colorClass) return contact.colorClass;
+  const seed = contact?.id || contact?.email || contact?.name || "";
+  return colorClassForSeed(seed);
 }
 
 function countDoneSubtasks(subs) {
@@ -180,4 +242,3 @@ function getPriorityIcon(task) {
   if (pr === "low") return "../assets/icons/low.svg";
   return "";
 }
-

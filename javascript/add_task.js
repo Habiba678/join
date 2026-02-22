@@ -119,10 +119,11 @@ async function populateAssignedContacts() {
   list.forEach((c) => {
     if (!c?.id || !c?.name) return;
 
+    const colorClass = getContactColorClass(c);
     const row = document.createElement("div");
     row.className = "contact-option";
     row.innerHTML = `
-      <div class="contact-avatar">${getInitials(c.name)}</div>
+      <div class="contact-avatar ${colorClass}">${getInitials(c.name)}</div>
       <span>${c.name}</span>
       <input type="checkbox" ${selectedContacts.has(c.id) ? "checked" : ""}>
     `;
@@ -159,7 +160,8 @@ async function renderSelectedContacts() {
   text.innerHTML = [...selectedContacts]
     .map((id) => {
       const c = list.find((x) => x.id === id);
-      return `<span class="contact-avatar">${getInitials(c?.name || "")}</span>`;
+      const colorClass = getContactColorClass(c || {});
+      return `<span class="contact-avatar ${colorClass}">${getInitials(c?.name || "")}</span>`;
     })
     .join("");
 }
@@ -329,6 +331,23 @@ function getInitials(name) {
     .map((n) => n[0])
     .join("")
     .toUpperCase();
+}
+
+function hashString(str) {
+  let h = 0;
+  const s = String(str || "");
+  for (let i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
+  return Math.abs(h);
+}
+
+function colorClassFor(seed) {
+  return "avatar-color-" + (hashString(seed) % 12);
+}
+
+function getContactColorClass(contact) {
+  if (contact && contact.colorClass) return contact.colorClass;
+  const seed = contact?.id || contact?.email || contact?.name || "";
+  return colorClassFor(seed);
 }
 
 // ------------------ CLEAR ------------------

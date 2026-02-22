@@ -191,30 +191,55 @@ function renderOverlayAssigned(task) {
 }
 
 function getAssignedList(task) {
-  return resolveAssignedList(task);
+  if (typeof resolveAssignedContacts === "function") return resolveAssignedContacts(task);
+  const list = resolveAssignedList(task);
+  return list.map(function (name) {
+    const s = String(name || "");
+    return { id: s, name: s };
+  });
 }
 
-function createPersonRow(name, index) {
+function createPersonRow(item, index) {
+  const contact = normalizeOverlayContact(item);
   const row = document.createElement("div");
   row.className = "task-overlay-person";
-  row.appendChild(createPersonBadge(name, index));
-  row.appendChild(createPersonText(name));
+  row.appendChild(createPersonBadge(contact, index));
+  row.appendChild(createPersonText(contact));
   return row;
 }
 
-function createPersonBadge(name, index) {
+function createPersonBadge(contact, index) {
   const badge = document.createElement("div");
-  badge.className = "task-overlay-badge";
-  const colors = ["#00BEE8", "#6E52FF", "#FF7A00"];
-  badge.style.background = colors[index % 3];
-  badge.textContent = getInitials(String(name));
+  const colorClass = getOverlayViewContactColorClass(contact, index);
+  badge.className = "task-overlay-badge " + colorClass;
+  badge.textContent = getInitials(String(contact.name || contact.id || ""));
   return badge;
 }
 
-function createPersonText(name) {
+function createPersonText(contact) {
   const text = document.createElement("div");
-  text.textContent = String(name);
+  text.textContent = String(contact.name || contact.id || "");
   return text;
+}
+
+function normalizeOverlayContact(item) {
+  if (item && typeof item === "object") return item;
+  const s = String(item || "");
+  return { id: s, name: s };
+}
+
+function getOverlayViewContactColorClass(contact, index) {
+  if (typeof getContactColorClass === "function") return getContactColorClass(contact);
+  if (contact && contact.colorClass) return contact.colorClass;
+  const seed = contact?.id || contact?.email || contact?.name || String(index || "");
+  return "avatar-color-" + (overlayViewHashString(seed) % 12);
+}
+
+function overlayViewHashString(str) {
+  let h = 0;
+  const s = String(str || "");
+  for (let i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
+  return Math.abs(h);
 }
 
 function renderOverlaySubtasks(task) {
@@ -344,4 +369,3 @@ function toggleOverlayEditState(els, editing) {
   if (els.saveBtn) els.saveBtn.hidden = !editing;
   if (els.cancelBtn) els.cancelBtn.hidden = !editing;
 }
-

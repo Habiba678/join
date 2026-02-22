@@ -26,19 +26,46 @@ function guastLogin() {
   window.location.href = "./subpages/summary.html";
 }
 
+async function verifyPassword(inputPassword, storedHash, storedSalt) {
+  const result = await hashPasswordWithSalt(inputPassword, storedSalt);
+  return result === storedHash;
+}
+
 async function logIn() {
   const loginData = await fetchRegisterNode();
-  try {validateEmail(email);validatePassword(password);} catch (e) {console.warn("Validation failed", e);}
+
+  try {
+    validateEmail(email);
+    validatePassword(password);
+  } catch (e) {
+    console.warn("Validation failed", e);
+  }
+
   const users = loginData ? Object.values(loginData) : [];
-  if (!users.length) return alert("No users found in database. Please register first.");
-  const foundUser = users.find((u) =>(u.mail || "") === (email.value || "") && (u.passwort || "") === (password.value || ""),);
-  if (foundUser) {
-    try {sessionStorage.setItem("loggedInUser", JSON.stringify(foundUser.namen));} catch (e) {/* ignore */}
-    const payload = encodeURIComponent(JSON.stringify(foundUser.namen || "Guest"));
-    document.cookie = `loggedInUser=${payload}; path=/; max-age=3600`;
-    try {console.debug("login: stored loggedInUser ->", foundUser);} catch (e) {}
-    window.location.href = "./subpages/summary.html";
-  } else alert("Check your email and password. Please try again");
+  if (!users.length) {
+    alert("No users found in database. Please register first.");
+    return;
+  }
+
+  for (const user of users) {
+    if ((user.mail || "") === (email.value || "")) {
+      const hash = await hashPasswordWithSalt(password.value, user.salt);
+
+      if (hash === user.passwort) {
+        sessionStorage.setItem("loggedInUser", JSON.stringify(user.namen));
+
+        const payload = encodeURIComponent(
+          JSON.stringify(user.namen || "Guest"),
+        );
+        document.cookie = `loggedInUser=${payload}; path=/; max-age=3600`;
+
+        window.location.href = "./subpages/summary.html";
+        return;
+      }
+    }
+  }
+
+  alert("Check your email and password. Please try again");
 }
 
 function logout() {

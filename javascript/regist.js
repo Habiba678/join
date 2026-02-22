@@ -1,6 +1,42 @@
-async function regData() {
-  // Grundlegende client-seitige Validierung (keine Fehlermeldung wenn validate nicht verfügbar)
-  try { validateSingUpForm(); } catch (e) { /* ignore */ }
+async function hashPasswordWithSalt(password, saltArray) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+
+  const salt = new Uint8Array(saltArray);
+
+  const key = await crypto.subtle.importKey(
+    "raw",
+    data,
+    { name: "PBKDF2" },
+    false,
+    ["deriveBits"]
+  );
+
+  const hashBuffer = await crypto.subtle.deriveBits(
+    {
+      name: "PBKDF2",
+      salt: salt,
+      iterations: 100000,
+      hash: "SHA-256",
+    },
+    key,
+    256
+  );
+
+  return Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+
+
+async function regData(saltArray) {
+  const passwordResult = await hashPasswordWithSalt(password.value, saltArray);
+  try {
+    validateSingUpForm();
+  } catch (e) {
+    /* ignore */
+  }
   const db = "https://join-da53b-default-rtdb.firebaseio.com/";
   try {
     const resp = await fetch(db + "register.json", {
@@ -9,12 +45,15 @@ async function regData() {
       body: JSON.stringify({
         namen: full_name.value,
         mail: email.value,
-        passwort: password.value,
+        passwort: passwordResult,
       }),
     });
 
     if (!resp.ok) {
-      showRegNotice("Registrierung fehlgeschlagen. Bitte versuche es später.", "error");
+      showRegNotice(
+        "Registrierung fehlgeschlagen. Bitte versuche es später.",
+        "error",
+      );
       return null;
     }
 
@@ -31,7 +70,8 @@ async function regData() {
 
 function registrationSuccessRedirect() {
   // Weiterleitung zu index.html; index zeigt dort die Erfolgsmeldung an
-  window.location.href = "../index.html?msg=" + encodeURIComponent("You Signed Up successfully.");
+  window.location.href =
+    "../index.html?msg=" + encodeURIComponent("You Signed Up successfully.");
 }
 
 function showRegNotice(message, type = "info", duration = 4000) {
@@ -51,7 +91,10 @@ function showRegNotice(message, type = "info", duration = 4000) {
   if (duration > 0) {
     setTimeout(() => {
       el.style.opacity = "0";
-      setTimeout(() => { el.style.display = "none"; el.textContent = ""; }, 400);
+      setTimeout(() => {
+        el.style.display = "none";
+        el.textContent = "";
+      }, 400);
     }, duration);
   }
 }

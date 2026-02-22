@@ -236,10 +236,13 @@ function populateOverlayAssignedContacts() {
   for (let i = 0; i < contacts.length; i++) {
     const c = contacts[i];
     if (!c || !c.id || !c.name) continue;
+    const colorClass = getOverlayEditContactColorClass(c);
     const row = document.createElement("div");
     row.className = "contact-option";
     row.innerHTML =
-      '<div class="contact-avatar">' +
+      '<div class="contact-avatar ' +
+      colorClass +
+      '">' +
       getInitials(c.name) +
       '</div><span>' +
       c.name +
@@ -276,7 +279,9 @@ function renderOverlaySelectedContacts() {
       const c = contacts.find(function (x) {
         return String(x.id) === String(id);
       });
-      return c ? '<span class="contact-avatar">' + getInitials(c.name) + "</span>" : "";
+      if (!c) return "";
+      const colorClass = getOverlayEditContactColorClass(c);
+      return '<span class="contact-avatar ' + colorClass + '">' + getInitials(c.name) + "</span>";
     })
     .join("");
 }
@@ -368,6 +373,20 @@ function setOverlaySubtasksFromTask(task) {
       })
     : [];
   renderOverlaySubtasksList();
+}
+
+function getOverlayEditContactColorClass(contact) {
+  if (typeof getContactColorClass === "function") return getContactColorClass(contact);
+  if (contact && contact.colorClass) return contact.colorClass;
+  const seed = contact?.id || contact?.email || contact?.name || "";
+  return "avatar-color-" + (overlayEditHashString(seed) % 12);
+}
+
+function overlayEditHashString(str) {
+  let h = 0;
+  const s = String(str || "");
+  for (let i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
+  return Math.abs(h);
 }
 
 // ---------------- Drag & Drop (persist status) ----------------
