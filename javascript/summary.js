@@ -86,8 +86,7 @@ async function init() {
   getTasksProgress();
   getAwaitFeedback();
   getUrgrentTodo();
-  if (!(typeof sessionStorage !== 'undefined' && sessionStorage.getItem('guest') === '1')) getCokkieCheck();
-
+  getCokkieCheck();
 }
 
 function greetingText() {
