@@ -143,6 +143,26 @@ body.loaded .login-form {
   transform: translateY(0);
 }
 
+/* Zweiter und weitere Besuche: keine Animation/Transition */
+body.visited .logo {
+  top: 37px;
+  left: 81px;
+  transform: translate(0, 0);
+  transition: none !important;
+}
+
+body.visited .logo_page {
+  width: 100px;
+  height: 120px;
+  transition: none !important;
+}
+
+body.visited .login-form {
+  opacity: 1;
+  transform: translateY(0);
+  transition: none !important;
+}
+
 .login-form h1 {
   text-align: center;
   font-size: 44px;
