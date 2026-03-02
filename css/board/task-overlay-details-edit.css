@@ -46,6 +46,13 @@
   background: #fff;
 }
 
+.task-edit-field input:focus,
+.task-edit-field textarea:focus,
+.task-edit-field select:focus {
+  border: 1px solid #5ec0e9;
+  outline: none;
+}
+
 .task-edit-field textarea {
   resize: vertical;
 }
