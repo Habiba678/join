@@ -97,7 +97,7 @@
     display: block;
     height: 50px;
     width: 50px;
-    content: url("../assets/icons/logo.svg");
+    content: url("../../assets/icons/logo.svg");
   }
 
   .header-help {
