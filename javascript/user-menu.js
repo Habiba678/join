@@ -96,11 +96,18 @@ document.addEventListener("DOMContentLoaded", function () {
   populateHeaderInitials();
 
   const links = document.querySelectorAll(".menu a[href]");
+  const footerLinks = document.querySelectorAll(".sidebar-footer a[href]");
   if (!links.length) return;
+  if (!footerLinks.length) return;
 
   const current = location.pathname.split("/").pop() || "index.html";
-
-  links.forEach((a) => {
+links.forEach((a) => {
+  const target = new URL(a.getAttribute("href"), location.href).pathname
+    .split("/")
+    .pop();
+  a.classList.toggle("active", target === current);
+});
+  footerLinks.forEach((a) => {
     const target = new URL(a.getAttribute("href"), location.href).pathname.split("/").pop();
     a.classList.toggle("active", target === current);
   });

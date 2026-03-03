@@ -47,7 +47,7 @@
   .menu ul {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: start;
     align-items: center;
     width: 100%;
     list-style: none;
@@ -56,7 +56,6 @@
   }
 
   .menu li {
-    flex: 1;
     min-width: 0;
     display: flex;
     justify-content: center;
@@ -83,14 +82,52 @@
   }
 
   .sidebar-footer {
-    display: none;
+    display: flex;
+    margin-top: 0px;
+    margin-right: 16px;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .sidebar-footer a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 74px;
+    width: 116px;
+    color: #ffffff;
+  }
+
+    .sidebar-footer a:hover {
+      color: #ffffff;
+      transform: translateX(0px);
+  }
+
+  .sidebar-footer a.active {
+    background-color: #091931;
+    color: #ffffff;
+    border-radius: 16px;
+  }
+
+  .sidebar-footer a.active::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+
+    background-color: #091931;
   }
 
   /* ---------Sidebar section end----------------- */
   /* ---------header section start----------------- */
   .header {
+    position: fixed;
+    width: 100%;
     padding: 24px 40px 20px 25px;
     height: 80px;
+    z-index: 998;
   }
 
   .header-title {
@@ -117,6 +154,7 @@
     align-items: flex-start;
     flex-direction: column;
     padding-left: 0;
+    margin-top: 128px;
   }
 
   .board-title {
@@ -265,10 +303,11 @@
     max-width: 220px;
   }
 
-.task-overlay {
-  height: auto;
-  padding: 28px 5px;
-}
+  .task-overlay {
+    height: auto;
+    padding: 28px 5px;
+  }
+
   .task-overlay-edit .priority-btn {
     flex: 1 1 0;
     height: 46px;

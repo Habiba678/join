@@ -24,6 +24,7 @@ body {
   justify-content: flex-start;
   max-width: 1920px;
 }
+
 .main {
   flex: 1;
   min-height: 0;
@@ -125,6 +126,13 @@ body {
   .policy-title {
     font-size: 40px;
   }
+
+  .policy-content {
+    padding: 40px 24px calc(120px + env(safe-area-inset-bottom));
+    margin: 80px 0 0 0;
+  }
+
+
 }
 
 @media (max-width: 900px) {
