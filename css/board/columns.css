@@ -17,11 +17,11 @@
   width: 300px;
   min-width: 300px;
   max-width: 300px;
-  max-height: 580px;
+  max-height: none;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  overflow-y: visible;
   overflow-x: hidden;
 }
 
@@ -136,8 +136,7 @@
 
 .card-content {
   flex: 1 1 auto;
-  overflow: auto;
-  padding-right: 6px;
+  overflow: hidden;
 }
 
 /* width */
@@ -185,6 +184,10 @@
   color: #2a3647;
   margin-bottom: 6px;
   word-break: break-word;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 .desc {
@@ -192,6 +195,10 @@
   color: #a8a8a8;
   margin: 0 0 12px;
   word-break: break-word;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
 }
 
 /* Card progress + footer */

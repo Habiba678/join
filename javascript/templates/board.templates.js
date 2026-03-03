@@ -152,8 +152,10 @@ function buildCardFooterHtml(task) {
 function buildAssignedAvatarsHtml(task) {
   const list = getAssignedContactsForCard(task);
   if (!list.length) return "";
+  const maxAvatars = 5;
   let html = "";
-  for (let i = 0; i < list.length; i++) {
+  const limit = Math.min(list.length, maxAvatars);
+  for (let i = 0; i < limit; i++) {
     const contact = list[i] || {};
     const name = String(contact.name || contact.id || "");
     const initials = getInitials(name);
