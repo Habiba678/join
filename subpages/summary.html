@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg" sizes="32x32" href="../assets/icons/logo.svg">
     <link rel="stylesheet" href="../css/summary.css">
-   
+    
     <title>Summary</title>
 </head>
 
@@ -23,7 +23,6 @@
           <li><a href="./add_task.html"><img src="../assets/icons/addTask-gray.svg" alt="">Add Task</a></li>
           <li><a href="./board.html"><img src="../assets/icons/board-gray.svg" alt="">Board</a></li>
           <li><a href="./contact.html"><img src="../assets/icons/contacts-gray.svg" alt="">Contacts</a></li>
-          
         </ul>
       </nav>
 
@@ -36,116 +35,122 @@
     <div class="cantainer">
       <div class="main">
 
-
         <header class="header">
           <div class="content-wrepper-header">
-          <div class="header-left">
-            <img src="../assets/icons/logo.svg" class="header-logo">
-            <span class="header-title">Kanban Project Management Tool</span>
-          </div>
+            <div class="header-left">
+              <img src="../assets/icons/logo.svg" class="header-logo">
+              <span class="header-title">Kanban Project Management Tool</span>
+            </div>
   
-          <div class="header-right">
-            <a class="header-help" href="./help.html">?</a>
-            <div class="header-user-area">
-              <button class="header-user" id="headerUserBtn" type="button" aria-expanded="false"
-                aria-controls="userMenu" aria-label="Open user menu">
-                G
-              </button>
-              <div class="user-menu" id="userMenu" role="menu" aria-hidden="true">
-                <a class="user-menu-item" href="./legal_notice.html" role="menuitem">Legal Notice</a>
-                <a class="user-menu-item" href="./privacy_policy.html" role="menuitem">Privacy Policy</a>
-                <a class="user-menu-item menu-item--mobile" href="./help.html" role="menuitem">Help</a>
-                <a class="user-menu-item" href="#" onclick="logout()" role="menuitem">Log out</a>
+            <div class="header-right">
+              <a class="header-help" href="./help.html">?</a>
+              <div class="header-user-area">
+                <button class="header-user" id="headerUserBtn" type="button">
+                  G
+                </button>
+                <div class="user-menu" id="userMenu">
+                  <a class="user-menu-item" href="./legal_notice.html">Legal Notice</a>
+                  <a class="user-menu-item" href="./privacy_policy.html">Privacy Policy</a>
+                  <a class="user-menu-item menu-item--mobile" href="./help.html">Help</a>
+                  <a class="user-menu-item" href="#" onclick="logout()">Log out</a>
+                </div>
               </div>
             </div>
-          </div>
           </div>
         </header>
 
-<div class="content-wrepper">
-        <div class="summary-section">
-          <div class="summary-headline">
-            <h1 class="summary-title">Join 360</h1>
-            <span class="summary-divider"></span>
-            <p class="summary-subtitle">Key Metrics at a Glance</p>
-          </div>
-        </div>
-
-
-        <div class="summary-content">
-        <div class="kpi-panel">
-
-          <div class="kpi-top">
-            <div class="kpi-card kpi-card--half" onclick="goToBoard()">
-              <div class="kpi-icon">
-                <img src="../assets/icons/edit-white.svg" alt="">
-              </div>
-              <div class="kpi-info">
-                <div id="todos-total" class="kpi-number"></div>
-                <div class="kpi-label">To-do</div>
-              </div>
-            </div>
-
-            <div class="kpi-card kpi-card--half" onclick="goToBoard()">
-              <div class="kpi-icon">
-                <img src="../assets/icons/check-white.svg" alt="">
-              </div>
-              <div class="kpi-info">
-                <div id="todos-done" class="kpi-number"></div>
-                <div class="kpi-label">Done</div>
-              </div>
+        <div class="content-wrepper">
+          <div class="summary-section">
+            <div class="summary-headline">
+              <h1 class="summary-title">Join 360</h1>
+              <span class="summary-divider"></span>
+              <p class="summary-subtitle">Key Metrics at a Glance</p>
             </div>
           </div>
 
-          <div class="kpi-card kpi-card--wide" onclick="goToBoard()">
+          <div class="summary-content">
+            <div class="kpi-panel">
 
-            <div class="kpi-urgent-left">
-              <div class="kpi-urgent-icon">
-                <img src="../assets/icons/urgent-white.png" alt="">
+              
+              <div class="kpi-top">
+                <div class="kpi-card kpi-card--half" onclick="goToBoard()">
+                  <div class="kpi-icon">
+                    <img src="../assets/icons/edit-white.svg" alt="">
+                  </div>
+                  <div class="kpi-info">
+                    <div id="todos-total" class="kpi-number"></div>
+                    <div class="kpi-label">To-do</div>
+                  </div>
+                </div>
+
+                <div class="kpi-card kpi-card--half" onclick="goToBoard()">
+                  <div class="kpi-icon">
+                    <img src="../assets/icons/check-white.svg" alt="">
+                  </div>
+                  <div class="kpi-info">
+                    <div id="todos-done" class="kpi-number"></div>
+                    <div class="kpi-label">Done</div>
+                  </div>
+                </div>
               </div>
 
-              <div class="kpi-info">
-                <div id="todo-status-urgent" class="kpi-number">1</div>
-                <div class="kpi-label">Urgent</div>
+              
+              <div class="kpi-card kpi-card--wide" onclick="goToBoard()">
+
+                <div class="kpi-urgent-left">
+                  <div class="kpi-urgent-icon">
+                    <img src="../assets/icons/urgent-white.png" alt="">
+                  </div>
+                  <div class="kpi-info">
+                    <div id="todo-status-urgent" class="kpi-number">1</div>
+                    <div class="kpi-label">Urgent</div>
+                  </div>
+                </div>
+
+                <div class="kpi-divider"></div>
+
+                <div class="kpi-urgent-right">
+                  <div id="due-date" class="kpi-date">
+                    <span id="months"></span>
+                    <span id="day"></span>,
+                    <span id="year"></span>
+                  </div>
+                  <div class="kpi-date-sub">Upcoming Deadline</div>
+                </div>
+
               </div>
+
+              
+              <div class="kpi-bottom">
+                <div class="kpi-card kpi-card--small" onclick="goToBoard()">
+                  <span id="task-in-board" class="kpi-number">5</span>
+                  <span class="kpi-label">Tasks in Board</span>
+                </div>
+
+                <div class="kpi-card kpi-card--small" onclick="goToBoard()">
+                  <span id="task-in-pogress" class="kpi-number">2</span>
+                  <span class="kpi-label">Tasks in Progress</span>
+                </div>
+
+                <div class="kpi-card kpi-card--small" onclick="goToBoard()">
+                  <span id="task-in-feedback" class="kpi-number">2</span>
+                  <span class="kpi-label">Awaiting Feedback</span>
+                </div>
+              </div>
+
             </div>
-            
-            <div class="kpi-urgent-right">
-              <div id="due-date" class="kpi-date"><span id="months"></span>  <span id="day"></span>, <span id="year"></span></div>
-              <div class="kpi-date-sub">Upcoming Deadline</div>
+
+            <div class="greeting-text">
+              <p class="good-morning" id="greeting-text"></p>
             </div>
-            
+
           </div>
-          
-
-          <div class="kpi-bottom">
-            <div class="kpi-card kpi-card--small" onclick="goToBoard()">
-              <span id="task-in-board" class="kpi-number">5</span>
-              <span class="kpi-label">Tasks in Board</span>
-            </div>
-
-            <div class="kpi-card kpi-card--small" onclick="goToBoard()">
-              <span id="task-in-pogress" class="kpi-number">2</span>
-              <span class="kpi-label">Tasks in Progress</span>
-            </div>
-
-            <div class="kpi-card kpi-card--small" onclick="goToBoard()">
-              <span id="task-in-feedback" class="kpi-number">2</span>
-              <span class="kpi-label">Awaiting Feedback</span>
-            </div>
-          </div>
-
         </div>
-        <div class="greeting-text">
-          <p class="good-morning" id="greeting-text"></p>
-        </div>
-        </div>
+
       </div>
-    </div>
     </div>
   </div>
 
-  
   <script src="../javascript/login.js"></script>
   <script src="../javascript/idb-storage.js" defer></script>
   <script src="../javascript/user-menu.js"></script>
