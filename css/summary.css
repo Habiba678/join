@@ -452,6 +452,7 @@ body {
 .kpi-urgent-left {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 18px;
   min-width: 0;
 }
@@ -459,6 +460,7 @@ body {
 .kpi-urgent-right {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 6px;
   min-width: 0;
   padding-left: 18px;
@@ -551,7 +553,7 @@ body {
     height: 135px;
     padding: 18px 32px;
     border-radius: 26px;
-    grid-template-columns: 40% 2px 60%;
+    grid-template-columns: 48% 2px 50%;
   }
 
   .kpi-card--small {
