@@ -205,7 +205,7 @@ function getCokkieCheckHelper() {
     const loginBtn = document.getElementById("login-btn");
     const menueUl = document.querySelector(".menu ul");
     
-    if (menueUl) menueUl.style.justifyContent = "space-around"; 
+   // if (menueUl) menueUl.style.justifyContent = "space-around"; 
     if (hidenNav) hidenNav.forEach(el => el.style.display = "block");
     if (sidebarFooter) sidebarFooter.style.display = "none";
     if (loginBtn) loginBtn.style.display = "none";
