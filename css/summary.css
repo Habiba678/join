@@ -919,6 +919,12 @@ body {
     padding-right: 10px;
   }
 
+  .kpi-icon,
+  .kpi-urgent-icon{
+    min-width: 46px;
+    min-height: 46px;
+  } 
+
   .kpi-number {
     font-size: 30px;
   }
