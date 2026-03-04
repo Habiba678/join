@@ -38,6 +38,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (createBtn) createBtn.addEventListener("click", createTask);
   if (clearBtn) clearBtn.addEventListener("click", clearForm);
+
+  const dateInput = document.getElementById("date");
+  if (!dateInput) return;
+
+  const today = new Date().toISOString().split("T")[0];
+  dateInput.setAttribute("min", today);
 });
 
 // ------------------ PRIORITY ------------------
@@ -100,11 +106,48 @@ function initSubtasks() {
 
   if (list) {
     list.onclick = (e) => {
-      const remove = e.target.closest(".subtasks-remove");
-      if (!remove) return;
+      const item = e.target.closest(".subtasks-item");
+      if (!item) return;
 
-      pendingSubtasks.splice(remove.dataset.index, 1);
-      renderSubtasks();
+      const remove = e.target.closest(".subtasks-remove");
+      const edit = e.target.closest(".subtasks-edit");
+      const save = e.target.closest(".subtasks-save-edit");
+      const cancel = e.target.closest(".subtasks-cancel-edit");
+
+      if (remove) {
+        const index = parseInt(remove.dataset.index, 10);
+        if (isNaN(index)) return;
+        pendingSubtasks.splice(index, 1);
+        renderSubtasks();
+        return;
+      }
+
+      if (edit) {
+        const index = parseInt(edit.dataset.index, 10);
+        if (isNaN(index) || !pendingSubtasks[index]) return;
+        const currentTitle = pendingSubtasks[index].title || "";
+        startInlineSubtaskEdit(item, index, currentTitle);
+        return;
+      }
+
+      if (save) {
+        const index = parseInt(save.dataset.index, 10);
+        if (isNaN(index) || !pendingSubtasks[index]) return;
+        const input = item.querySelector(".subtasks-edit-input");
+        if (!input) return;
+        const trimmed = input.value.trim();
+        if (!trimmed) {
+          renderSubtasks();
+          return;
+        }
+        pendingSubtasks[index].title = trimmed;
+        renderSubtasks();
+        return;
+      }
+
+      if (cancel) {
+        renderSubtasks();
+      }
     };
   }
 }
@@ -142,9 +185,55 @@ function renderSubtasks() {
     list.innerHTML += `
       <li class="subtasks-item">
         <span>${s.title}</span>
-        <button class="subtasks-remove" data-index="${i}">x</button>
-      </li>`;
+        <div class="subtasks-actions">  
+        <button class="subtasks-edit" data-index="${i}"><img src="../assets/icons/edit-gray.svg" alt="Edit subtask ${s.title}"></button>
+       <span class="subtasks-separator"></span> <button class="subtasks-remove" data-index="${i}"><img src="../assets/icons/delete.svg" alt="Remove subtask ${s.title}"></button>
+      </div></li>`;
   });
+}
+
+/**
+ * Switches a subtask list item into inline edit mode
+ * using an input field instead of a prompt.
+ * @param {HTMLElement} item
+ * @param {number} index
+ * @param {string} title
+ */
+function startInlineSubtaskEdit(item, index, title) {
+  if (!item) return;
+  item.innerHTML = "";
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.className = "subtasks-edit-input";
+  input.value = title || "";
+
+  const actions = document.createElement("div");
+  actions.className = "subtasks-actions";
+
+  const saveBtn = document.createElement("button");
+  saveBtn.className = "subtasks-save-edit";
+  saveBtn.dataset.index = String(index);
+  saveBtn.innerHTML = '<img src="../assets/icons/check.svg" alt="Save subtask">';
+
+  const sep = document.createElement("span");
+  sep.className = "subtasks-separator";
+
+  const cancelBtn = document.createElement("button");
+  cancelBtn.className = "subtasks-cancel-edit";
+  cancelBtn.dataset.index = String(index);
+  cancelBtn.innerHTML = '<img src="../assets/icons/iconoir_cancel.svg" alt="Cancel edit">';
+
+  actions.appendChild(saveBtn);
+  actions.appendChild(sep);
+  actions.appendChild(cancelBtn);
+
+  item.appendChild(input);
+  item.appendChild(actions);
+
+  input.focus();
+  const len = input.value.length;
+  input.setSelectionRange(len, len);
 }
 
 // ------------------ CONTACTS / MULTI SELECT ------------------
@@ -170,6 +259,7 @@ async function populateAssignedContacts() {
 
     const row = document.createElement("div");
     row.className = "contact-option";
+    row.dataset.id = String(c.id);
 
     row.innerHTML = `
       <div class="contact-avatar ${colorClass}">${getInitials(c.name)}</div>
@@ -177,7 +267,10 @@ async function populateAssignedContacts() {
       <input type="checkbox" ${selectedContacts.has(c.id) ? "checked" : ""}>
     `;
 
-    row.onclick = () => toggleContact(c.id);
+    row.onclick = (e) => {
+      e.stopPropagation();
+      toggleContact(c.id);
+    };
     dropdown.appendChild(row);
   });
 }
@@ -187,12 +280,26 @@ async function populateAssignedContacts() {
  * @param {string} id Contact ID
  */
 function toggleContact(id) {
-  selectedContacts.has(id)
-    ? selectedContacts.delete(id)
-    : selectedContacts.add(id);
-
-  populateAssignedContacts();
+  selectedContacts.has(id) ? selectedContacts.delete(id) : selectedContacts.add(id);
+  updateAssignedCheckboxes();
   renderSelectedContacts();
+}
+
+/**
+ * Updates the checked state of checkboxes in the existing
+ * dropdown without rebuilding all rows.
+ */
+function updateAssignedCheckboxes() {
+  const dropdown = document.getElementById("assignedDropdown");
+  if (!dropdown) return;
+  const rows = dropdown.querySelectorAll(".contact-option");
+  rows.forEach((row) => {
+    const id = row.dataset.id;
+    if (!id) return;
+    const input = row.querySelector('input[type="checkbox"]');
+    if (!input) return;
+    input.checked = selectedContacts.has(id);
+  });
 }
 
 /**
@@ -230,9 +337,22 @@ function initAssignedDropdown() {
   const arrow = document.getElementById("dropdownArrow");
   if (!input || !dropdown || !arrow) return;
 
-  input.onclick = () => {
-    dropdown.classList.toggle("hidden");
-    arrow.classList.toggle("open");
+  input.onclick = (e) => {
+    e.stopPropagation();
+    dropdown.classList.remove("hidden");
+    arrow.classList.add("open");
+  };
+
+  arrow.onclick = (e) => {
+    e.stopPropagation();
+    const isHidden = dropdown.classList.contains("hidden");
+    if (isHidden) {
+      dropdown.classList.remove("hidden");
+      arrow.classList.add("open");
+    } else {
+      dropdown.classList.add("hidden");
+      arrow.classList.remove("open");
+    }
   };
 
   document.addEventListener("click", (e) => {
@@ -250,7 +370,7 @@ function initAssignedDropdown() {
  * Also reloads tasks from the database and updates the board.
  */
 async function createTask() {
-  const titleEl = document.getElementById("titel");
+  const titleEl = document.getElementById("title");
   const descriptionEl = document.getElementById("description");
   const dueDateEl = document.getElementById("date");
   const categoryEl = document.getElementById("category");
@@ -328,10 +448,7 @@ async function createTask() {
 
     location.href = "./board.html";
   } catch (e) {
-    console.error(
-      "Failed to load tasks from remote DB; keeping overlay open for retry",
-      e,
-    );
+    console.error("Failed to load tasks from remote DB; keeping overlay open for retry", e);
 
     const overlay = document.getElementById("addTaskOverlayBackdrop");
     if (!overlay) {
@@ -362,10 +479,7 @@ async function loadContactsFromStorage() {
         return Object.values(data);
       }
     } catch (e) {
-      console.error(
-        "Failed to load contacts from direct node, trying root inspection",
-        e,
-      );
+      console.error("Failed to load contacts from direct node, trying root inspection", e);
     }
 
     try {
@@ -490,15 +604,14 @@ function getContactColorClass(contact) {
 function clearForm() {
   const root = getAddTaskRoot();
 
-  const title = document.getElementById("titel");
+  const title = document.getElementById("title");
   const description = document.getElementById("description");
   const dueDate = document.getElementById("date");
   const category = document.getElementById("category");
   const assigned = document.getElementById("assigned");
   const subtaskInput = document.getElementById("subtasks");
-
   const priorityBtns = root.querySelectorAll(".priority-section li");
-
+ 
   if (title) title.value = "";
   if (description) description.value = "";
   if (dueDate) dueDate.value = "";

@@ -215,9 +215,22 @@ function initOverlayAssignedDropdown() {
   const arrow = document.getElementById("taskEditDropdownArrow");
   if (!input || !dropdown || !arrow) return;
 
-  input.addEventListener("click", function () {
-    dropdown.classList.toggle("hidden");
-    arrow.classList.toggle("open");
+  input.addEventListener("click", function (e) {
+    e.stopPropagation();
+    dropdown.classList.remove("hidden");
+    arrow.classList.add("open");
+  });
+
+  arrow.addEventListener("click", function (e) {
+    e.stopPropagation();
+    const isHidden = dropdown.classList.contains("hidden");
+    if (isHidden) {
+      dropdown.classList.remove("hidden");
+      arrow.classList.add("open");
+    } else {
+      dropdown.classList.add("hidden");
+      arrow.classList.remove("open");
+    }
   });
 
   document.addEventListener("click", function (e) {
@@ -239,17 +252,11 @@ function populateOverlayAssignedContacts() {
     const colorClass = getOverlayEditContactColorClass(c);
     const row = document.createElement("div");
     row.className = "contact-option";
+    row.dataset.id = String(c.id);
     row.innerHTML =
-      '<div class="contact-avatar ' +
-      colorClass +
-      '">' +
-      getInitials(c.name) +
-      '</div><span>' +
-      c.name +
-      '</span><input type="checkbox" ' +
-      (overlaySelectedContacts.has(String(c.id)) ? "checked" : "") +
-      ">";
-    row.onclick = function () {
+      '<div class="contact-avatar ' + colorClass + '">' +getInitials(c.name) + '</div><span>' + c.name + '</span><input type="checkbox" ' + (overlaySelectedContacts.has(String(c.id)) ? "checked" : "") +">";
+    row.onclick = function (e) {
+      e.stopPropagation();
       toggleOverlayContact(c.id);
     };
     dropdown.appendChild(row);
@@ -261,8 +268,25 @@ function toggleOverlayContact(id) {
   overlaySelectedContacts.has(key)
     ? overlaySelectedContacts.delete(key)
     : overlaySelectedContacts.add(key);
-  populateOverlayAssignedContacts();
+  updateOverlayAssignedCheckboxes();
   renderOverlaySelectedContacts();
+}
+
+/**
+ * Updates the checked state of checkboxes in the overlay
+ * contacts dropdown without rebuilding all rows.
+ */
+function updateOverlayAssignedCheckboxes() {
+  const dropdown = document.getElementById("taskEditAssignedDropdown");
+  if (!dropdown) return;
+  const rows = dropdown.querySelectorAll(".contact-option");
+  rows.forEach(function (row) {
+    const id = row.dataset.id;
+    if (!id) return;
+    const input = row.querySelector('input[type="checkbox"]');
+    if (!input) return;
+    input.checked = overlaySelectedContacts.has(String(id));
+  });
 }
 
 function renderOverlaySelectedContacts() {
@@ -331,12 +355,48 @@ function initOverlaySubtasks() {
 
   if (list) {
     list.addEventListener("click", function (e) {
+      const item = e.target.closest(".subtasks-item");
+      if (!item) return;
+
       const remove = e.target.closest(".subtasks-remove");
-      if (!remove) return;
-      const index = parseInt(remove.dataset.index, 10);
-      if (!isNaN(index)) {
-        overlayPendingSubtasks.splice(index, 1);
-        renderOverlaySubtasksEdit();
+      const edit = e.target.closest(".subtasks-edit");
+      const save = e.target.closest(".subtasks-save-edit");
+      const cancel = e.target.closest(".subtasks-cancel-edit");
+
+      if (remove) {
+        const index = parseInt(remove.dataset.index, 10);
+        if (!isNaN(index)) {
+          overlayPendingSubtasks.splice(index, 1);
+          renderOverlaySubtasksList();
+        }
+        return;
+      }
+
+      if (edit) {
+        const index = parseInt(edit.dataset.index, 10);
+        if (isNaN(index) || !overlayPendingSubtasks[index]) return;
+        const currentTitle = overlayPendingSubtasks[index].title || "";
+        startOverlayInlineSubtaskEdit(item, index, currentTitle);
+        return;
+      }
+
+      if (save) {
+        const index = parseInt(save.dataset.index, 10);
+        if (isNaN(index) || !overlayPendingSubtasks[index]) return;
+        const input = item.querySelector(".subtasks-edit-input");
+        if (!input) return;
+        const trimmed = input.value.trim();
+        if (!trimmed) {
+          renderOverlaySubtasksList();
+          return;
+        }
+        overlayPendingSubtasks[index].title = trimmed;
+        renderOverlaySubtasksList();
+        return;
+      }
+
+      if (cancel) {
+        renderOverlaySubtasksList();
       }
     });
   }
@@ -352,9 +412,7 @@ function addOverlaySubtasksFromInput() {
     })
     .forEach(function (title) {
       if (!title) return;
-      if (overlayPendingSubtasks.length < 3) {
-        overlayPendingSubtasks.push({ title: title, done: false });
-      }
+      overlayPendingSubtasks.push({ title: title, done: false });
     });
   input.value = "";
   renderOverlaySubtasksList();
@@ -366,11 +424,8 @@ function renderOverlaySubtasksList() {
   list.innerHTML = "";
   for (let i = 0; i < overlayPendingSubtasks.length; i++) {
     list.innerHTML +=
-      '<li class="subtasks-item"><span>' +
-      overlayPendingSubtasks[i].title +
-      '</span><button class="subtasks-remove" data-index="' +
-      i +
-      '">x</button></li>';
+      '<li class="subtasks-item"><span>' + overlayPendingSubtasks[i].title +
+      '</span><div class="subtasks-actions"><button class="subtasks-edit" data-index="' + i + '" ><img src="../assets/icons/edit-gray.svg" alt="Edit subtask"></button><span class="subtasks-separator"></span><button class="subtasks-remove" data-index="' + i + '"><img src="../assets/icons/delete.svg" alt="Remove subtask"></button></div></li > ';
   }
 }
 
@@ -395,6 +450,50 @@ function overlayEditHashString(str) {
   const s = String(str || "");
   for (let i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
   return Math.abs(h);
+}
+
+/**
+ * Switches an overlay subtask list item into inline edit mode
+ * using an input field instead of a prompt.
+ * @param {HTMLElement} item
+ * @param {number} index
+ * @param {string} title
+ */
+function startOverlayInlineSubtaskEdit(item, index, title) {
+  if (!item) return;
+  item.innerHTML = "";
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.className = "subtasks-edit-input";
+  input.value = title || "";
+
+  const actions = document.createElement("div");
+  actions.className = "subtasks-actions";
+
+  const saveBtn = document.createElement("button");
+  saveBtn.className = "subtasks-save-edit";
+  saveBtn.dataset.index = String(index);
+  saveBtn.innerHTML = '<img src="../assets/icons/check.svg" alt="Save subtask">';
+
+  const sep = document.createElement("span");
+  sep.className = "subtasks-separator";
+
+  const cancelBtn = document.createElement("button");
+  cancelBtn.className = "subtasks-cancel-edit";
+  cancelBtn.dataset.index = String(index);
+  cancelBtn.innerHTML = '<img src="../assets/icons/iconoir_cancel.svg" alt="Cancel edit">';
+
+  actions.appendChild(saveBtn);
+  actions.appendChild(sep);
+  actions.appendChild(cancelBtn);
+
+  item.appendChild(input);
+  item.appendChild(actions);
+
+  input.focus();
+  const len = input.value.length;
+  input.setSelectionRange(len, len);
 }
 
 // ---------------- Drag & Drop (persist status) ----------------

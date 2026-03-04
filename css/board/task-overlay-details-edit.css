@@ -279,7 +279,30 @@
   font-size: 14px;
 }
 
+.subtasks-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .task-overlay-edit .subtasks-remove {
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 2px;
+}
+
+.task-overlay-edit .subtasks-separator {
+  width: 2px;
+  height: 18px;
+  background-color: #969595;
+  margin: 0 4px;
+}
+
+.task-overlay-edit .subtasks-edit {
   background: transparent;
   border: none;
   color: #666;
