@@ -47,7 +47,7 @@
   .menu ul {
     display: flex;
     flex-direction: row;
-    justify-content: start;
+    justify-content: space-around;
     align-items: center;
     width: 100%;
     list-style: none;
@@ -82,10 +82,9 @@
   }
 
   .sidebar-footer {
-    display: flex;
+    display: none;
     margin-top: 0px;
     margin-right: 16px;
-    display: flex;
     flex-direction: row;
     gap: 8px;
   }
