@@ -131,7 +131,7 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 32px;
+  gap: 27px;
   opacity: 0;
   transform: translateY(40px);
   transition: all 0.6s ease;
@@ -169,6 +169,8 @@ body.visited .login-form {
   font-weight: 700;
   position: relative;
   padding-bottom: 16px;
+  width: 315px;
+  height: 89px;
 }
 
 .login-form h1::after {
@@ -223,6 +225,7 @@ body.visited .login-form {
   display: flex;
   justify-content: center;
   gap: 35px;
+  margin-top: -24px;
 }
 
 .login-form .button-group button {
@@ -275,7 +278,7 @@ body.visited .login-form {
   opacity: 0;
   height: 30px;
   color: rgb(255, 47, 47);
-  font-size: 14px;
+  font-size: 16px;
   text-align: center;
   width: 422px;
 }
