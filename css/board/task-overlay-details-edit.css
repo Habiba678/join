@@ -141,18 +141,42 @@
   justify-content: center;
 }
 
-.task-overlay-edit .contact-avatar.avatar-color-0 { background:#FF7A00; }
-.task-overlay-edit .contact-avatar.avatar-color-1 { background:#FF5EB3; }
-.task-overlay-edit .contact-avatar.avatar-color-2 { background:#6E52FF; }
-.task-overlay-edit .contact-avatar.avatar-color-3 { background:#9327FF; }
-.task-overlay-edit .contact-avatar.avatar-color-4 { background:#00BEE8; }
-.task-overlay-edit .contact-avatar.avatar-color-5 { background:#1FD7C1; }
-.task-overlay-edit .contact-avatar.avatar-color-6 { background:#FFBB2B; }
-.task-overlay-edit .contact-avatar.avatar-color-7 { background:#FF4646; }
-.task-overlay-edit .contact-avatar.avatar-color-8 { background:#FC71FF; }
-.task-overlay-edit .contact-avatar.avatar-color-9 { background:#0038FF; }
-.task-overlay-edit .contact-avatar.avatar-color-10 { background:#C3FF2B; }
-.task-overlay-edit .contact-avatar.avatar-color-11 { background:#FFE62B; }
+.task-overlay-edit .contact-avatar.avatar-color-0 {
+  background: #ff7a00;
+}
+.task-overlay-edit .contact-avatar.avatar-color-1 {
+  background: #ff5eb3;
+}
+.task-overlay-edit .contact-avatar.avatar-color-2 {
+  background: #6e52ff;
+}
+.task-overlay-edit .contact-avatar.avatar-color-3 {
+  background: #9327ff;
+}
+.task-overlay-edit .contact-avatar.avatar-color-4 {
+  background: #00bee8;
+}
+.task-overlay-edit .contact-avatar.avatar-color-5 {
+  background: #1fd7c1;
+}
+.task-overlay-edit .contact-avatar.avatar-color-6 {
+  background: #ffbb2b;
+}
+.task-overlay-edit .contact-avatar.avatar-color-7 {
+  background: #ff4646;
+}
+.task-overlay-edit .contact-avatar.avatar-color-8 {
+  background: #fc71ff;
+}
+.task-overlay-edit .contact-avatar.avatar-color-9 {
+  background: #0038ff;
+}
+.task-overlay-edit .contact-avatar.avatar-color-10 {
+  background: #c3ff2b;
+}
+.task-overlay-edit .contact-avatar.avatar-color-11 {
+  background: #ffe62b;
+}
 
 .task-overlay-edit .contact-option input[type="checkbox"] {
   pointer-events: none;
@@ -178,17 +202,20 @@
   display: flex;
   gap: 12px;
   width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .task-overlay-edit .priority-btn {
-  flex: 1 1 0;
-  height: 46px;
+  flex: 0 0 auto;
+  width: 136px;
+  height: 56px;
   border: 1px solid #d0d0d0;
   background: #ffffff;
   border-radius: 8px;
   color: #000;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 20px;
   cursor: pointer;
   display: flex;
   align-items: center;

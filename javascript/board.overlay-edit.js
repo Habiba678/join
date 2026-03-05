@@ -183,6 +183,14 @@ function initOverlayEditWidgets() {
   initOverlayPriorityButtons();
   initOverlayAssignedDropdown();
   initOverlaySubtasks();
+  setOverlayDueMin();
+}
+
+function setOverlayDueMin() {
+  const dateInput = document.getElementById("taskEditDue");
+  if (!dateInput) return;
+  const today = new Date().toISOString().split("T")[0];
+  dateInput.setAttribute("min", today);
 }
 
 function initOverlayPriorityButtons() {
