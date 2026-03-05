@@ -301,7 +301,7 @@ html, body{
   background:rgba(255,255,255,.08);
 }
 .userMenuItem:hover{ background:rgba(255,255,255,.08); }
-@media (max-width: 1024px){
+@media (max-width: 1023px){
   .layout{
     flex-direction:column;
     min-height:100vh;
@@ -362,14 +362,15 @@ html, body{
     padding:10px 8px;
     width:auto;
     color:#A8A8A8;
+    border-radius: 20px;
   }
 
   .menu a:hover::before,
   .menu a.active::before{ display:none !important; }
 
   .menu img{
-    width:22px;
-    height:22px;
+    width: 22px;
+    height: 22px;
   }
 
   .detail-content{
@@ -391,13 +392,12 @@ html, body{
   display: flex;
  }
 
-
  .header-dropdown{
    position:absolute;
    right:0;
    top:calc(100% + 6px);
-   background:#2A3647;
-   border-radius:20px;
+   background: #2A3647;
+   border-radius: 20px;
    padding:8px;
    min-width:190px;
    box-shadow:0 12px 28px rgba(0,0,0,.22);
@@ -419,7 +419,7 @@ html, body{
   border-radius:12px;
   font-size:16px;
   cursor:pointer;
-}
+ }
 
 }
 

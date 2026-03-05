@@ -304,7 +304,7 @@ footer .links:hover {
   color: #29abe2;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   main {
     padding: 56px 24px 96px;
   }

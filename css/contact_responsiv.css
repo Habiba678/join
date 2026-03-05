@@ -1,4 +1,4 @@
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   .contacts-page {
     gap: 16px;
     height: calc(100vh - 80px);
