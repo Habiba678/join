@@ -243,8 +243,13 @@
 .subtasks-actions {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 0px;
   padding: 6px;
+}
+
+.subtasks-icon {
+  width: 16px;
+  height: 16px;
 }
 
 .subtasks-remove {

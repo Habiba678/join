@@ -374,9 +374,6 @@ async function createTask() {
   const descriptionEl = document.getElementById("description");
   const dueDateEl = document.getElementById("date");
   const categoryEl = document.getElementById("category");
-
-  // Ensure any text currently in the subtask input
-  // is converted into pendingSubtasks before saving.
   const subInput = document.getElementById("subtasks");
   if (subInput && subInput.value.trim()) addSubtasksFromInput();
 

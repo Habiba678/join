@@ -424,8 +424,13 @@ function renderOverlaySubtasksList() {
   list.innerHTML = "";
   for (let i = 0; i < overlayPendingSubtasks.length; i++) {
     list.innerHTML +=
-      '<li class="subtasks-item"><span>' + overlayPendingSubtasks[i].title +
-      '</span><div class="subtasks-actions"><button class="subtasks-edit" data-index="' + i + '" ><img src="../assets/icons/edit-gray.svg" alt="Edit subtask"></button><span class="subtasks-separator"></span><button class="subtasks-remove" data-index="' + i + '"><img src="../assets/icons/delete.svg" alt="Remove subtask"></button></div></li > ';
+      '<li class="subtasks-item"><span>' +
+      overlayPendingSubtasks[i].title +
+      '</span><div class="subtasks-actions"><button class="subtasks-edit" data-index="' +
+      i +
+      '" ><img class="subtasks-icon" src="../assets/icons/edit-gray.svg" alt="Edit subtask"></button><span class="subtasks-separator"></span><button class="subtasks-remove" data-index="' +
+      i +
+      '"><img class="subtasks-icon"src="../assets/icons/delete.svg" alt="Remove subtask"></button></div></li > ';
   }
 }
 
