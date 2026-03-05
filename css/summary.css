@@ -584,7 +584,6 @@ body {
   .header {
     padding: 20px 40px !important;
     height: 96px;
-    position: fixed;
   }
 .header-title,
 .header-help {
@@ -722,6 +721,7 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 20px 27px;
+    position: fixed;
   }
 
   .header-help {
@@ -743,8 +743,7 @@ body {
   }
 
   .summary-section {
-    padding-top: 20px;
-    margin: 0 auto;
+    padding-top: 150px;
   }
 
   .summary-headline {
@@ -1149,4 +1148,5 @@ body {
     padding-left: 0;
     padding-right: 0;
   }
+  
 }
