@@ -56,10 +56,7 @@ function guastLogin() {
   document.cookie = `loggedInUser=${payload}; path=/; max-age=3600`;
 
   try {
-    sessionStorage.setItem(
-      "loggedInUser",
-      JSON.stringify({ mail: "Guest", namen: "Guest" }),
-    );
+    sessionStorage.setItem("loggedInUser",JSON.stringify({ mail: "Guest", namen: "Guest" }),);
   } catch (e) {}
 
   window.location.href = "./subpages/summary.html";

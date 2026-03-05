@@ -41,29 +41,29 @@
             <div class="cantainer">
                 <div class="main" id="addTaskRoot">
 
-                <header class="header">
-                    <div class="content-wrepper-header">
-                        <div class="header-left">
-                            <img src="../assets/icons/logo.svg" class="header-logo" alt="Join Logo">
-                            <span class="header-title">Kanban Project Management Tool</span>
-                        </div>
-                
-                        <div class="header-right">
-                            <div class="header-help">?</div>
-                
-                            <button class="header-guest" id="headerUserBtn" type="button" aria-label="User menu" aria-expanded="false">
-                
+            <header class="header">
+                <div class="content-wrepper-header">
+                    <div class="header-left">
+                        <img src="../assets/icons/logo.svg" class="header-logo">
+                        <span class="header-title">Kanban Project Management Tool</span>
+                    </div>
+            
+                    <div class="header-right">
+                        <a class="header-help" href="./help.html">?</a>
+                        <div class="header-user-area">
+                            <button class="header-user" id="headerUserBtn" type="button">
+                                G
                             </button>
-                
-                            <div class="header-dropdown d-none" id="userMenu" role="menu" aria-labelledby="headerUserBtn">
-                                <a class="userMenuItem" href="./help.html" role="menuitem">Help</a>
-                                <a class="userMenuItem" href="./legal_notice.html" role="menuitem">Legal notice</a>
-                                <a class="userMenuItem" href="./privacy_policy.html" role="menuitem">Privacy Policy</a>
-                                <a class="userMenuItem" href="#" onclick="logout()" role="menuitem">Log out</a>
+                            <div class="user-menu" id="userMenu">
+                                <a class="user-menu-item" href="./legal_notice.html">Legal Notice</a>
+                                <a class="user-menu-item" href="./privacy_policy.html">Privacy Policy</a>
+                                <a class="user-menu-item menu-item--mobile" href="./help.html">Help</a>
+                                <a class="user-menu-item" href="#" onclick="logout()">Log out</a>
                             </div>
                         </div>
                     </div>
-                </header>
+                </div>
+            </header>
 
                     <div class="summary-section">
                         <div class="summary-headline">

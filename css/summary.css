@@ -582,10 +582,13 @@ body {
   }
 
   .header {
-    padding: 20px 40px;
+    padding: 20px 40px !important;
     height: 96px;
   }
-
+.header-title,
+.header-help {
+  display: none !important;
+}
   .good-morning {
     display: none;
   }

@@ -13,7 +13,7 @@ html, body{
   
 }
 
-.d-none{ display:none !important; }
+/* .d-none{ display:none !important; } */
 
 .layout{
   display:flex;
@@ -301,7 +301,7 @@ html, body{
   background:rgba(255,255,255,.08);
 }
 .userMenuItem:hover{ background:rgba(255,255,255,.08); }
-@media (max-width: 1023px){
+@media (max-width: 1024px){
   .layout{
     flex-direction:column;
     min-height:100vh;
@@ -317,7 +317,7 @@ html, body{
   .header-title,
   .header-help{ display:none !important; }
 
-  .header-logo{ display:block !important; height: 50px; margin-left: 5px;}
+  .header-logo{ display:block !important; width: 56px;height: 64px;}
 
   .sidebar{
     width:100%;
@@ -423,6 +423,12 @@ html, body{
 
 }
 
+@media (max-width: 768px){
+  .header-logo {
+      width: 44px;
+      height: 50px;
+    }
+}
 @media (max-width: 360px){
   .menu a{ font-size:11px; }
   .menu ul{ padding:0 6px; }

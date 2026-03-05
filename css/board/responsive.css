@@ -129,7 +129,7 @@
   .sidebar-footer a.active {
     background-color: #091931;
     color: #ffffff;
-    border-radius: 16px;
+    border-radius: 20px;
   }
 
   .sidebar-footer a.active::before {

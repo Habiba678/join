@@ -113,7 +113,6 @@
   width: 50%;
   justify-content: center;
   align-items: flex-start;
-  height: 560px;
 }
 
 .form_2 {
@@ -121,7 +120,7 @@
   align-items: center;
   flex-direction: column;
   width: 50%;
-  height: 560px;
+  height: 460px;
 }
 
 .form-details {
@@ -429,27 +428,7 @@ label .label-star {
 }
 
 @media (max-width: 900px) {
-  .header {
-    height: 80px;
-    background: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 24px 40px 20px 25px;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.08);
-  }
 
-  .header-title {
-    display: block !important;
-    height: 50px;
-    width: 50px;
-    content: url("../assets/icons/logo.svg");
-    margin-left: 0px;
-  }
-
-  .header-help {
-    display: none;
-  }
 
   .add-task-button {
     background-image: url("../assets/icons/addPlus-white.svg");
