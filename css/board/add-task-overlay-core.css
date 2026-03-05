@@ -32,6 +32,7 @@ body.no-scroll {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  font-size: 16px;
 }
 
 .add-task-overlay-header {
@@ -112,7 +113,7 @@ body.no-scroll {
 }
 
 .add-task-overlay .dropdown-arrow {
-  font-size: 12px;
+  font-size: 16px;
   transition: transform 0.2s ease;
 }
 
@@ -149,18 +150,42 @@ body.no-scroll {
   justify-content: center;
 }
 
-.add-task-overlay .contact-avatar.avatar-color-0 { background:#FF7A00; }
-.add-task-overlay .contact-avatar.avatar-color-1 { background:#FF5EB3; }
-.add-task-overlay .contact-avatar.avatar-color-2 { background:#6E52FF; }
-.add-task-overlay .contact-avatar.avatar-color-3 { background:#9327FF; }
-.add-task-overlay .contact-avatar.avatar-color-4 { background:#00BEE8; }
-.add-task-overlay .contact-avatar.avatar-color-5 { background:#1FD7C1; }
-.add-task-overlay .contact-avatar.avatar-color-6 { background:#FFBB2B; }
-.add-task-overlay .contact-avatar.avatar-color-7 { background:#FF4646; }
-.add-task-overlay .contact-avatar.avatar-color-8 { background:#FC71FF; }
-.add-task-overlay .contact-avatar.avatar-color-9 { background:#0038FF; }
-.add-task-overlay .contact-avatar.avatar-color-10 { background:#C3FF2B; }
-.add-task-overlay .contact-avatar.avatar-color-11 { background:#FFE62B; }
+.add-task-overlay .contact-avatar.avatar-color-0 {
+  background: #ff7a00;
+}
+.add-task-overlay .contact-avatar.avatar-color-1 {
+  background: #ff5eb3;
+}
+.add-task-overlay .contact-avatar.avatar-color-2 {
+  background: #6e52ff;
+}
+.add-task-overlay .contact-avatar.avatar-color-3 {
+  background: #9327ff;
+}
+.add-task-overlay .contact-avatar.avatar-color-4 {
+  background: #00bee8;
+}
+.add-task-overlay .contact-avatar.avatar-color-5 {
+  background: #1fd7c1;
+}
+.add-task-overlay .contact-avatar.avatar-color-6 {
+  background: #ffbb2b;
+}
+.add-task-overlay .contact-avatar.avatar-color-7 {
+  background: #ff4646;
+}
+.add-task-overlay .contact-avatar.avatar-color-8 {
+  background: #fc71ff;
+}
+.add-task-overlay .contact-avatar.avatar-color-9 {
+  background: #0038ff;
+}
+.add-task-overlay .contact-avatar.avatar-color-10 {
+  background: #c3ff2b;
+}
+.add-task-overlay .contact-avatar.avatar-color-11 {
+  background: #ffe62b;
+}
 
 .add-task-overlay .contact-option input[type="checkbox"] {
   pointer-events: none;
@@ -197,6 +222,7 @@ body.no-scroll {
   border-radius: 8px;
   width: 100%;
   box-sizing: border-box;
+  font-size: 16px;
 }
 
 .add-task-overlay .form-details input[type="text"],
@@ -221,6 +247,7 @@ body.no-scroll {
   border-radius: 8px;
   border: 1px solid #ccc;
   box-sizing: border-box;
+  font-size: 16px;
 }
 
 .add-task-overlay .form-details textarea:focus {
@@ -253,7 +280,7 @@ body.no-scroll {
   border-radius: 8px;
   color: #000;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 20px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -299,6 +326,13 @@ body.no-scroll {
 .add-task-overlay .subtasks-input input {
   width: 100%;
   padding-right: 44px;
+  font-size: 16px;
+}
+
+.add-task-overlay .form-details input::placeholder,
+.add-task-overlay .form-details textarea::placeholder,
+.add-task-overlay .subtasks-input input::placeholder {
+  font-size: 16px;
 }
 
 .add-task-overlay .subtasks-add-btn {
@@ -340,7 +374,7 @@ body.no-scroll {
   border: 1px solid #e0e0e0;
   border-radius: 6px;
   padding: 6px 10px;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .add-task-overlay .subtasks-remove {
