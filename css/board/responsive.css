@@ -371,6 +371,12 @@
   }
 }
 
+@media (max-width: 480px) {
+  .board-title {
+    font-size: 40px;
+  }
+}
+
 @media (max-width: 320px) {
   .search-bar {
     display: flex;
