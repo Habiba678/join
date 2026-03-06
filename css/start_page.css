@@ -378,14 +378,10 @@ footer .links:hover {
 
   .button-section--mobile {
     display: flex;
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 56px;
     justify-content: center;
     align-items: center;
     gap: 12px;
-    padding: 0 16px;
+    padding: 55px 16px;
     z-index: 6;
   }
 
@@ -418,6 +414,7 @@ footer .links:hover {
   main {
     justify-content: flex-start;
     align-items: center;
+    flex-direction: column;
     padding: 43px 16px 170px;
   }
 
@@ -455,11 +452,8 @@ footer .links:hover {
   }
 
   footer {
-    position: fixed;
-    left: 0;
-    right: 0;
     bottom: 16px;
-    padding: 0 16px;
+    padding: 0 16px 16px 16px;
     z-index: 6;
   }
 

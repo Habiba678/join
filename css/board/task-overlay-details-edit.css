@@ -144,36 +144,47 @@
 .task-overlay-edit .contact-avatar.avatar-color-0 {
   background: #ff7a00;
 }
+
 .task-overlay-edit .contact-avatar.avatar-color-1 {
   background: #ff5eb3;
 }
+
 .task-overlay-edit .contact-avatar.avatar-color-2 {
   background: #6e52ff;
 }
+
 .task-overlay-edit .contact-avatar.avatar-color-3 {
   background: #9327ff;
 }
+
 .task-overlay-edit .contact-avatar.avatar-color-4 {
   background: #00bee8;
 }
+
 .task-overlay-edit .contact-avatar.avatar-color-5 {
   background: #1fd7c1;
 }
+
 .task-overlay-edit .contact-avatar.avatar-color-6 {
   background: #ffbb2b;
 }
+
 .task-overlay-edit .contact-avatar.avatar-color-7 {
   background: #ff4646;
 }
+
 .task-overlay-edit .contact-avatar.avatar-color-8 {
   background: #fc71ff;
 }
+
 .task-overlay-edit .contact-avatar.avatar-color-9 {
   background: #0038ff;
 }
+
 .task-overlay-edit .contact-avatar.avatar-color-10 {
   background: #c3ff2b;
 }
+
 .task-overlay-edit .contact-avatar.avatar-color-11 {
   background: #ffe62b;
 }
@@ -228,8 +239,7 @@
 }
 
 .task-overlay-edit .priority-btn.medium .btn-icon {
-  filter: brightness(0) saturate(100%) invert(57%) sepia(88%) saturate(749%)
-    hue-rotate(1deg) brightness(103%) contrast(103%);
+  filter: brightness(0) saturate(100%) invert(57%) sepia(88%) saturate(749%) hue-rotate(1deg) brightness(103%) contrast(103%);
 }
 
 .task-overlay-edit .priority-btn.--selected {
@@ -364,4 +374,24 @@
   cursor: pointer;
   line-height: 1;
   padding: 0 2px;
+}
+
+@media (max-width: 425px) {
+  .task-overlay-edit .task-edit-assigned-avatars {
+    display: flex;
+    align-items: center;
+    justify-content: stretch;
+    gap: 2px;
+    padding: 0 16px;
+    margin-top: 8px;
+    min-height: 36px;
+  }
+
+  .task-overlay-edit .task-edit-assigned-avatars .contact-avatar {
+    width: 36px;
+    height: 36px;
+    margin-left: -13px;
+  }
+
+
 }

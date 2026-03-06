@@ -1,7 +1,17 @@
+let touchDragCard = null;
+let touchDragId = null;
+let touchDragStartX = 0;
+let touchDragStartY = 0;
+let touchDragActive = false;
+let lastTouchClientX = 0;
+let lastTouchClientY = 0;
+const TOUCH_DRAG_THRESHOLD = 10;
+
 function initDragAndDrop() {
   bindDragStart();
   bindDragEnd();
   bindDropZones();
+  bindTouchDrag();
 }
 
 function bindDragStart() {
@@ -78,6 +88,15 @@ function handleDrop(zone, e) {
   updateEmptyStates();
 }
 
+function handleTouchDrop(zone, card, id) {
+  const col = zone.closest(".column");
+  if (col) col.classList.remove("drag-over");
+  if (!card || !id) return;
+  zone.appendChild(card);
+  updateStatusAfterDrop(col, id);
+  updateEmptyStates();
+}
+
 function getDraggedCard(id) {
   if (id) {
     return document.querySelector('.card[data-id="' + CSS.escape(String(id)) + '"]');
@@ -111,6 +130,85 @@ function setEmptyStateForColumn(col) {
   const empty = col.querySelector(".empty");
   if (!cards || !empty) return;
   empty.style.display = cards.children.length ? "none" : "block";
+}
+
+// ---------------- Touch drag & drop (mobile) ----------------
+function bindTouchDrag() {
+  document.addEventListener("touchstart", onTouchStart, { passive: true });
+  document.addEventListener("touchmove", onTouchMove, { passive: false });
+  document.addEventListener("touchend", onTouchEnd);
+  document.addEventListener("touchcancel", onTouchEnd);
+}
+
+function onTouchStart(e) {
+  if (e.touches.length !== 1) return;
+  const card = e.target.closest(".card");
+  if (!card) return;
+
+  const touch = e.touches[0];
+  touchDragCard = card;
+  touchDragId = card.dataset.id || "";
+  touchDragStartX = touch.clientX;
+  touchDragStartY = touch.clientY;
+  lastTouchClientX = touch.clientX;
+  lastTouchClientY = touch.clientY;
+  touchDragActive = false;
+}
+
+function onTouchMove(e) {
+  if (!touchDragCard) return;
+  const touch = e.touches[0];
+  lastTouchClientX = touch.clientX;
+  lastTouchClientY = touch.clientY;
+
+  const dx = lastTouchClientX - touchDragStartX;
+  const dy = lastTouchClientY - touchDragStartY;
+
+  if (!touchDragActive) {
+    if (Math.abs(dx) + Math.abs(dy) < TOUCH_DRAG_THRESHOLD) return;
+    touchDragActive = true;
+    isDragging = true;
+    touchDragCard.classList.add("dragging");
+  }
+
+  // Verhindert Scrollen der Seite während des aktiven Drags
+  e.preventDefault();
+
+  updateTouchDragOver(lastTouchClientX, lastTouchClientY);
+}
+
+function onTouchEnd() {
+  if (!touchDragCard) return;
+
+  const card = touchDragCard;
+  const id = touchDragId;
+  const wasActive = touchDragActive;
+
+  clearDragOverClasses();
+
+  if (wasActive) {
+    const el = document.elementFromPoint(lastTouchClientX, lastTouchClientY);
+    const zone = el && el.closest ? el.closest(".column .cards") : null;
+    if (zone) {
+      handleTouchDrop(zone, card, id);
+    }
+  }
+
+  card.classList.remove("dragging");
+  touchDragCard = null;
+  touchDragId = null;
+  touchDragActive = false;
+  isDragging = false;
+}
+
+function updateTouchDragOver(x, y) {
+  clearDragOverClasses();
+  const el = document.elementFromPoint(x, y);
+  if (!el || !el.closest) return;
+  const zone = el.closest(".column .cards");
+  if (!zone) return;
+  const col = zone.closest(".column");
+  if (col) col.classList.add("drag-over");
 }
 
 // ---------------- Utils ----------------
