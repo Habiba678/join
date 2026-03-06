@@ -107,7 +107,8 @@
   .sidebar-footer {
     display: none;
     margin-top: 0px;
-    margin-right: 16px;
+    margin-right: 5px;
+    margin-left: 5px;
     flex-direction: row;
     gap: 8px;
   }
