@@ -20,15 +20,17 @@
 }
 
 .contact-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 32px;
   height: 32px;
+  margin-left: -8px;
   border-radius: 50%;
   background: #2a7cff;
   color: white;
   font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+
 }
 
 .avatar-color-0 {
@@ -261,6 +263,11 @@
   padding: 0 2px;
 }
 
+.subtasks-remove img {
+  width: 16px;
+  height: 16px;
+}
+
 .subtasks-edit {
   background: transparent;
   border: none;
@@ -269,6 +276,11 @@
   cursor: pointer;
   line-height: 1;
   padding: 0 2px;
+}
+
+.subtasks-edit img{
+  width: 16px;
+  height: 16px;
 }
 
 .subtasks-separator {
