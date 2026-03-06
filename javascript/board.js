@@ -12,6 +12,7 @@ let overlaySelectedContacts = new Set();
 let overlayPendingSubtasks = [];
 let overlaySelectedPriority = "medium";
 let activeSearchQuery = "";
+window.activeSearchQuery = activeSearchQuery;
 
 document.addEventListener("DOMContentLoaded", async function () {
   getCokkieCheck();
@@ -100,6 +101,7 @@ function initSearch() {
 
 function applySearchQuery(value) {
   activeSearchQuery = normalizeSearchQuery(value);
+  window.activeSearchQuery = activeSearchQuery;
   renderBoardFromStorage();
 }
 

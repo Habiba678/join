@@ -7,6 +7,21 @@ function renderBoardFromStorage() {
   updateEmptyStates();
 }
 
+function getNormalizeSearchFn() {
+  if (typeof normalizeSearchQuery === "function") return normalizeSearchQuery;
+  return function (value) {
+    return String(value || "").trim().toLowerCase();
+  };
+}
+
+function getActiveSearchQuery() {
+  if (typeof activeSearchQuery !== "undefined") return activeSearchQuery;
+  if (typeof window !== "undefined" && typeof window.activeSearchQuery !== "undefined") {
+    return window.activeSearchQuery;
+  }
+  return "";
+}
+
 function clearAllCards() {
   const cardsLists = document.querySelectorAll(".column .cards");
   for (let i = 0; i < cardsLists.length; i++) {
@@ -23,10 +38,12 @@ function renderAllTasks(tasks) {
 
 function getFilteredTasks() {
   const tasks = getTasks();
-  if (!activeSearchQuery) return tasks;
+  const normalize = getNormalizeSearchFn();
+  const query = normalize(getActiveSearchQuery());
+  if (!query) return tasks;
   const filtered = [];
   for (let i = 0; i < tasks.length; i++) {
-    if (taskMatchesQuery(tasks[i], activeSearchQuery)) filtered.push(tasks[i]);
+    if (taskMatchesQuery(tasks[i], query)) filtered.push(tasks[i]);
   }
   return filtered;
 }
@@ -35,7 +52,7 @@ function updateSearchEmptyState(tasks) {
   const el = document.getElementById("boardSearchEmpty");
   if (!el) return;
   const list = Array.isArray(tasks) ? tasks : [];
-  const show = !!activeSearchQuery && list.length === 0;
+  const show = !!getActiveSearchQuery() && list.length === 0;
   el.style.display = show ? "block" : "none";
 }
 
@@ -45,6 +62,7 @@ function taskMatchesQuery(task, query) {
 }
 
 function buildTaskSearchText(task) {
+  const normalize = getNormalizeSearchFn();
   const assigned = resolveAssignedList(task);
   const subs = getTaskSubtasks(task);
   const subtaskTitles = [];
@@ -62,7 +80,7 @@ function buildTaskSearchText(task) {
     assigned.join(" "),
     subtaskTitles.join(" "),
   ];
-  return normalizeSearchQuery(values.join(" "));
+  return normalize(values.join(" "));
 }
 
 function renderTaskCard(task) {
