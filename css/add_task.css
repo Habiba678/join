@@ -182,9 +182,15 @@
   width: 100%;
 }
 
+.subtasks-input.is-empty .subtasks-add-btn,
+.subtasks-input.is-empty .subtasks-clear-btn {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .subtasks-input input {
   width: 100%;
-  padding-right: 44px;
+  padding-right: 80px;
 }
 
 .subtasks-add-btn {
@@ -200,6 +206,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.subtasks-clear-btn {
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.subtasks-clear-btn img {
+  width: 16px;
+  height: 16px;
 }
 
 .subtasks-add-btn img {

@@ -349,7 +349,16 @@ function setOverlayAssignedFromTask(task) {
 function initOverlaySubtasks() {
   const input = document.getElementById("taskEditSubtaskInput");
   const btn = document.getElementById("taskEditAddSubtaskBtn");
+  const clearBtn = document.getElementById("taskEditClearSubtaskBtn");
   const list = document.getElementById("taskEditSubtasksList");
+
+  const syncSubtaskButtons = () => {
+    if (!input) return;
+    const wrap = input.closest(".subtasks-input");
+    if (!wrap) return;
+    const hasValue = !!input.value.trim();
+    wrap.classList.toggle("is-empty", !hasValue);
+  };
 
   if (btn && input) {
     btn.addEventListener("click", addOverlaySubtasksFromInput);
@@ -359,7 +368,18 @@ function initOverlaySubtasks() {
       e.preventDefault();
       addOverlaySubtasksFromInput();
     });
+    input.addEventListener("input", syncSubtaskButtons);
   }
+
+  if (clearBtn && input) {
+    clearBtn.addEventListener("click", function () {
+      input.value = "";
+      input.focus();
+      syncSubtaskButtons();
+    });
+  }
+
+  syncSubtaskButtons();
 
   if (list) {
     list.addEventListener("click", function (e) {

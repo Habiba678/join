@@ -323,9 +323,15 @@ body.no-scroll {
   width: 100%;
 }
 
+.add-task-overlay .subtasks-input.is-empty .subtasks-add-btn,
+.add-task-overlay .subtasks-input.is-empty .subtasks-clear-btn {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .add-task-overlay .subtasks-input input {
   width: 100%;
-  padding-right: 44px;
+  padding-right: 80px;
   font-size: 16px;
 }
 
@@ -350,6 +356,26 @@ body.no-scroll {
   justify-content: center;
 }
 
+.add-task-overlay .subtasks-clear-btn {
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-task-overlay .subtasks-clear-btn img {
+  width: 16px;
+  height: 16px;
+}
+
 .add-task-overlay .subtasks-add-btn img {
   width: 20px;
   height: 20px;
@@ -370,11 +396,19 @@ body.no-scroll {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  height: 35px;
   background: #f6f7f8;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
   padding: 6px 10px;
   font-size: 16px;
+}
+
+.add-task-overlay .subtasks-actions {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 6px;
 }
 
 .add-task-overlay .subtasks-remove {
@@ -385,6 +419,33 @@ body.no-scroll {
   cursor: pointer;
   line-height: 1;
   padding: 0 2px;
+}
+
+.add-task-overlay .subtasks-remove img {
+  width: 16px;
+  height: 16px;
+}
+
+.add-task-overlay .subtasks-edit {
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 2px;
+}
+
+.add-task-overlay .subtasks-edit img {
+  width: 16px;
+  height: 16px;
+}
+
+.add-task-overlay .subtasks-separator {
+  width: 2px;
+  height: 18px;
+  background-color: #969595;
+  margin: 0 4px;
 }
 
 .add-task-overlay label {

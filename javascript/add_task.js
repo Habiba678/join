@@ -92,7 +92,16 @@ function setDefaultPriority() {
 function initSubtasks() {
   const input = document.getElementById("subtasks");
   const btn = document.getElementById("addSubtaskBtn");
+  const clearBtn = document.getElementById("clearSubtaskBtn");
   const list = document.getElementById("subtasksList");
+
+  const syncSubtaskButtons = () => {
+    if (!input) return;
+    const wrap = input.closest(".subtasks-input");
+    if (!wrap) return;
+    const hasValue = !!input.value.trim();
+    wrap.classList.toggle("is-empty", !hasValue);
+  };
 
   if (btn && input) {
     btn.onclick = addSubtasksFromInput;
@@ -102,7 +111,18 @@ function initSubtasks() {
       e.preventDefault();
       addSubtasksFromInput();
     };
+    input.addEventListener("input", syncSubtaskButtons);
   }
+
+  if (clearBtn && input) {
+    clearBtn.onclick = () => {
+      input.value = "";
+      input.focus();
+      syncSubtaskButtons();
+    };
+  }
+
+  syncSubtaskButtons();
 
   if (list) {
     list.onclick = (e) => {

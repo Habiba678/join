@@ -259,9 +259,15 @@
   width: 100%;
 }
 
+.task-overlay-edit .subtasks-input.is-empty .subtasks-add-btn,
+.task-overlay-edit .subtasks-input.is-empty .subtasks-clear-btn {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .task-overlay-edit .subtasks-input input {
   width: 100%;
-  padding-right: 44px;
+  padding-right: 80px;
 }
 
 .task-overlay-edit .subtasks-add-btn {
@@ -277,6 +283,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.task-overlay-edit .subtasks-clear-btn {
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.task-overlay-edit .subtasks-clear-btn img {
+  width: 16px;
+  height: 16px;
 }
 
 .task-overlay-edit .subtasks-add-btn img {
