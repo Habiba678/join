@@ -452,11 +452,8 @@ footer .links:hover {
   }
 
   footer {
-    position: fixed;
-    left: 0;
-    right: 0;
     bottom: 16px;
-    padding: 0 16px;
+    padding: 0 16px 16px 16px;
     z-index: 6;
   }
 
