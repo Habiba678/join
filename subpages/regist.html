@@ -1,79 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" type="image/svg" sizes="32x32" href="../assets/icons/logo.svg">
-        <link rel="stylesheet" href="../css/forms.css">
-        <link rel="stylesheet" href="../css/singup.css">
-        <link rel="stylesheet" href="../css/style.css">
-        <title>Sign up</title>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg" sizes="32x32" href="../assets/icons/logo.svg">
+    <link rel="stylesheet" href="../css/forms.css">
+    <link rel="stylesheet" href="../css/singup.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <title>Sign up</title>
+</head>
 
-    <body>
-        <div class="content-wrepper">
-            <header class="sing_up_page">
-                <figure class="logo">
-                    <img class="logo-img" src="../assets/icons/logo.svg" alt="Join">
-                </figure>
-            </header>
-            <main>
-                <div class="main-content">
-                    <p id="reg-notice" class="reg-notice"></p>
-                    <form class="main-form">
-                        <section class="form-header">
-                            <a class="back-link" href="../index.html"><img src="../assets/icons/pfeil-links-blue.png" alt="Back"></a>
-                            <h1>Sign up</h1>
-                        </section>
-                        <div class="form-fields">
-                            <div class="field-group">
-                                <input onchange="validateFullname()" id="name" type="text" name="namen" placeholder="Name">
-                                <img class="input-icon" src="../assets/icons/person.png" alt="name icon">
-                                <span class="info-name" id="info-name">Please enter your name.</span>
-                            </div>
-                            <div class="field-group">
-                                <input onchange="validateEmail()" class="" id="mail" type="mail" name="mail"
-                                    placeholder="Email">
-                                <img class="input-icon" src="../assets/icons/mail.png" alt="email icon">
-                                <span class="info-email" id="info-email">Please enter a valid email.</span>
-                            </div>
-                            <div class="field-group">
-                                <input onchange="validatePassword()" class="" id="password" type="password"
-                                    name="singup-password" id="singup-password" placeholder="Password" autocomplete="off">
-                                <img class="input-icon password-toggle" id="password-toggle" src="../assets/icons/visibility_off.svg" alt="toggle password visibility">
-                                <span class="info-password" id="info-password">Password must be at least 6 characters.</span>
-                            </div>
-                            <div class="field-group">
-                                <input onchange="validateConfirmPassword()" class="" id="confirm-password" type="password"
-                                    name="confirm-password" placeholder="Confirm Password" autocomplete="off">
-                                <img class="input-icon password-toggle" id="confirm-password-toggle" src="../assets/icons/visibility_off.svg" alt="toggle password visibility">
-                                <span class="info-confirm-password" id="info-confirm-password">Your passwords don't match. Please try again. </span>
-                            </div>
+<body>
+    <div class="content-wrepper">
+        <header class="sing_up_page">
+            <figure class="logo">
+                <img class="logo-img" src="../assets/icons/logo.svg" alt="Join">
+            </figure>
+        </header>
+        <main>
+            <div class="main-content">
+                <p id="reg-notice" class="reg-notice"></p>
+                <form class="main-form">
+                    <section class="form-header">
+                        <a class="back-link" href="../index.html"><img src="../assets/icons/pfeil-links-blue.png"
+                                alt="Back"></a>
+                        <h1>Sign up</h1>
+                    </section>
+                    <div class="form-fields">
+                        <div class="field-group">
+                            <input onchange="validateFullname()" id="name" type="text" name="namen" placeholder="Name">
+                            <img class="input-icon" src="../assets/icons/person.png" alt="name icon">
+                            <span class="info-name" id="info-name">Please enter your name.</span>
                         </div>
-                        <section class="form-footer">
-                            <div class="form-check-content">
-                                <input onchange="validateCheckbox()" type="checkbox" name="accept" id="accept-id">
-                                <a class="" href="./privacy_policy.html"><span>I accept the</span> Privacy Policy</a>
-                                <span class="accept-tooltip" id="accept-police">Please accept the Privacy Policy.</span>
-                            </div>
-                            <button type="button" class="disebles-singup-button" id="singup-button" onclick="regData()" disabled><span class="button-text">Sign up</span></button>
-                        </section>
-                    </form>
+                        <div class="field-group">
+                            <input onchange="validateEmail()" class="" id="mail" type="mail" name="mail"
+                                placeholder="Email">
+                            <img class="input-icon" src="../assets/icons/mail.png" alt="email icon">
+                            <span class="info-email" id="info-email">Please enter a valid email.</span>
+                        </div>
+                        <div class="field-group">
+                            <input onchange="validatePassword()" class="" id="password" type="password"
+                                name="singup-password" id="singup-password" placeholder="Password" autocomplete="off">
+                            <img class="input-icon password-toggle" id="password-toggle"
+                                src="../assets/icons/visibility_off.svg" alt="toggle password visibility">
+                            <span class="info-password" id="info-password">Password: min. 6 characters.</span>
+                        </div>
+                        <div class="field-group">
+                            <input onchange="validateConfirmPassword()" class="" id="confirm-password" type="password"
+                                name="confirm-password" placeholder="Confirm Password" autocomplete="off">
+                            <img class="input-icon password-toggle" id="confirm-password-toggle"
+                                src="../assets/icons/visibility_off.svg" alt="toggle password visibility">
+                            <span class="info-confirm-password" id="info-confirm-password">Your passwords don't match.
+                                Please try again. </span>
+                        </div>
+                    </div>
+                    <section class="form-footer">
+                        <div class="form-check-content">
+                            <input onchange="validateCheckbox()" type="checkbox" name="accept" id="accept-id">
+                            <a class="" href="./privacy_policy.html"><span>I accept the</span> Privacy Policy</a>
+                            <span class="accept-tooltip" id="accept-police">Please accept the Privacy Policy.</span>
+                        </div>
+                        <button type="button" class="disebles-singup-button" id="singup-button" onclick="regData()"
+                            disabled><span class="button-text">Sign up</span></button>
+                    </section>
+                </form>
 
-                </div>
+            </div>
 
-            </main>
-            <footer>
-                <section class="footer-content">
-                    <a class="links" href="./privacy_policy.html">Privacy Policy</a><a class="links"
-                        href="./legal_notice.html">Legal notice</a>
-                </section>
-            </footer>
-        </div>
-        <script src="../javascript/validate.js"></script>
-        <script src="../javascript/regist.js"></script>
+        </main>
+        <footer>
+            <section class="footer-content">
+                <a class="links" href="./privacy_policy.html">Privacy Policy</a><a class="links"
+                    href="./legal_notice.html">Legal notice</a>
+            </section>
+        </footer>
+    </div>
+    <script src="../javascript/validate.js"></script>
+    <script src="../javascript/regist.js"></script>
 
-    </body>
+</body>
 
 </html>

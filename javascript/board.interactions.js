@@ -179,26 +179,16 @@ function onTouchMove(e) {
 
 function onTouchEnd() {
   if (!touchDragCard) return;
-
-  const card = touchDragCard;
-  const id = touchDragId;
-  const wasActive = touchDragActive;
-
+  const card = touchDragCard; const id = touchDragId; const wasActive = touchDragActive;
   clearDragOverClasses();
 
   if (wasActive) {
     const el = document.elementFromPoint(lastTouchClientX, lastTouchClientY);
     const zone = el && el.closest ? el.closest(".column .cards") : null;
-    if (zone) {
-      handleTouchDrop(zone, card, id);
-    }
+    if (zone) { handleTouchDrop(zone, card, id);}
   }
-
   card.classList.remove("dragging");
-  touchDragCard = null;
-  touchDragId = null;
-  touchDragActive = false;
-  isDragging = false;
+  touchDragCard = null; touchDragId = null; touchDragActive = false;  isDragging = false;
 }
 
 function updateTouchDragOver(x, y) {

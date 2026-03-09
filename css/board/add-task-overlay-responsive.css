@@ -1,4 +1,51 @@
 @media (max-width: 850px) {
+  .add-task-overlay .form_2 .form-details > p:first-of-type {
+    display: none;
+  }
+
+  .add-task-overlay-backdrop {
+    align-items: flex-start;
+    padding: 0;
+    background: #f6f7f8;
+    z-index: 998;
+    top: 96px;
+    bottom: calc(80px + env(safe-area-inset-bottom));
+  }
+
+  .add-task-overlay {
+    width: 100vw;
+    height: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-top: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+  }
+
+  .add-task-overlay-header {
+    position: sticky;
+    top: 0;
+    background: #ffffff;
+    z-index: 2;
+    padding: 8px 0;
+  }
+
+  .add-task-overlay .kpi-panel-task-footer {
+    position: sticky;
+    bottom: 0;
+    background: #ffffff;
+    z-index: 2;
+    margin-bottom: 0;
+    padding: 12px 0;
+  }
+
+  .add-task-overlay .kpi-panel-task-footer > span {
+    display: block;
+    margin-bottom: 8px;
+  }
+
   .add-task-overlay .kpi-panel-task {
     flex-direction: column;
   }
@@ -18,12 +65,66 @@
   }
 
   .add-task-overlay .kpi-panel-task-footer {
-    margin-bottom: 80px;
+    margin-bottom: 0;
     margin-top: 0;
+  }
+
+  .add-task-overlay .create-task-button .primary-btn {
+    width: auto;
+    font-weight: 500;
+    font-size: 16px;
+    height: 55px;
+  }
+
+  .add-task-overlay .primary-btn-cancel {
+    width: auto;
+    background-color: #fffefe;
+    border: 1px solid grey;
+    color: #000;
+    font-weight: 300;
+    width: 100px;
+    height: 55px;
   }
 }
 
 @media (max-width: 425px) {
+  .add-task-overlay-backdrop {
+    align-items: flex-start;
+    padding: 0;
+    background: #f6f7f8;
+    z-index: 998;
+    top: 80px;
+    bottom: calc(80px + env(safe-area-inset-bottom));
+  }
+
+  .add-task-overlay {
+    width: 100vw;
+    height: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-top: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding-bottom: calc(0px + env(safe-area-inset-bottom));
+  }
+
+  .add-task-overlay-header {
+    position: sticky;
+    top: 0;
+    background: #ffffff;
+    z-index: 2;
+    padding: 8px 0;
+  }
+
+  .add-task-overlay .kpi-panel-task-footer {
+    position: sticky;
+    bottom: 0;
+    background: #ffffff;
+    z-index: 2;
+    margin-bottom: 0;
+    padding: 12px 0;
+  }
 
   .add-task-overlay .form-details {
     display: flex;
@@ -42,7 +143,7 @@
   .add-task-overlay .kpi-panel-task-footer {
     align-items: center;
     flex-direction: column;
-    margin-bottom: 80px;
+    margin-bottom: 0;
     margin-top: 0;
   }
 
@@ -51,6 +152,21 @@
     justify-content: center;
     width: 100%;
     gap: 15px;
+  }
+
+  .add-task-overlay .priority-btn {
+    flex: 0 0 86px;
+    width: 86px;
+    height: 41px;
+    font-size: 16px;
+    line-height: 1;
+    gap: 2px;
+    padding: 0 4px;
+  }
+
+  .add-task-overlay .priority-btn .btn-icon {
+    width: 16px;
+    height: 16px;
   }
 
   .content-footer-buttons {
@@ -76,6 +192,7 @@
     width: auto;
     font-weight: 500;
     font-size: 16px;
+    height: 55px;
   }
 
   .add-task-overlay .primary-btn-cancel {
@@ -85,13 +202,13 @@
     color: #000;
     font-weight: 300;
     width: 100px;
+    height: 55px;
   }
 }
 
 @media (max-width: 320px) {
   .add-task-overlay-backdrop {
-    padding: 8px;
-
+    padding: 0;
   }
 
   .add-task-overlay .create-task-button .primary-btn {
@@ -108,5 +225,4 @@
     font-weight: 300;
     width: auto;
   }
-
 }

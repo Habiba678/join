@@ -27,7 +27,7 @@ body.no-scroll {
   overflow: auto;
   background: #ffffff;
   border-radius: 18px;
-  padding: 24px 28px 18px;
+  padding: 0px 28px 18px;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
   display: flex;
   flex-direction: column;
@@ -148,6 +148,7 @@ body.no-scroll {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-left: -8px;
 }
 
 .add-task-overlay .contact-avatar.avatar-color-0 {

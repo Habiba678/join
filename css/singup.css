@@ -114,6 +114,7 @@
 
 .main-form {
   width: 598px;
+  max-width: 100%;
   border-radius: 30px;
   background: #ffffff;
   box-shadow: 0 0 14px rgba(0, 0, 0, 0.04);
@@ -129,6 +130,7 @@
   gap: 16px;
   width: 422px;
   height: 286px;
+  max-width: 100%;
 }
 
 .field-group {
@@ -136,6 +138,7 @@
   position: relative;
   padding-bottom: 14px;
   box-sizing: border-box;
+  max-width: 100%;
 }
 
 .field-group input {
@@ -316,6 +319,10 @@ footer .links {
   font-size: 16px;
 }
 
+.content-wrepper > footer {
+  margin-top: 24px;
+}
+
 .button-text {
   display: inline-block;
   width: 78px;
@@ -333,6 +340,17 @@ footer .links {
 }
 
 @media (max-width: 700px) {
+  html,
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  body .content-wrepper main {
+    height: auto;
+    min-height: calc(100vh - 184px);
+  }
+
   .main-form {
     width: min(92vw, 598px);
     min-height: unset;
@@ -426,7 +444,7 @@ footer .links {
     overflow-y: auto;
   }
 
-  main {
+  body .content-wrepper main {
     height: auto;
   }
 
@@ -439,11 +457,11 @@ footer .links {
   }
 
   .main-content {
-    padding-top: 120px;
+    padding-top: 38px;
   }
 
   .main-form {
-    margin-top: 28px;
+    margin-top: 4px;
   }
 
   .form-header h1 {

@@ -170,6 +170,7 @@
   border-radius: 8px;
   border: 1px solid #ccc;
   box-sizing: border-box;
+  padding: 10px;
 }
 
 .form-details textarea:focus {
@@ -270,6 +271,7 @@
 .subtasks-actions {
   display: flex;
   align-items: center;
+  flex-direction: row-reverse;
   gap: 0px;
   padding: 6px;
 }
@@ -305,6 +307,36 @@
 }
 
 .subtasks-edit img{
+  width: 16px;
+  height: 16px;
+}
+
+.subtasks-save-edit{
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 2px;
+}
+
+.subtasks-save-edit img{
+  width: 16px;
+  height: 16px;
+} 
+
+.subtasks-cancel-edit{
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 2px;
+}
+
+.subtasks-cancel-edit img{
   width: 16px;
   height: 16px;
 }
@@ -546,16 +578,22 @@ label .label-star {
   .priority-section {
     justify-content: center;
     flex-direction: row;
-    gap: 15px;
+    gap: 9px;
   }
 
   .priority-section li {
     width: 100%;
     height: 46px;
+    font-size: 16px;
   }
 
   .create-task-button {
     margin-top: 5px;
     gap: 16px;
   }
+
+    .form-details input[type="text"],
+    .form-details input[type="date"] {
+      width: auto;
+    }
 }

@@ -347,6 +347,7 @@
   align-items: center;
   gap: 4px;
   padding: 6px;
+  flex-direction: row-reverse;
 }
 
 .task-overlay-edit .subtasks-remove {
@@ -376,6 +377,25 @@
   padding: 0 2px;
 }
 
+.subtasks-cancel-edit {
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 2px;
+}
+
+.subtasks-save-edit {
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 2px;
+}
 @media (max-width: 425px) {
   .task-overlay-edit .task-edit-assigned-avatars {
     display: flex;

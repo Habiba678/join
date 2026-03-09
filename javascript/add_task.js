@@ -234,7 +234,7 @@ function startInlineSubtaskEdit(item, index, title) {
   const saveBtn = document.createElement("button");
   saveBtn.className = "subtasks-save-edit";
   saveBtn.dataset.index = String(index);
-  saveBtn.innerHTML = '<img src="../assets/icons/check.svg" alt="Save subtask">';
+  saveBtn.innerHTML = '<img src="../assets/icons/check-black.svg" alt="Save subtask">';
 
   const sep = document.createElement("span");
   sep.className = "subtasks-separator";
@@ -333,12 +333,13 @@ async function renderSelectedContacts() {
     text.textContent = "Select contacts to assign";
     return;
   }
-
+ const limit = 8;
+  if (selectedContacts.size > limit) {
+    text.textContent = `${selectedContacts.size} contacts selected`;
+    return;
+  }
   const contactsData = await loadContactsFromStorage();
-  const list = Array.isArray(contactsData)
-    ? contactsData
-    : Object.values(contactsData || {});
-
+  const list = Array.isArray(contactsData) ? contactsData : Object.values(contactsData || {});
   text.innerHTML = [...selectedContacts]
     .map((id) => {
       const c = list.find((x) => x.id === id);

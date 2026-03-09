@@ -161,8 +161,7 @@ function buildAssignedAvatarsHtml(task) {
     const name = String(contact.name || contact.id || "");
     const initials = getInitials(name);
     const colorClass = getContactColorClass(contact);
-    html +=
-      '<span class="card-avatar ' + escapeHtml(colorClass) +'">' +escapeHtml(initials) +'</span>';
+    html += '<span class="card-avatar ' + escapeHtml(colorClass) +'">' +escapeHtml(initials) +'</span>';
   }
   const remaining = list.length - maxAvatars;
   if (remaining > 0) {

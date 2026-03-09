@@ -107,7 +107,8 @@
   .sidebar-footer {
     display: none;
     margin-top: 0px;
-    margin-right: 16px;
+    margin-right: 5px;
+    margin-left: 5px;
     flex-direction: row;
     gap: 8px;
   }
@@ -389,7 +390,18 @@
 
   .cards {
     height: auto;
-    overflow: visible;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 12px;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px;
+  }
+
+  .cards .card {
+    flex: 0 0 250px;
   }
 }
 
