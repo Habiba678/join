@@ -24,7 +24,6 @@
 }
 
 @media (max-width: 425px) {
-
   .add-task-overlay .form-details {
     display: flex;
     flex-direction: column;
@@ -51,6 +50,21 @@
     justify-content: center;
     width: 100%;
     gap: 15px;
+  }
+
+  .add-task-overlay .priority-btn {
+    flex: 0 0 86px;
+    width: 86px;
+    height: 41px;
+    font-size: 16px;
+    line-height: 1;
+    gap: 2px;
+    padding: 0 4px;
+  }
+
+  .add-task-overlay .priority-btn .btn-icon {
+    width: 16px;
+    height: 16px;
   }
 
   .content-footer-buttons {
@@ -91,7 +105,6 @@
 @media (max-width: 320px) {
   .add-task-overlay-backdrop {
     padding: 8px;
-
   }
 
   .add-task-overlay .create-task-button .primary-btn {
@@ -108,5 +121,4 @@
     font-weight: 300;
     width: auto;
   }
-
 }
