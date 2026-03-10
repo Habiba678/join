@@ -4,6 +4,7 @@
 #assignedText {
   display: flex;
   justify-content: space-around;
+  color: #999;
 }
 
 .contact-option {
