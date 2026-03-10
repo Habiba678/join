@@ -128,8 +128,8 @@ function modalFormTemplate(mode, data) {
                required
                value="${(data && data.name) ? data.name : ""}">
         <img src="../assets/icons/person.png" class="input-icon" alt="">
+        </div>
         <div class="input-error-message" id="nameError"></div>
-      </div>
 
       <div class="input-wrapper">
         <input id="contactEmail"
@@ -138,8 +138,8 @@ function modalFormTemplate(mode, data) {
                required
                value="${(data && data.email) ? data.email : ""}">
         <img src="../assets/icons/mail.png" class="input-icon" alt="">
+        </div>
         <div class="input-error-message" id="emailError"></div>
-      </div>
 
       <div class="input-wrapper">
         <input id="contactPhone"
