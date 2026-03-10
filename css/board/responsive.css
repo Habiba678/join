@@ -409,6 +409,34 @@
   .board-title {
     font-size: 40px;
   }
+
+  .task-overlay {
+    height: auto;
+    padding: 28px 5px;
+  }
+
+  .task-overlay-edit .priority-section {
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
+  .task-overlay-edit .priority-btn {
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+    height: 46px;
+    border: 1px solid #d0d0d0;
+    background: #ffffff;
+    border-radius: 8px;
+    color: #000;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+  }
 }
 
 @media (max-width: 320px) {
@@ -432,6 +460,8 @@
 
   .task-overlay-edit .priority-btn {
     flex: 1 1 0;
+    width: auto;
+    min-width: 0;
     height: 46px;
     border: 1px solid #d0d0d0;
     background: #ffffff;
@@ -444,6 +474,11 @@
     align-items: center;
     justify-content: center;
     gap: 3px;
+  }
+
+  .task-overlay-edit .priority-section {
+    flex-wrap: nowrap;
+    gap: 8px;
   }
 }
 

@@ -27,7 +27,7 @@
   height: 32px;
   margin-left: -8px;
   border-radius: 50%;
-  background: #2a7cff;
+  background: black;
   color: white;
   font-weight: bold;
 
@@ -260,12 +260,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 35px;
+  height: auto;
   background: #f6f7f8;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
   padding: 6px 10px;
   font-size: 16px;
+}
+
+.subtasks-item span{
+  flex: 1;
+  margin-right: 10px;
+  word-break: break-word;
 }
 
 .subtasks-actions {
@@ -498,8 +504,6 @@ label .label-star {
 }
 
 @media (max-width: 900px) {
-
-
   .add-task-button {
     background-image: url("../assets/icons/addPlus-white.svg");
     background-repeat: no-repeat;
@@ -591,9 +595,4 @@ label .label-star {
     margin-top: 5px;
     gap: 16px;
   }
-
-    .form-details input[type="text"],
-    .form-details input[type="date"] {
-      width: auto;
-    }
 }

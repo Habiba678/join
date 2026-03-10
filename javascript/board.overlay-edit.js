@@ -254,6 +254,8 @@ function populateOverlayAssignedContacts() {
   if (!dropdown) return;
   dropdown.innerHTML = "";
   const contacts = loadContacts();
+  const text = document.getElementById("taskEditAssignedText");
+  if (text) text.textContent = "Select contacts to assign";
   for (let i = 0; i < contacts.length; i++) {
     const c = contacts[i];
     if (!c || !c.id || !c.name) continue;
@@ -262,7 +264,15 @@ function populateOverlayAssignedContacts() {
     row.className = "contact-option";
     row.dataset.id = String(c.id);
     row.innerHTML =
-      '<div class="contact-avatar ' + colorClass + '">' +getInitials(c.name) + '</div><span>' + c.name + '</span><input type="checkbox" ' + (overlaySelectedContacts.has(String(c.id)) ? "checked" : "") +">";
+      '<div class="contact-avatar ' +
+      colorClass +
+      '">' +
+      getInitials(c.name) +
+      '</div><span>' +
+      c.name +
+      '</span><input type="checkbox" ' +
+      (overlaySelectedContacts.has(String(c.id)) ? "checked" : "") +
+      ">";
     row.onclick = function (e) {
       e.stopPropagation();
       toggleOverlayContact(c.id);
@@ -301,12 +311,19 @@ function renderOverlaySelectedContacts() {
   const text = document.getElementById("taskEditAssignedText");
   const avatarsWrap = document.getElementById("taskEditAssignedAvatars");
   if (!text) return;
-  text.textContent = "Select contacts to assign";
   if (!avatarsWrap) return;
   avatarsWrap.innerHTML = "";
-  if (!overlaySelectedContacts.size) return;
+  if (!overlaySelectedContacts.size) {
+    text.textContent = "Select contacts to assign";
+    return;
+  }
   const contacts = loadContacts();
-  avatarsWrap.innerHTML = Array.from(overlaySelectedContacts)
+  const selectedIds = Array.from(overlaySelectedContacts);
+  const limit = 8;
+  const visibleIds = selectedIds.slice(0, limit);
+  const remaining = selectedIds.length - visibleIds.length;
+
+  const avatarsHtml = visibleIds
     .map(function (id) {
       const c = contacts.find(function (x) {
         return String(x.id) === String(id);
@@ -316,6 +333,15 @@ function renderOverlaySelectedContacts() {
       return '<span class="contact-avatar ' + colorClass + '">' + getInitials(c.name) + "</span>";
     })
     .join("");
+
+  let moreHtml = "";
+  if (remaining > 0) {
+    moreHtml = '<span class="contact-avatar contact-avatar-more">+' + remaining + "</span>";
+  }
+
+  avatarsWrap.innerHTML = avatarsHtml + moreHtml;
+
+    text.textContent = "Select contacts to assign";
 }
 
 function setOverlayAssignedFromTask(task) {

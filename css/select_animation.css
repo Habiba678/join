@@ -35,6 +35,23 @@
     min-height: 40px;
 }
 
+.category-option {
+    padding: 6px 8px;
+    cursor: pointer;
+}
+
+.category-option:hover {
+    background: #f2f2f2;
+}
+
+.category-option.selected {
+    background: #e9f4ff;
+}
+
+.category-select .placeholder {
+    color: #999;
+}
+
 .dropdown-arrow {
     font-size: 16px;
     transition: transform 0.3s ease;
