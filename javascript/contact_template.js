@@ -118,25 +118,27 @@ function modalFormTemplate(mode, data) {
   return `
     <form id="addContactForm"
           novalidate
-          data-mode="${String(mode || "").trim().toLowerCase()}"
-          data-edit-id="${(data && data.id) ? data.id : ""}">
+          data-mode="${String(mode || "")
+            .trim()
+            .toLowerCase()}"
+          data-edit-id="${data && data.id ? data.id : ""}">
       
       <div class="input-wrapper">
         <input id="contactName"
                type="text"
                placeholder="Name"
                required
-               value="${(data && data.name) ? data.name : ""}">
+               value="${data && data.name ? data.name : ""}">
         <img src="../assets/icons/person.png" class="input-icon" alt="">
         </div>
         <div class="input-error-message" id="nameError"></div>
 
       <div class="input-wrapper">
-        <input id="contactEmail"
+        <input onchange="validateEmail()" id="contactEmail"
                type="email"
                placeholder="Email"
                required
-               value="${(data && data.email) ? data.email : ""}">
+               value="${data && data.email ? data.email : ""}">
         <img src="../assets/icons/mail.png" class="input-icon" alt="">
         </div>
         <div class="input-error-message" id="emailError"></div>
@@ -145,7 +147,7 @@ function modalFormTemplate(mode, data) {
         <input id="contactPhone"
                type="text"
                placeholder="Phone"
-               value="${(data && data.phone) ? data.phone : ""}">
+               value="${data && data.phone ? data.phone : ""}">
         <img src="../assets/icons/call.svg" class="input-icon" alt="">
       </div>
 

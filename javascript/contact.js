@@ -4,12 +4,20 @@ const dbTask = "https://join-da53b-default-rtdb.firebaseio.com/";
 let contacts = [];
 let selectedId = null;
 
-function isMobile() { return window.isMobile && window.isMobile(); }
-function showMobileList() { window.showMobileList && window.showMobileList(); }
-function showMobileDetails() { window.showMobileDetails && window.showMobileDetails(); }
+function isMobile() {
+  return window.isMobile && window.isMobile();
+}
+function showMobileList() {
+  window.showMobileList && window.showMobileList();
+}
+function showMobileDetails() {
+  window.showMobileDetails && window.showMobileDetails();
+}
 
 document.addEventListener("DOMContentLoaded", async function () {
-  await (window.idbStorage && window.idbStorage.ready ? window.idbStorage.ready : Promise.resolve());
+  await (window.idbStorage && window.idbStorage.ready
+    ? window.idbStorage.ready
+    : Promise.resolve());
   await init();
 });
 
@@ -34,7 +42,8 @@ function generateId() {
 }
 
 function hashString(str) {
-  let h = 0, s = String(str || "");
+  let h = 0,
+    s = String(str || "");
   for (let i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
   return Math.abs(h);
 }
@@ -62,7 +71,9 @@ function getInitials(fullName) {
 }
 
 function sortContacts(a, b) {
-  return (a.name || "").toLowerCase().localeCompare((b.name || "").toLowerCase());
+  return (a.name || "")
+    .toLowerCase()
+    .localeCompare((b.name || "").toLowerCase());
 }
 
 function groupKey(name) {
@@ -78,7 +89,11 @@ async function loadContacts() {
 
   if (!data) contacts = [];
   else if (Array.isArray(data)) contacts = data.filter(Boolean);
-  else contacts = Object.entries(data).map(([k, v]) => ({ ...(v || {}), id: v?.id || k }));
+  else
+    contacts = Object.entries(data).map(([k, v]) => ({
+      ...(v || {}),
+      id: v?.id || k,
+    }));
 
   ensureUniqueColors();
 }
@@ -116,7 +131,10 @@ function openModal(mode, contact) {
   removeModalNow();
 
   let data = buildModalData(mode, contact);
-  document.body.insertAdjacentHTML("beforeend", contactModalTemplate(mode, data));
+  document.body.insertAdjacentHTML(
+    "beforeend",
+    contactModalTemplate(mode, data),
+  );
 
   let m = document.getElementById("addContactModal");
   if (!m) return;
@@ -165,7 +183,7 @@ function buildModalData(mode, contact) {
     email: contact.email || "",
     phone: contact.phone || "",
     initials: getInitials(contact.name),
-    colorClass: contact.colorClass
+    colorClass: contact.colorClass,
   };
 }
 
@@ -174,7 +192,8 @@ function renderContactsList() {
   if (!list) return;
 
   let sorted = [...contacts].sort(sortContacts);
-  let html = "", current = "";
+  let html = "",
+    current = "";
 
   for (let c of sorted) {
     let g = groupKey(c.name);
@@ -183,13 +202,16 @@ function renderContactsList() {
       html += letterGroupTemplate(current);
     }
 
-    html += contactListItemTemplate({
-      id: c.id,
-      name: c.name,
-      email: c.email,
-      initials: getInitials(c.name),
-      colorClass: c.colorClass
-    }, c.id === selectedId);
+    html += contactListItemTemplate(
+      {
+        id: c.id,
+        name: c.name,
+        email: c.email,
+        initials: getInitials(c.name),
+        colorClass: c.colorClass,
+      },
+      c.id === selectedId,
+    );
   }
 
   list.innerHTML = html;
@@ -204,7 +226,7 @@ function renderDetails() {
     return;
   }
 
-  let c = contacts.find(x => x.id === selectedId);
+  let c = contacts.find((x) => x.id === selectedId);
   if (!c) return;
 
   d.innerHTML = contactDetailsTemplate({
@@ -213,7 +235,7 @@ function renderDetails() {
     email: c.email,
     phone: c.phone || "-",
     initials: getInitials(c.name),
-    colorClass: c.colorClass
+    colorClass: c.colorClass,
   });
 
   if (isMobile()) showMobileDetails();
@@ -229,7 +251,9 @@ function clearContactErrors() {
 
 function validateContactForm() {
   let name = normalize(document.getElementById("contactName")?.value);
-  let email = normalize(document.getElementById("contactEmail")?.value).toLowerCase();
+  let email = normalize(
+    document.getElementById("contactEmail")?.value,
+  ).toLowerCase();
 
   let nameError = document.getElementById("nameError");
   let emailError = document.getElementById("emailError");
@@ -253,7 +277,9 @@ function validateContactForm() {
 
 function createFromForm() {
   let name = normalize(document.getElementById("contactName")?.value);
-  let email = normalize(document.getElementById("contactEmail")?.value).toLowerCase();
+  let email = normalize(
+    document.getElementById("contactEmail")?.value,
+  ).toLowerCase();
   let phone = normalize(document.getElementById("contactPhone")?.value);
 
   if (!validateContactForm()) return;
@@ -265,7 +291,7 @@ function createFromForm() {
     name,
     email,
     phone,
-    colorClass: colorClassFor(id)
+    colorClass: colorClassFor(id),
   });
 
   selectedId = id;
@@ -278,11 +304,13 @@ function createFromForm() {
 }
 
 function saveEdit(editId) {
-  let idx = contacts.findIndex(c => c.id === editId);
+  let idx = contacts.findIndex((c) => c.id === editId);
   if (idx === -1) return;
 
   let name = normalize(document.getElementById("contactName")?.value);
-  let email = normalize(document.getElementById("contactEmail")?.value).toLowerCase();
+  let email = normalize(
+    document.getElementById("contactEmail")?.value,
+  ).toLowerCase();
   let phone = normalize(document.getElementById("contactPhone")?.value);
 
   if (!validateContactForm()) return;
@@ -297,7 +325,7 @@ function saveEdit(editId) {
 }
 
 function deleteContact(id) {
-  contacts = contacts.filter(c => c.id !== id);
+  contacts = contacts.filter((c) => c.id !== id);
   selectedId = null;
   saveContacts();
   renderContactsList();
@@ -324,7 +352,7 @@ function handleClick(e) {
 
   if (act?.dataset.action === "edit") {
     window.closeMobileMenu && window.closeMobileMenu();
-    let contact = contacts.find(c => c.id === act.dataset.id);
+    let contact = contacts.find((c) => c.id === act.dataset.id);
     return openModal("edit", contact);
   }
 
@@ -343,4 +371,29 @@ function handleSubmit(e) {
 
   if (mode === "edit" && editId) return saveEdit(editId);
   return createFromForm();
+}
+
+function validateEmailRegEx(emailInput) {
+  const value = typeof emailInput === "string" ? emailInput : (emailInput && emailInput.value) || "";
+  const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return pattern.test(String(value).toLowerCase());
+}
+/**
+ * Email prüfen
+ */
+function validateEmail() {
+  let email = document.getElementById("contactEmail");
+  const isValid = validateEmailRegEx(email);
+
+  if (isValid) {
+    email.classList.remove("isInvaled");
+    email.classList.add("isValidate");
+    setInfoState(infoEmail, false);
+  } else {
+    email.classList.add("isInvaled");
+    email.classList.remove("isValidate");
+    setInfoState(infoEmail, true);
+  }
+
+  return isValid;
 }

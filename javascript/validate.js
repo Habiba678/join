@@ -104,9 +104,6 @@ function validateEmail() {
   }
 
   if (isValid) {
-   
-  
-    
     email.classList.remove("isInvaled");
     email.classList.add("isValidate");
     setInfoState(infoEmail, false);

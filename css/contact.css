@@ -530,13 +530,25 @@
   padding: 0 36px 0 12px;
   font-size: 16px;
   background: white;
+  outline: unset;
+}
+
+.input-wrapper input:focus {
+  border-color: #5ec0e9;
+  outline: unset;
 }
 
 input::placeholder {
   color: #d1d1d1;
   font-size: 16px;
 }
+.isValidate {
+  border: 1px solid greenyellow !important;
+}
 
+.isInvaled {
+  border: 1px solid rgb(255, 47, 47) !important;
+}
 .input-icon {
   position: absolute;
   right: 14px;
