@@ -361,6 +361,7 @@ html, body{
     display:flex;
     flex-direction:column;
     gap:6px;
+    font-size: 16px;
     padding:10px 8px;
     width:auto;
     color:#A8A8A8;
@@ -451,8 +452,5 @@ html, body{
   }
 }
 @media (max-width: 360px){
-  .menu a{ font-size:11px; }
-  .menu ul{ padding:0 6px; }
-  .menu a{ padding:8px 6px; gap:4px; }
-  .menu img{ width:20px; height:20px; }
+  .menu a{ padding:10px 8px; gap:6px; }
 }

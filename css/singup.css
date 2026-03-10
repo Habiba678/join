@@ -340,11 +340,7 @@ footer .links {
 }
 
 @media (max-width: 700px) {
-  html,
-  body {
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
+
 
   body .content-wrepper main {
     height: auto;
@@ -364,9 +360,9 @@ footer .links {
 
 @media (max-width: 600px) {
   .logo {
-    top: 12px;
-    left: 12px;
+    top: 19px;
     transform: none;
+    padding: 0 0 0 38px;
     margin: 0;
   }
 

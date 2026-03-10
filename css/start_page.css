@@ -333,11 +333,6 @@ footer .links:hover {
 }
 
 @media (max-width: 768px) {
-  html,
-  body {
-    overflow-y: auto;
-  }
-
   main {
     display: flex;
     justify-content: center;
