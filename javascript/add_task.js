@@ -43,9 +43,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const dateInput = document.getElementById("date");
   if (!dateInput) return;
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = getLocalDateInputValue();
   dateInput.setAttribute("min", today);
 });
+
+/**
+ * Returns today's date in local YYYY-MM-DD format for date inputs.
+ * @param {Date} [date]
+ */
+function getLocalDateInputValue(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
 
 // ------------------ PRIORITY ------------------
 
@@ -486,7 +497,8 @@ function setCategorySelection(value) {
  * Also reloads tasks from the database and updates the board.
  */
 async function createTask() {
-  const titleEl = document.getElementById("title");
+  const titleEl =
+    document.getElementById("title") || document.getElementById("titel");
   const descriptionEl = document.getElementById("description");
   const dueDateEl = document.getElementById("date");
   const categoryEl = document.getElementById("category");
@@ -717,7 +729,7 @@ function getContactColorClass(contact) {
 function clearForm() {
   const root = getAddTaskRoot();
 
-  const title = document.getElementById("title");
+  const title = document.getElementById("title") || document.getElementById("titel");
   const description = document.getElementById("description");
   const dueDate = document.getElementById("date");
   const category = document.getElementById("category");

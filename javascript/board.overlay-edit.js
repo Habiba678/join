@@ -189,8 +189,19 @@ function initOverlayEditWidgets() {
 function setOverlayDueMin() {
   const dateInput = document.getElementById("taskEditDue");
   if (!dateInput) return;
-  const today = new Date().toISOString().split("T")[0];
+  const today = getLocalDateInputValue();
   dateInput.setAttribute("min", today);
+}
+
+/**
+ * Returns today's date in local YYYY-MM-DD format for date inputs.
+ * @param {Date} [date]
+ */
+function getLocalDateInputValue(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 function initOverlayPriorityButtons() {
