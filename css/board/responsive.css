@@ -40,20 +40,24 @@
 
   /* ---------Sidebar section start----------------- */
   .sidebar {
-    width: 100vw;
-    height: calc(80px + env(safe-area-inset-bottom));
+    width: 100%;
+    max-width: 100%;
+    height: 80px;
     background-color: #2a3647;
     color: white;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    padding: 0 0 env(safe-area-inset-bottom);
+    padding: 2px 16px;
     position: fixed;
     left: 0;
     right: 0;
+    transform: none;
     bottom: 0;
     z-index: 999;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+    border-radius: 0;
   }
 
   .logo {
@@ -70,15 +74,18 @@
   .menu ul {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
     list-style: none;
     margin: 0;
-    padding: 0 10px;
+    height: 100%;
+    padding: 2px 8px;
+    gap: 0;
   }
 
   .menu li {
+    flex: 1 1 0;
     min-width: 0;
     display: flex;
     justify-content: center;
@@ -86,22 +93,46 @@
 
   .menu a {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    padding: 10px 8px;
-    width: auto;
-    font-size: 12px;
+    padding: 0;
+    width: 100%;
+    font-size: 16px;
     white-space: nowrap;
     color: #a8a8a8;
     text-decoration: none;
     position: relative;
   }
 
+  .menu-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 0;
+    gap: 4px;
+    width: 76px;
+    height: 76px;
+    line-height: 120%;
+    border-radius: 8px;
+  }
+
+  .menu a.active {
+    background-color: transparent;
+  }
+
+  .menu a.active .menu-button {
+    background: #091931;
+    border-radius: 16px;
+  }
+
   .menu img {
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
+  }
+
+  #login-btn {
+    display: none;
   }
 
   .sidebar-footer {
@@ -319,6 +350,37 @@
 
   .task-edit-row {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 340px) {
+  .sidebar {
+    padding: 2px 8px;
+  }
+
+  .menu ul {
+    padding: 0;
+    gap: 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .sidebar {
+    padding: 2px 8px;
+  }
+
+  .menu ul {
+    padding: 0;
+  }
+}
+
+@media (max-width: 320px) {
+  .sidebar {
+    padding: 2px 4px;
+  }
+
+  .menu ul {
+    padding: 0;
   }
 }
 

@@ -10,6 +10,8 @@ body {
     sans-serif;
   background: #ffffff;
   scrollbar-width: none;
+  scrollbar-gutter: stable;
+  overflow-y: scroll;
 }
 
 .layout {
@@ -71,6 +73,13 @@ body {
   color: #a8a8a8;
   text-decoration: none;
   position: relative;
+}
+
+.menu-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
 }
 
 .menu a:hover {
