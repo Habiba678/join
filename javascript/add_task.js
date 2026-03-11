@@ -43,8 +43,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const dateInput = document.getElementById("date");
   if (!dateInput) return;
 
-  const today = new Date().toISOString().split("T")[0];
-  dateInput.setAttribute("min", today);
+  const now = new Date();
+  const localToday = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+    .toISOString()
+    .split("T")[0];
+  dateInput.setAttribute("min", localToday);
 });
 
 // ------------------ PRIORITY ------------------

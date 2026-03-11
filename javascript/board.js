@@ -137,7 +137,7 @@ function openAddTaskOverlay(status) {
   if (typeof resetAddTaskForm === "function") resetAddTaskForm();
   else if (typeof clearForm === "function") clearForm();
 
-  const titleInput = document.getElementById("titel");
+  const titleInput = document.getElementById("title");
   if (titleInput) titleInput.focus();
 }
 
