@@ -334,7 +334,7 @@
 
 .task-overlay-edit .subtasks-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   background: #f6f7f8;
   border: 1px solid #e0e0e0;
@@ -342,6 +342,13 @@
   padding: 6px 10px;
   font-size: 16px;
   color: #999;
+}
+
+.task-overlay-edit .subtasks-item span {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .subtasks-actions {

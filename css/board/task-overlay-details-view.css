@@ -162,9 +162,16 @@
 
 .task-overlay-subtask {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   padding: 6px 16px;
+}
+
+.task-overlay-subtask span {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .task-overlay-subtask input {

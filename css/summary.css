@@ -6,7 +6,8 @@ html,
 body {
   height: 100%;
   margin: 0;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial,
+    sans-serif;
   scrollbar-width: none;
   overscroll-behavior-x: none;
 }
@@ -19,7 +20,7 @@ body {
 .cantainer,
 .container {
   flex: 1;
-  background: #F6F7F8;
+  background: #f6f7f8;
 }
 
 .main {
@@ -50,7 +51,7 @@ body {
 
 .sidebar {
   width: 232px;
-  background-color: #2A3647;
+  background-color: #2a3647;
   color: white;
   display: flex;
   flex-direction: column;
@@ -95,7 +96,7 @@ body {
   gap: 12px;
   padding: 12px 0 12px 56px;
   width: 100%;
-  color: #A8A8A8;
+  color: #a8a8a8;
   text-decoration: none;
   position: relative;
   border: none;
@@ -150,14 +151,14 @@ body {
 .sidebar-footer a {
   font-size: 16px;
   line-height: 120%;
-  color: #A8A8A8;
+  color: #a8a8a8;
   text-decoration: none;
   cursor: pointer;
 }
 
 .sidebar-footer a:hover {
   transform: translate(0.95px);
-  color: #29ABE2;
+  color: #29abe2;
 }
 
 .header {
@@ -202,7 +203,7 @@ body {
   align-items: center;
   justify-content: center;
   border: 1.5px solid #3a3a334e;
-  color: #A8A8A8;
+  color: #a8a8a8;
   text-decoration: none;
   font-size: 16px;
   font-weight: 600;
@@ -211,8 +212,8 @@ body {
 }
 
 .header-help:hover {
-  color: #A8A8A8;
-  border-color: #A8A8A8;
+  color: #a8a8a8;
+  border-color: #a8a8a8;
   background: transparent;
 }
 
@@ -221,13 +222,13 @@ body {
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  border: 2px solid #2A3647;
+  border: 2px solid #2a3647;
   display: grid;
   place-items: center;
   font: inherit;
   font-size: 20px;
   font-weight: 700;
-  color: #29ABE2;
+  color: #29abe2;
   background: #ffffff;
   cursor: pointer;
   padding: 0;
@@ -314,7 +315,7 @@ body {
 .summary-divider {
   width: 0;
   height: 59px;
-  border-left: 3px solid #29ABE2;
+  border-left: 3px solid #29abe2;
 }
 
 .summary-subtitle {
@@ -322,7 +323,7 @@ body {
   font-weight: 400;
   font-size: 27px;
   line-height: 120%;
-  color: #2A3647;
+  color: #2a3647;
 }
 
 .summary-content {
@@ -382,7 +383,7 @@ body {
 
 .kpi-divider {
   width: 2px;
-  background: #D1D1D1;
+  background: #d1d1d1;
   height: 70%;
   justify-self: center;
   border-radius: 2px;
@@ -405,7 +406,7 @@ body {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: #2A3647;
+  background: #2a3647;
   display: grid;
   place-items: center;
 }
@@ -414,7 +415,7 @@ body {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: #FF3D00;
+  background: #ff3d00;
   display: grid;
   place-items: center;
 }
@@ -444,7 +445,7 @@ body {
   font-size: 16px;
   font-weight: 400;
   line-height: 120%;
-  color: #2A3647;
+  color: #2a3647;
   text-align: center;
   max-width: 85px;
 }
@@ -469,20 +470,20 @@ body {
 .kpi-date {
   font-size: 20px;
   font-weight: 700;
-  color: #2A3647;
+  color: #2a3647;
   white-space: nowrap;
 }
 
 .kpi-date-sub {
   font-size: 16px;
   font-weight: 400;
-  color: #2A3647;
+  color: #2a3647;
   opacity: 0.8;
   white-space: nowrap;
 }
 
 .kpi-card:hover {
-  background-color: #2A3647;
+  background-color: #2a3647;
 }
 
 .kpi-card:hover .kpi-number,
@@ -498,7 +499,8 @@ body {
 }
 
 .kpi-card:hover .kpi-icon img {
-  filter: brightness(0) saturate(100%) invert(16%) sepia(11%) saturate(1600%) hue-rotate(182deg) brightness(92%) contrast(92%);
+  filter: brightness(0) saturate(100%) invert(16%) sepia(11%) saturate(1600%)
+    hue-rotate(182deg) brightness(92%) contrast(92%);
 }
 
 .good-morning {
@@ -507,7 +509,7 @@ body {
   text-align: start;
   font-weight: 400;
   font-size: 28px;
-  color: #2A3647;
+  color: #2a3647;
 }
 @media (max-width: 1200px) {
   .summary-section {
@@ -585,10 +587,10 @@ body {
     padding: 20px 40px !important;
     height: 96px;
   }
-.header-title,
-.header-help {
-  display: none !important;
-}
+  .header-title,
+  .header-help {
+    display: none !important;
+  }
   .good-morning {
     display: none;
   }
@@ -658,7 +660,7 @@ body {
     width: auto;
     font-size: 16px;
     color: #a8a8a8;
-    border-radius: 20px;
+    border-radius: 8px;
   }
 
   .menu a.active::before,
@@ -913,7 +915,6 @@ body {
     position: relative;
     right: 15px;
   }
-
 }
 
 @media (max-width: 320px) {
@@ -925,10 +926,10 @@ body {
   }
 
   .kpi-icon,
-  .kpi-urgent-icon{
+  .kpi-urgent-icon {
     min-width: 50px;
     min-height: 50px;
-  } 
+  }
 
   .kpi-number {
     font-size: 30px;
@@ -949,9 +950,8 @@ body {
   }
 }
 
-
 @media (max-width: 1023px) {
-  .summary-section{
+  .summary-section {
     margin: 0 auto;
     width: 100%;
     max-width: 860px;
@@ -959,7 +959,7 @@ body {
     padding-right: 24px;
   }
 
-  .kpi-panel{
+  .kpi-panel {
     width: 100%;
     max-width: 860px;
     margin: 0 auto;
@@ -1008,9 +1008,7 @@ body {
 
   .summary-headline {
     margin-left: 0;
-    
   }
-
 }
 
 @media (max-width: 768px) {
@@ -1018,7 +1016,6 @@ body {
     padding-top: 150px;
     padding-left: 16px;
     padding-right: 16px;
-    
   }
 
   .kpi-panel {
@@ -1095,11 +1092,9 @@ body {
     right: 18px !important;
   }
 
-
   .summary-headline {
     margin-left: 15px;
   }
-
 
   .header-logo {
     width: 56px;
@@ -1172,5 +1167,4 @@ body {
     padding-left: 0;
     padding-right: 0;
   }
-  
 }
