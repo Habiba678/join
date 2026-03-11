@@ -4,6 +4,7 @@
 #assignedText {
   display: flex;
   justify-content: space-around;
+  color: #999999;
 }
 
 .contact-option {
@@ -268,7 +269,7 @@
   font-size: 16px;
 }
 
-.subtasks-item span{
+.subtasks-item span {
   flex: 1;
   margin-right: 10px;
   word-break: break-word;
@@ -312,12 +313,12 @@
   padding: 0 2px;
 }
 
-.subtasks-edit img{
+.subtasks-edit img {
   width: 16px;
   height: 16px;
 }
 
-.subtasks-save-edit{
+.subtasks-save-edit {
   background: transparent;
   border: none;
   color: #666;
@@ -327,12 +328,12 @@
   padding: 0 2px;
 }
 
-.subtasks-save-edit img{
+.subtasks-save-edit img {
   width: 16px;
   height: 16px;
-} 
+}
 
-.subtasks-cancel-edit{
+.subtasks-cancel-edit {
   background: transparent;
   border: none;
   color: #666;
@@ -342,7 +343,7 @@
   padding: 0 2px;
 }
 
-.subtasks-cancel-edit img{
+.subtasks-cancel-edit img {
   width: 16px;
   height: 16px;
 }
@@ -589,6 +590,10 @@ label .label-star {
     width: 100%;
     height: 46px;
     font-size: 16px;
+  }
+
+  .priority-section li span {
+    padding: 5px;
   }
 
   .create-task-button {

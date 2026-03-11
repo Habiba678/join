@@ -19,19 +19,20 @@
 }
 
 .primary-btn .btn-icon {
-  margin: 0 0 0 8px;
+  margin: 0 8px 0 8px;
   height: 24px;
   width: 24px;
 }
 
 .priority-btn {
+  flex: 1 1 0;
   width: 136px;
   height: 56px;
   border: 1px solid #d0d0d0;
   background: #ffffff;
   border-radius: 8px;
   color: #000;
-  font-weight: bold;
+  font-weight: 600;
   font-size: 21px;
   cursor: pointer;
   display: flex;
@@ -42,6 +43,7 @@
 
 .priority-btn .btn-icon {
   filter: none;
+  padding: 0 4px 0 0;
 }
 
 .priority-btn.medium .btn-icon {
