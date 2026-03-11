@@ -259,8 +259,7 @@
   content: "";
   width: 16px;
   height: 12px;
-  background: url("../assets/icons/check-black.svg") no-repeat center / 16px
-    12px;
+  background: url("../assets/icons/check-black.svg") no-repeat center / 16px 12px;
   transform: scale(0);
   transition: transform 0.12s ease;
 }
@@ -319,7 +318,7 @@ footer .links {
   font-size: 16px;
 }
 
-.content-wrepper > footer {
+.content-wrepper>footer {
   margin-top: 24px;
 }
 
@@ -360,7 +359,7 @@ footer .links {
 
 @media (max-width: 600px) {
   .logo {
-    top: 19px;
+    top: 37px;
     transform: none;
     padding: 0 0 0 38px;
     margin: 0;
@@ -435,9 +434,16 @@ footer .links {
 }
 
 @media (max-width: 420px) {
-  html,
+  /* html,
   body {
     overflow-y: auto;
+  } */
+
+  .logo {
+    top: 21px;
+    transform: none;
+    padding: 0 0 0 38px;
+    margin: 0;
   }
 
   body .content-wrepper main {
@@ -483,10 +489,7 @@ footer .links {
 }
 
 @media (max-width: 320px) and (max-height: 667px) {
-  .logo {
-    top: 16px;
-    left: 24px;
-  }
+
 
   .main-form {
     width: 94vw;

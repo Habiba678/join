@@ -338,7 +338,7 @@ html, body{
     justify-content:space-around;
     align-items:center;
     width:100%;
-    padding:0 10px;
+    padding:0 6px;
     margin:0;
   }
 
@@ -437,5 +437,6 @@ html, body{
   }
 }
 @media (max-width: 360px){
-  .menu a{ padding:10px 8px; gap:6px; }
+  .menu a{ padding:8px 6px; gap:4px; }
+  .menu img {width: 20px; height: 20px;}
 }
