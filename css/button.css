@@ -43,11 +43,11 @@
 
 .priority-btn .btn-icon {
   filter: none;
-  padding: 0 4px 0 0;
 }
 
 .priority-btn.medium .btn-icon {
-  filter: brightness(0) saturate(100%) invert(57%) sepia(88%) saturate(749%) hue-rotate(1deg) brightness(103%) contrast(103%);
+  filter: brightness(0) saturate(100%) invert(57%) sepia(88%) saturate(749%)
+    hue-rotate(1deg) brightness(103%) contrast(103%);
 }
 
 .priority-btn.--selected {
