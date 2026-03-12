@@ -15,30 +15,30 @@ function initOverlayEvents() {
 }
 
 function getOverlayElements() {
-  const overlay = document.querySelector(".task-overlay");
-  const backdrop = document.getElementById("taskOverlayBackdrop");
-  const top = document.querySelector(".task-overlay-top");
-  const closeBtn = document.getElementById("taskOverlayClose");
-  const delBtn = document.getElementById("taskOverlayDelete");
-  const editBtn = document.getElementById("taskOverlayEdit");
-  const saveBtn = document.getElementById("taskOverlaySave");
-  const view = document.getElementById("taskOverlayView");
-  const editForm = document.getElementById("taskOverlayEditForm");
-  if (!backdrop || !closeBtn) {
-    console.warn("Overlay elements not found (taskOverlayBackdrop/taskOverlayClose).");
+  const els = collectOverlayElements();
+  if (!els.backdrop || !els.closeBtn) {
+    warnOverlayMissing();
     return null;
   }
+  return els;
+}
+
+function collectOverlayElements() {
   return {
-    overlay: overlay,
-    backdrop: backdrop,
-    top: top,
-    closeBtn: closeBtn,
-    delBtn: delBtn,
-    editBtn: editBtn,
-    saveBtn: saveBtn,
-    view: view,
-    editForm: editForm,
+    overlay: document.querySelector(".task-overlay"),
+    backdrop: document.getElementById("taskOverlayBackdrop"),
+    top: document.querySelector(".task-overlay-top"),
+    closeBtn: document.getElementById("taskOverlayClose"),
+    delBtn: document.getElementById("taskOverlayDelete"),
+    editBtn: document.getElementById("taskOverlayEdit"),
+    saveBtn: document.getElementById("taskOverlaySave"),
+    view: document.getElementById("taskOverlayView"),
+    editForm: document.getElementById("taskOverlayEditForm"),
   };
+}
+
+function warnOverlayMissing() {
+  console.warn("Overlay elements not found (taskOverlayBackdrop/taskOverlayClose).");
 }
 
 function bindOverlayClose(els) {
@@ -147,25 +147,11 @@ function setOverlayTexts(task) {
 
 function setOverlayPriority(task) {
   const prioEl = document.getElementById("taskOverlayPrio");
-  
   if (!prioEl) return;
-  const pr = String(task.priority || task.prio || "medium").toLowerCase();
-  prioEl.textContent = "";
-  prioEl.classList.remove("urgent", "medium", "low");
-  prioEl.classList.add(pr);
-
-  const text = document.createElement("span");
-  text.textContent = capitalize(pr);
-  prioEl.appendChild(text);
-
-  const icon = getPriorityIcon(task);
-  if (icon) {
-    const img = document.createElement("img");
-    img.src = icon;
-    img.alt = "Priority " + pr;
-    img.className = "task-overlay-prio-icon";
-    prioEl.appendChild(img);
-  }
+  const pr = getTaskPriority(task);
+  resetOverlayPriorityEl(prioEl, pr);
+  appendOverlayPriorityText(prioEl, pr);
+  appendOverlayPriorityIcon(prioEl, task, pr);
 }
 
 function renderOverlayAssigned(task) {
@@ -281,28 +267,72 @@ function updateSubtaskDone(taskId, subIndex, done) {
 }
 
 function updateCardSubtaskProgress(task) {
-  const card = document.querySelector('.card[data-id="' + task.id + '"]');
+  const card = getCardByTaskId(task.id);
   if (!card) return;
   const subs = Array.isArray(task.subtasks) ? task.subtasks : [];
   const total = subs.length;
   const existing = card.querySelector(".card-progress");
-  if (!total) {
-    if (existing) existing.remove();
-    return;
-  }
+  if (!total) return removeCardProgress(existing);
   const done = countDoneSubtasks(subs);
   const percent = Math.round((done / total) * 100);
-  let progress = existing;
-  if (!progress) {
-    const bottom = card.querySelector(".card-bottom");
-    if (!bottom) return;
-    progress = document.createElement("div");
-    progress.className = "card-progress";
-    progress.innerHTML =
-      '<div class="card-progress-bar"><div class="card-progress-fill"></div></div>' +
-      '<div class="card-progress-text"></div>';
-    bottom.insertBefore(progress, bottom.firstChild);
-  }
+  const progress = ensureCardProgress(card, existing);
+  if (!progress) return;
+  updateCardProgressDisplay(progress, done, total, percent);
+}
+
+function getTaskPriority(task) {
+  return String(task.priority || task.prio || "medium").toLowerCase();
+}
+
+function resetOverlayPriorityEl(prioEl, pr) {
+  prioEl.textContent = "";
+  prioEl.classList.remove("urgent", "medium", "low");
+  prioEl.classList.add(pr);
+}
+
+function appendOverlayPriorityText(prioEl, pr) {
+  const text = document.createElement("span");
+  text.textContent = capitalize(pr);
+  prioEl.appendChild(text);
+}
+
+function appendOverlayPriorityIcon(prioEl, task, pr) {
+  const icon = getPriorityIcon(task);
+  if (!icon) return;
+  const img = document.createElement("img");
+  img.src = icon;
+  img.alt = "Priority " + pr;
+  img.className = "task-overlay-prio-icon";
+  prioEl.appendChild(img);
+}
+
+function getCardByTaskId(id) {
+  return document.querySelector('.card[data-id="' + id + '"]');
+}
+
+function removeCardProgress(existing) {
+  if (existing) existing.remove();
+}
+
+function ensureCardProgress(card, existing) {
+  if (existing) return existing;
+  const bottom = card.querySelector(".card-bottom");
+  if (!bottom) return null;
+  const progress = buildCardProgressElement();
+  bottom.insertBefore(progress, bottom.firstChild);
+  return progress;
+}
+
+function buildCardProgressElement() {
+  const progress = document.createElement("div");
+  progress.className = "card-progress";
+  progress.innerHTML =
+    '<div class="card-progress-bar"><div class="card-progress-fill"></div></div>' +
+    '<div class="card-progress-text"></div>';
+  return progress;
+}
+
+function updateCardProgressDisplay(progress, done, total, percent) {
   const fill = progress.querySelector(".card-progress-fill");
   const text = progress.querySelector(".card-progress-text");
   if (fill) fill.style.width = percent + "%";

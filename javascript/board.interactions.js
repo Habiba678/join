@@ -158,23 +158,34 @@ function onTouchStart(e) {
 function onTouchMove(e) {
   if (!touchDragCard) return;
   const touch = e.touches[0];
+  updateTouchPosition(touch);
+  if (!ensureTouchDragActive()) return;
+  e.preventDefault();
+  updateTouchDragOver(lastTouchClientX, lastTouchClientY);
+}
+
+function updateTouchPosition(touch) {
   lastTouchClientX = touch.clientX;
   lastTouchClientY = touch.clientY;
+}
 
+function ensureTouchDragActive() {
+  if (touchDragActive) return true;
+  if (!hasTouchDragThreshold()) return false;
+  activateTouchDrag();
+  return true;
+}
+
+function hasTouchDragThreshold() {
   const dx = lastTouchClientX - touchDragStartX;
   const dy = lastTouchClientY - touchDragStartY;
+  return Math.abs(dx) + Math.abs(dy) >= TOUCH_DRAG_THRESHOLD;
+}
 
-  if (!touchDragActive) {
-    if (Math.abs(dx) + Math.abs(dy) < TOUCH_DRAG_THRESHOLD) return;
-    touchDragActive = true;
-    isDragging = true;
-    touchDragCard.classList.add("dragging");
-  }
-
-  // Verhindert Scrollen der Seite während des aktiven Drags
-  e.preventDefault();
-
-  updateTouchDragOver(lastTouchClientX, lastTouchClientY);
+function activateTouchDrag() {
+  touchDragActive = true;
+  isDragging = true;
+  touchDragCard.classList.add("dragging");
 }
 
 function onTouchEnd() {

@@ -14,33 +14,56 @@ let overlaySelectedPriority = "medium";
 let activeSearchQuery = "";
 window.activeSearchQuery = activeSearchQuery;
 
-document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener("DOMContentLoaded", onBoardReady);
+
+async function onBoardReady() {
   getCokkieCheck();
-  // Wait for IndexedDB wrapper to be ready (if available)
-  await (window.idbStorage && window.idbStorage.ready ? window.idbStorage.ready : Promise.resolve());
+  await waitForIdbReady();
+  initBoardUi();
+  await syncBoardData();
+  finalizeBoardUi();
+}
+
+async function waitForIdbReady() {
+  const ready = window.idbStorage && window.idbStorage.ready;
+  if (!ready) return;
+  await ready;
+}
+
+function initBoardUi() {
   initRedirects();
   initAddTaskOverlay();
   initSearch();
+}
 
-    // Try to sync tasks from remote DB first (DB = source of truth)
-    try {
-      await syncTasksFromDB();
-    } catch (e) {
-      console.error("Initial sync failed, falling back to local storage", e);
-    }
+async function syncBoardData() {
+  await trySyncTasks();
+  await trySyncContacts();
+}
 
-    try {
-      await syncContactsFromDB();
-    } catch (e) {
-      console.warn("Initial contacts sync failed, continuing with local cache", e);
-    }
+async function trySyncTasks() {
+  try {
+    await syncTasksFromDB();
+  } catch (e) {
+    console.error("Initial sync failed, falling back to local storage", e);
+  }
+}
 
+async function trySyncContacts() {
+  try {
+    await syncContactsFromDB();
+  } catch (e) {
+    console.warn("Initial contacts sync failed, continuing with local cache", e);
+  }
+}
+
+function finalizeBoardUi() {
   renderBoardFromStorage();
   initDragAndDrop();
   initOverlayEvents();
   initDeleteConfirm();
   updateEmptyStates();
-});
+}
 
 // ---------------- Redirects ----------------
 function initRedirects() {
@@ -80,23 +103,39 @@ function initSearch() {
   const input = document.querySelector(".search-input");
   if (!input) return;
   const icon = document.querySelector(".search-icon");
+  bindSearchInput(input);
+  bindSearchEscape(input);
+  bindSearchIcon(icon, input);
+}
 
+function bindSearchInput(input) {
   input.addEventListener("input", function () {
     applySearchQuery(input.value);
   });
+}
 
+function bindSearchEscape(input) {
   input.addEventListener("keydown", function (e) {
-    if (e.key !== "Escape") return;
-    input.value = "";
-    applySearchQuery("");
+    handleSearchEscape(e, input);
   });
+}
 
-  if (icon) {
-    icon.addEventListener("click", function () {
-      input.focus();
-      applySearchQuery(input.value);
-    });
-  }
+function handleSearchEscape(e, input) {
+  if (e.key !== "Escape") return;
+  input.value = "";
+  applySearchQuery("");
+}
+
+function bindSearchIcon(icon, input) {
+  if (!icon) return;
+  icon.addEventListener("click", function () {
+    focusAndSearch(input);
+  });
+}
+
+function focusAndSearch(input) {
+  input.focus();
+  applySearchQuery(input.value);
 }
 
 function applySearchQuery(value) {
@@ -162,74 +201,15 @@ function getTasks() {
 }
 
 async function saveTasks(tasks) {
-  if (window.idbStorage && typeof window.idbStorage.saveTasks === "function") {
-    try {
-      await window.idbStorage.saveTasks(tasks);
-    } catch (e) {
-      console.error("Failed to save tasks to IDB:", e);
-    }
-  } else {
-    console.warn("idbStorage not available - tasks not persisted");
-  }
-
-  (async function () {
-    try {
-      const url = (window.DB_TASK_URL || "https://join-da53b-default-rtdb.firebaseio.com/") + "tasks.json";
-      const map = {};
-      for (const t of (tasks || [])) {
-        const id = (t && t.id) ? String(t.id) : ("tmp_" + Date.now() + "_" + Math.random().toString(16).slice(2));
-        map[id] = t;
-      }
-      await fetch(url, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(map),
-      });
-      renderBoardFromStorage();
-    } catch (err) {
-      console.warn("Failed to sync tasks to remote DB:", err);
-    }
-  })();
+  await persistTasksToIdb(tasks);
+  syncTasksToRemote(tasks);
 }
 
 // Sync tasks from Firebase RTDB and save to persistent storage (IndexedDB)
 async function fetchDBNode(nodeName) {
-  try {
-    const resp = await fetch(DB_TASK_URL + nodeName + ".json");
-    const data = await resp.json();
-    if (data != null) return data;
-  } catch (e) {}
-
-  try {
-    const r = await fetch(DB_TASK_URL + ".json");
-    const root = await r.json();
-    if (!root) return null;
-
-    if (Array.isArray(root)) {
-      const entry = root.find((e) => e && e.id === nodeName);
-      if (entry) {
-        const clone = Object.assign({}, entry);
-        delete clone.id;
-        if (clone.hasOwnProperty(nodeName)) return clone[nodeName];
-        const keys = Object.keys(clone);
-        if (keys.length) return clone;
-      }
-    } else if (typeof root === "object") {
-      const vals = Object.values(root);
-      for (let i = 0; i < vals.length; i++) {
-        const e = vals[i];
-        if (e && e.id === nodeName) {
-          const clone = Object.assign({}, e);
-          delete clone.id;
-          if (clone.hasOwnProperty(nodeName)) return clone[nodeName];
-          const keys = Object.keys(clone);
-          if (keys.length) return clone;
-        }
-      }
-      if (root[nodeName] !== undefined) return root[nodeName];
-    }
-  } catch (e) {}
-  return null;
+  const direct = await tryFetchNode(nodeName);
+  if (direct != null) return direct;
+  return fetchNodeFromRoot(nodeName);
 }
 
 
@@ -252,30 +232,144 @@ async function syncTasksFromDB() {
 async function syncContactsFromDB() {
   try {
     const data = await fetchDBNode("contacts");
-
-    let contacts = [];
-    if (!data) contacts = [];
-    else if (Array.isArray(data)) contacts = data.filter(Boolean);
-    else contacts = Object.entries(data).map(([k, v]) => ({ ...(v || {}), id: v && v.id ? v.id : k }));
-
-    if (window.idbStorage && typeof window.idbStorage.saveContacts === "function") {
-      try {
-        await window.idbStorage.saveContacts(contacts);
-        try {
-          const local = window.idbStorage.getContactsSync ? window.idbStorage.getContactsSync() : null;
-          return local || contacts;
-        } catch (readErr) {
-          console.warn("syncContactsFromDB: saved to IDB but failed to read back:", readErr);
-        }
-      } catch (err) {
-        console.warn("Failed to save contacts to IDB:", err);
-      }
-    }
-
-    return contacts;
+    const contacts = normalizeContactsData(data);
+    const local = await trySaveContactsToIdb(contacts);
+    return local || contacts;
   } catch (e) {
     console.error("Failed to sync contacts from DB", e);
     throw e;
+  }
+}
+
+async function persistTasksToIdb(tasks) {
+  if (!(window.idbStorage && typeof window.idbStorage.saveTasks === "function")) {
+    console.warn("idbStorage not available - tasks not persisted");
+    return;
+  }
+  try {
+    await window.idbStorage.saveTasks(tasks);
+  } catch (e) {
+    console.error("Failed to save tasks to IDB:", e);
+  }
+}
+
+function syncTasksToRemote(tasks) {
+  (async function () {
+    try {
+      await putTasksToRemote(tasks);
+      renderBoardFromStorage();
+    } catch (err) {
+      console.warn("Failed to sync tasks to remote DB:", err);
+    }
+  })();
+}
+
+async function putTasksToRemote(tasks) {
+  const url = getRemoteTasksUrl();
+  const map = buildTasksMap(tasks);
+  await fetch(url, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(map),
+  });
+}
+
+function getRemoteTasksUrl() {
+  const base = window.DB_TASK_URL || "https://join-da53b-default-rtdb.firebaseio.com/";
+  return base + "tasks.json";
+}
+
+function buildTasksMap(tasks) {
+  const map = {};
+  for (const t of (tasks || [])) {
+    map[getTaskIdForMap(t)] = t;
+  }
+  return map;
+}
+
+function getTaskIdForMap(task) {
+  if (task && task.id) return String(task.id);
+  return "tmp_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+}
+
+async function tryFetchNode(nodeName) {
+  try {
+    const resp = await fetch(DB_TASK_URL + nodeName + ".json");
+    const data = await resp.json();
+    return data != null ? data : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+async function fetchNodeFromRoot(nodeName) {
+  try {
+    const root = await fetchDbRoot();
+    if (!root) return null;
+    return extractNodeFromRoot(root, nodeName);
+  } catch (e) {
+    return null;
+  }
+}
+
+async function fetchDbRoot() {
+  const r = await fetch(DB_TASK_URL + ".json");
+  return r.json();
+}
+
+function extractNodeFromRoot(root, nodeName) {
+  if (Array.isArray(root)) return extractNodeFromArray(root, nodeName);
+  if (root && typeof root === "object") return extractNodeFromObject(root, nodeName);
+  return null;
+}
+
+function extractNodeFromArray(root, nodeName) {
+  const entry = root.find((e) => e && e.id === nodeName);
+  return entry ? extractNodeFromEntry(entry, nodeName) : null;
+}
+
+function extractNodeFromObject(root, nodeName) {
+  const vals = Object.values(root);
+  for (let i = 0; i < vals.length; i++) {
+    const candidate = extractNodeFromEntry(vals[i], nodeName);
+    if (candidate !== null && candidate !== undefined) return candidate;
+  }
+  if (root[nodeName] !== undefined) return root[nodeName];
+  return null;
+}
+
+function extractNodeFromEntry(entry, nodeName) {
+  if (!entry || entry.id !== nodeName) return null;
+  const clone = Object.assign({}, entry);
+  delete clone.id;
+  if (clone.hasOwnProperty(nodeName)) return clone[nodeName];
+  const keys = Object.keys(clone);
+  return keys.length ? clone : null;
+}
+
+function normalizeContactsData(data) {
+  if (!data) return [];
+  if (Array.isArray(data)) return data.filter(Boolean);
+  return Object.entries(data).map(([k, v]) => ({ ...(v || {}), id: v && v.id ? v.id : k }));
+}
+
+async function trySaveContactsToIdb(contacts) {
+  if (!(window.idbStorage && typeof window.idbStorage.saveContacts === "function")) return null;
+  try {
+    await window.idbStorage.saveContacts(contacts);
+  } catch (err) {
+    console.warn("Failed to save contacts to IDB:", err);
+    return null;
+  }
+  return readContactsFromIdb();
+}
+
+function readContactsFromIdb() {
+  try {
+    return window.idbStorage.getContactsSync ? window.idbStorage.getContactsSync() : null;
+  } catch (readErr) {
+    console.warn("syncContactsFromDB: saved to IDB but failed to read back:", readErr);
+    return null;
   }
 }
 

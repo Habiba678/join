@@ -115,33 +115,13 @@ function fillOverlayEditForm(task) {
 }
 
 async function saveOverlayEdits(id, els) {
-  const tasks = getTasks();
-  const idx = findTaskIndexById(id, tasks);
-  if (idx === -1) return;
-  const values = readOverlayEditForm();
-  if (!values) return;
-  tasks[idx] = buildEditedTaskFromForm(tasks[idx], values);
-
-  // Persist and ensure storage is updated before reading it again
-  await saveTasks(tasks);
-
-  // Exit edit mode and refresh the overlay view from the saved task
-  try {
-    exitOverlayEditMode(els);
-  } catch (e) {
-    /* ignore if els not provided */
-  }
-
-  const task = tasks[idx];
-  // Update view parts directly so overlay shows current data immediately
-  if (typeof setOverlayCategory === "function") setOverlayCategory(task);
-  if (typeof setOverlayTexts === "function") setOverlayTexts(task);
-  if (typeof setOverlayPriority === "function") setOverlayPriority(task);
-  if (typeof renderOverlayAssigned === "function") renderOverlayAssigned(task);
-  if (typeof renderOverlaySubtasks === "function") renderOverlaySubtasks(task);
-
-  // Refresh board cards
-  if (typeof renderBoardFromStorage === "function") renderBoardFromStorage();
+  const ctx = buildOverlayEditContext(id);
+  if (!ctx) return;
+  applyOverlayEditValues(ctx);
+  await saveTasks(ctx.tasks);
+  exitOverlayEditModeSafe(els);
+  refreshOverlayView(ctx.task);
+  refreshBoardCards();
 }
 
 function readOverlayEditForm() {
@@ -161,10 +141,6 @@ function readOverlayEditForm() {
 }
 
 function buildEditedTaskFromForm(t, values) {
-  let assignedValue = "";
-  if (values.assigned.length === 1) assignedValue = values.assigned[0];
-  if (values.assigned.length > 1) assignedValue = values.assigned;
-
   return {
     title: values.title,
     description: values.description,
@@ -174,8 +150,48 @@ function buildEditedTaskFromForm(t, values) {
     priority: values.priority,
     status: t.status,
     subtasks: values.subtasks,
-    assigned: assignedValue,
+    assigned: getAssignedValue(values.assigned),
   };
+}
+
+function buildOverlayEditContext(id) {
+  const tasks = getTasks();
+  const idx = findTaskIndexById(id, tasks);
+  if (idx === -1) return null;
+  const values = readOverlayEditForm();
+  if (!values) return null;
+  return { tasks: tasks, idx: idx, values: values, task: tasks[idx] };
+}
+
+function applyOverlayEditValues(ctx) {
+  ctx.tasks[ctx.idx] = buildEditedTaskFromForm(ctx.tasks[ctx.idx], ctx.values);
+  ctx.task = ctx.tasks[ctx.idx];
+}
+
+function exitOverlayEditModeSafe(els) {
+  try {
+    exitOverlayEditMode(els);
+  } catch (e) {
+    /* ignore if els not provided */
+  }
+}
+
+function refreshOverlayView(task) {
+  if (typeof setOverlayCategory === "function") setOverlayCategory(task);
+  if (typeof setOverlayTexts === "function") setOverlayTexts(task);
+  if (typeof setOverlayPriority === "function") setOverlayPriority(task);
+  if (typeof renderOverlayAssigned === "function") renderOverlayAssigned(task);
+  if (typeof renderOverlaySubtasks === "function") renderOverlaySubtasks(task);
+}
+
+function refreshBoardCards() {
+  if (typeof renderBoardFromStorage === "function") renderBoardFromStorage();
+}
+
+function getAssignedValue(assigned) {
+  if (assigned.length === 1) return assigned[0];
+  if (assigned.length > 1) return assigned;
+  return "";
 }
 
 // ---------------- Overlay edit widgets ----------------
@@ -229,66 +245,64 @@ function setOverlayPriorityButtons(value) {
 }
 
 function initOverlayAssignedDropdown() {
+  const els = getOverlayAssignedDropdownEls();
+  if (!els) return;
+  bindOverlayAssignedInput(els);
+  bindOverlayAssignedArrow(els);
+  bindOverlayAssignedOutside(els);
+}
+
+function getOverlayAssignedDropdownEls() {
   const input = document.getElementById("taskEditAssignedInput");
   const dropdown = document.getElementById("taskEditAssignedDropdown");
   const arrow = document.getElementById("taskEditDropdownArrow");
-  if (!input || !dropdown || !arrow) return;
+  if (!input || !dropdown || !arrow) return null;
+  return { input: input, dropdown: dropdown, arrow: arrow };
+}
 
-  input.addEventListener("click", function (e) {
+function bindOverlayAssignedInput(els) {
+  els.input.addEventListener("click", function (e) {
     e.stopPropagation();
-    dropdown.classList.remove("hidden");
-    arrow.classList.add("open");
+    openOverlayAssignedDropdown(els);
   });
+}
 
-  arrow.addEventListener("click", function (e) {
+function bindOverlayAssignedArrow(els) {
+  els.arrow.addEventListener("click", function (e) {
     e.stopPropagation();
-    const isHidden = dropdown.classList.contains("hidden");
-    if (isHidden) {
-      dropdown.classList.remove("hidden");
-      arrow.classList.add("open");
-    } else {
-      dropdown.classList.add("hidden");
-      arrow.classList.remove("open");
-    }
+    toggleOverlayAssignedDropdown(els);
   });
+}
 
+function bindOverlayAssignedOutside(els) {
   document.addEventListener("click", function (e) {
-    if (!e.target.closest(".multi-select")) {
-      dropdown.classList.add("hidden");
-      arrow.classList.remove("open");
-    }
+    if (e.target.closest(".multi-select")) return;
+    closeOverlayAssignedDropdown(els);
   });
+}
+
+function toggleOverlayAssignedDropdown(els) {
+  const isHidden = els.dropdown.classList.contains("hidden");
+  isHidden ? openOverlayAssignedDropdown(els) : closeOverlayAssignedDropdown(els);
+}
+
+function openOverlayAssignedDropdown(els) {
+  els.dropdown.classList.remove("hidden");
+  els.arrow.classList.add("open");
+}
+
+function closeOverlayAssignedDropdown(els) {
+  els.dropdown.classList.add("hidden");
+  els.arrow.classList.remove("open");
 }
 
 function populateOverlayAssignedContacts() {
   const dropdown = document.getElementById("taskEditAssignedDropdown");
   if (!dropdown) return;
-  dropdown.innerHTML = "";
+  resetOverlayAssignedDropdown(dropdown);
   const contacts = loadContacts();
-  const text = document.getElementById("taskEditAssignedText");
-  if (text) text.textContent = "Select contacts to assign";
   for (let i = 0; i < contacts.length; i++) {
-    const c = contacts[i];
-    if (!c || !c.id || !c.name) continue;
-    const colorClass = getOverlayEditContactColorClass(c);
-    const row = document.createElement("div");
-    row.className = "contact-option";
-    row.dataset.id = String(c.id);
-    row.innerHTML =
-      '<div class="contact-avatar ' +
-      colorClass +
-      '">' +
-      getInitials(c.name) +
-      '</div><span>' +
-      c.name +
-      '</span><input type="checkbox" ' +
-      (overlaySelectedContacts.has(String(c.id)) ? "checked" : "") +
-      ">";
-    row.onclick = function (e) {
-      e.stopPropagation();
-      toggleOverlayContact(c.id);
-    };
-    dropdown.appendChild(row);
+    appendOverlayContactRow(dropdown, contacts[i]);
   }
 }
 
@@ -325,16 +339,82 @@ function renderOverlaySelectedContacts() {
   if (!avatarsWrap) return;
   avatarsWrap.innerHTML = "";
   if (!overlaySelectedContacts.size) {
-    text.textContent = "Select contacts to assign";
+    setOverlayAssignedText(text);
     return;
   }
+  const view = buildOverlaySelectedContactsView();
+  avatarsWrap.innerHTML = view.avatarsHtml + view.moreHtml;
+  setOverlayAssignedText(text);
+}
+
+function setOverlayAssignedFromTask(task) {
+  overlaySelectedContacts.clear();
+  const assignedArr = normalizeAssignedArray(task.assigned);
+  const contacts = loadContacts();
+  const contactsById = buildContactsById(contacts);
+  const byName = buildContactsByNameMap(contacts);
+  applyAssignedSelections(assignedArr, contactsById, byName);
+  populateOverlayAssignedContacts();
+  renderOverlaySelectedContacts();
+}
+
+function resetOverlayAssignedDropdown(dropdown) {
+  dropdown.innerHTML = "";
+  const text = document.getElementById("taskEditAssignedText");
+  if (text) setOverlayAssignedText(text);
+}
+
+function appendOverlayContactRow(dropdown, contact) {
+  if (!contact || !contact.id || !contact.name) return;
+  const row = buildOverlayContactRow(contact);
+  dropdown.appendChild(row);
+}
+
+function buildOverlayContactRow(contact) {
+  const row = document.createElement("div");
+  row.className = "contact-option";
+  row.dataset.id = String(contact.id);
+  row.innerHTML = getOverlayContactRowHtml(contact);
+  row.onclick = function (e) {
+    e.stopPropagation();
+    toggleOverlayContact(contact.id);
+  };
+  return row;
+}
+
+function getOverlayContactRowHtml(contact) {
+  const colorClass = getOverlayEditContactColorClass(contact);
+  const checked = overlaySelectedContacts.has(String(contact.id)) ? "checked" : "";
+  return (
+    '<div class="contact-avatar ' +
+    colorClass +
+    '">' +
+    getInitials(contact.name) +
+    '</div><span>' +
+    contact.name +
+    '</span><input type="checkbox" ' +
+    checked +
+    ">"
+  );
+}
+
+function setOverlayAssignedText(textEl) {
+  textEl.textContent = "Select contacts to assign";
+}
+
+function buildOverlaySelectedContactsView() {
   const contacts = loadContacts();
   const selectedIds = Array.from(overlaySelectedContacts);
-  const limit = 8;
-  const visibleIds = selectedIds.slice(0, limit);
-  const remaining = selectedIds.length - visibleIds.length;
+  const visible = selectedIds.slice(0, 8);
+  const remaining = selectedIds.length - visible.length;
+  return {
+    avatarsHtml: buildOverlayAvatarsHtml(contacts, visible),
+    moreHtml: buildOverlayMoreHtml(remaining),
+  };
+}
 
-  const avatarsHtml = visibleIds
+function buildOverlayAvatarsHtml(contacts, ids) {
+  return ids
     .map(function (id) {
       const c = contacts.find(function (x) {
         return String(x.id) === String(id);
@@ -344,127 +424,155 @@ function renderOverlaySelectedContacts() {
       return '<span class="contact-avatar ' + colorClass + '">' + getInitials(c.name) + "</span>";
     })
     .join("");
-
-  let moreHtml = "";
-  if (remaining > 0) {
-    moreHtml = '<span class="contact-avatar contact-avatar-more">+' + remaining + "</span>";
-  }
-
-  avatarsWrap.innerHTML = avatarsHtml + moreHtml;
-
-    text.textContent = "Select contacts to assign";
 }
 
-function setOverlayAssignedFromTask(task) {
-  overlaySelectedContacts.clear();
-  const assignedArr = Array.isArray(task.assigned)
-    ? task.assigned
-    : task.assigned
-    ? [task.assigned]
-    : [];
-  const contacts = loadContacts();
-  const contactsById = buildContactsById(contacts);
+function buildOverlayMoreHtml(remaining) {
+  if (remaining <= 0) return "";
+  return '<span class="contact-avatar contact-avatar-more">+' + remaining + "</span>";
+}
+
+function normalizeAssignedArray(assigned) {
+  if (Array.isArray(assigned)) return assigned;
+  if (assigned) return [assigned];
+  return [];
+}
+
+function buildContactsByNameMap(contacts) {
   const byName = new Map();
   for (let i = 0; i < contacts.length; i++) {
     if (contacts[i] && contacts[i].name && contacts[i].id) {
       byName.set(String(contacts[i].name).toLowerCase(), String(contacts[i].id));
     }
   }
+  return byName;
+}
+
+function applyAssignedSelections(assignedArr, contactsById, byName) {
   for (let i = 0; i < assignedArr.length; i++) {
     const key = String(assignedArr[i] || "");
     if (!key) continue;
     if (contactsById.has(key)) overlaySelectedContacts.add(key);
-    else {
-      const matchId = byName.get(key.toLowerCase());
-      if (matchId) overlaySelectedContacts.add(matchId);
-    }
+    else addAssignedByName(key, byName);
   }
-  populateOverlayAssignedContacts();
-  renderOverlaySelectedContacts();
+}
+
+function addAssignedByName(key, byName) {
+  const matchId = byName.get(key.toLowerCase());
+  if (matchId) overlaySelectedContacts.add(matchId);
 }
 
 function initOverlaySubtasks() {
+  const els = getOverlaySubtaskEls();
+  if (!els) return;
+  bindOverlaySubtaskInput(els);
+  bindOverlaySubtaskClear(els);
+  bindOverlaySubtaskList(els);
+  syncOverlaySubtaskButtons(els.input);
+}
+
+function getOverlaySubtaskEls() {
   const input = document.getElementById("taskEditSubtaskInput");
   const btn = document.getElementById("taskEditAddSubtaskBtn");
   const clearBtn = document.getElementById("taskEditClearSubtaskBtn");
   const list = document.getElementById("taskEditSubtasksList");
+  if (!input) return null;
+  return { input: input, btn: btn, clearBtn: clearBtn, list: list };
+}
 
-  const syncSubtaskButtons = () => {
-    if (!input) return;
-    const wrap = input.closest(".subtasks-input");
-    if (!wrap) return;
-    const hasValue = !!input.value.trim();
-    wrap.classList.toggle("is-empty", !hasValue);
-  };
-
-  if (btn && input) {
-    btn.addEventListener("click", addOverlaySubtasksFromInput);
-
-    input.addEventListener("keydown", function (e) {
-      if (e.key !== "Enter") return;
-      e.preventDefault();
-      addOverlaySubtasksFromInput();
-    });
-    input.addEventListener("input", syncSubtaskButtons);
+function bindOverlaySubtaskInput(els) {
+  if (els.btn) {
+    els.btn.addEventListener("click", addOverlaySubtasksFromInput);
   }
+  els.input.addEventListener("keydown", function (e) {
+    handleOverlaySubtaskEnter(e);
+  });
+  els.input.addEventListener("input", function () {
+    syncOverlaySubtaskButtons(els.input);
+  });
+}
 
-  if (clearBtn && input) {
-    clearBtn.addEventListener("click", function () {
-      input.value = "";
-      input.focus();
-      syncSubtaskButtons();
-    });
+function handleOverlaySubtaskEnter(e) {
+  if (e.key !== "Enter") return;
+  e.preventDefault();
+  addOverlaySubtasksFromInput();
+}
+
+function bindOverlaySubtaskClear(els) {
+  if (!els.clearBtn) return;
+  els.clearBtn.addEventListener("click", function () {
+    clearOverlaySubtaskInput(els.input);
+  });
+}
+
+function clearOverlaySubtaskInput(input) {
+  input.value = "";
+  input.focus();
+  syncOverlaySubtaskButtons(input);
+}
+
+function syncOverlaySubtaskButtons(input) {
+  const wrap = input.closest(".subtasks-input");
+  if (!wrap) return;
+  const hasValue = !!input.value.trim();
+  wrap.classList.toggle("is-empty", !hasValue);
+}
+
+function bindOverlaySubtaskList(els) {
+  if (!els.list) return;
+  els.list.addEventListener("click", function (e) {
+    handleOverlaySubtaskListClick(e);
+  });
+}
+
+function handleOverlaySubtaskListClick(e) {
+  const item = e.target.closest(".subtasks-item");
+  if (!item) return;
+  if (handleSubtaskRemove(e, item)) return;
+  if (handleSubtaskEdit(e, item)) return;
+  if (handleSubtaskSave(e, item)) return;
+  handleSubtaskCancel(e);
+}
+
+function handleSubtaskRemove(e, item) {
+  const remove = e.target.closest(".subtasks-remove");
+  if (!remove) return false;
+  const index = parseInt(remove.dataset.index, 10);
+  if (!isNaN(index)) {
+    overlayPendingSubtasks.splice(index, 1);
+    renderOverlaySubtasksList();
   }
+  return true;
+}
 
-  syncSubtaskButtons();
+function handleSubtaskEdit(e, item) {
+  const edit = e.target.closest(".subtasks-edit");
+  if (!edit) return false;
+  const index = parseInt(edit.dataset.index, 10);
+  if (isNaN(index) || !overlayPendingSubtasks[index]) return true;
+  const currentTitle = overlayPendingSubtasks[index].title || "";
+  startOverlayInlineSubtaskEdit(item, index, currentTitle);
+  return true;
+}
 
-  if (list) {
-    list.addEventListener("click", function (e) {
-      const item = e.target.closest(".subtasks-item");
-      if (!item) return;
+function handleSubtaskSave(e, item) {
+  const save = e.target.closest(".subtasks-save-edit");
+  if (!save) return false;
+  const index = parseInt(save.dataset.index, 10);
+  if (isNaN(index) || !overlayPendingSubtasks[index]) return true;
+  const input = item.querySelector(".subtasks-edit-input");
+  if (!input) return true;
+  const trimmed = input.value.trim();
+  if (!trimmed) return renderOverlaySubtasksList(), true;
+  overlayPendingSubtasks[index].title = trimmed;
+  renderOverlaySubtasksList();
+  return true;
+}
 
-      const remove = e.target.closest(".subtasks-remove");
-      const edit = e.target.closest(".subtasks-edit");
-      const save = e.target.closest(".subtasks-save-edit");
-      const cancel = e.target.closest(".subtasks-cancel-edit");
-
-      if (remove) {
-        const index = parseInt(remove.dataset.index, 10);
-        if (!isNaN(index)) {
-          overlayPendingSubtasks.splice(index, 1);
-          renderOverlaySubtasksList();
-        }
-        return;
-      }
-
-      if (edit) {
-        const index = parseInt(edit.dataset.index, 10);
-        if (isNaN(index) || !overlayPendingSubtasks[index]) return;
-        const currentTitle = overlayPendingSubtasks[index].title || "";
-        startOverlayInlineSubtaskEdit(item, index, currentTitle);
-        return;
-      }
-
-      if (save) {
-        const index = parseInt(save.dataset.index, 10);
-        if (isNaN(index) || !overlayPendingSubtasks[index]) return;
-        const input = item.querySelector(".subtasks-edit-input");
-        if (!input) return;
-        const trimmed = input.value.trim();
-        if (!trimmed) {
-          renderOverlaySubtasksList();
-          return;
-        }
-        overlayPendingSubtasks[index].title = trimmed;
-        renderOverlaySubtasksList();
-        return;
-      }
-
-      if (cancel) {
-        renderOverlaySubtasksList();
-      }
-    });
-  }
+function handleSubtaskCancel(e) {
+  const cancel = e.target.closest(".subtasks-cancel-edit");
+  if (!cancel) return false;
+  renderOverlaySubtasksList();
+  return true;
 }
 
 function addOverlaySubtasksFromInput() {
@@ -532,35 +640,53 @@ function overlayEditHashString(str) {
 function startOverlayInlineSubtaskEdit(item, index, title) {
   if (!item) return;
   item.innerHTML = "";
+  const input = createOverlaySubtaskEditInput(title);
+  const actions = createOverlaySubtaskEditActions(index);
+  item.appendChild(input);
+  item.appendChild(actions);
+  focusOverlaySubtaskEditInput(input);
+}
 
+function createOverlaySubtaskEditInput(title) {
   const input = document.createElement("input");
   input.type = "text";
   input.className = "subtasks-edit-input";
   input.value = title || "";
+  return input;
+}
 
+function createOverlaySubtaskEditActions(index) {
   const actions = document.createElement("div");
   actions.className = "subtasks-actions";
+  actions.appendChild(createOverlaySubtaskSaveBtn(index));
+  actions.appendChild(createOverlaySubtaskSeparator());
+  actions.appendChild(createOverlaySubtaskCancelBtn(index));
+  return actions;
+}
 
-  const saveBtn = document.createElement("button");
-  saveBtn.className = "subtasks-save-edit";
-  saveBtn.dataset.index = String(index);
-  saveBtn.innerHTML = '<img src="../assets/icons/check-black.svg" alt="Save subtask">';
+function createOverlaySubtaskSaveBtn(index) {
+  const btn = document.createElement("button");
+  btn.className = "subtasks-save-edit";
+  btn.dataset.index = String(index);
+  btn.innerHTML = '<img src="../assets/icons/check-black.svg" alt="Save subtask">';
+  return btn;
+}
 
+function createOverlaySubtaskSeparator() {
   const sep = document.createElement("span");
   sep.className = "subtasks-separator";
+  return sep;
+}
 
-  const cancelBtn = document.createElement("button");
-  cancelBtn.className = "subtasks-cancel-edit";
-  cancelBtn.dataset.index = String(index);
-  cancelBtn.innerHTML = '<img src="../assets/icons/iconoir_cancel.svg" alt="Cancel edit">';
+function createOverlaySubtaskCancelBtn(index) {
+  const btn = document.createElement("button");
+  btn.className = "subtasks-cancel-edit";
+  btn.dataset.index = String(index);
+  btn.innerHTML = '<img src="../assets/icons/iconoir_cancel.svg" alt="Cancel edit">';
+  return btn;
+}
 
-  actions.appendChild(saveBtn);
-  actions.appendChild(sep);
-  actions.appendChild(cancelBtn);
-
-  item.appendChild(input);
-  item.appendChild(actions);
-
+function focusOverlaySubtaskEditInput(input) {
   input.focus();
   const len = input.value.length;
   input.setSelectionRange(len, len);

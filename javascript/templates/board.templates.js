@@ -130,44 +130,22 @@ function buildCardSubtaskProgressHtml(task) {
 function buildCardFooterHtml(task) {
   const avatars = buildAssignedAvatarsHtml(task);
   const prioIcon = getPriorityIcon(task);
-  let html = "";
-  html += '<div class="card-footer">';
-  html += '<div class="card-contacts">' + avatars + "</div>";
-  html += '<div class="card-priority">';
-  if (prioIcon) {
-    const prClass = getPriorityText(task);
-    html +=
-      '<img src="' +
-      prioIcon +
-      '" class="card-priority-icon ' +
-      escapeHtml(prClass) +
-      '" alt="Priority ' +
-      escapeHtml(prClass) +
-      '">';
-  }
-  html += "</div>";
-  html += "</div>";
-  return html;
+  const prClass = prioIcon ? getPriorityText(task) : "";
+  return [
+    '<div class="card-footer">',
+    '<div class="card-contacts">' + avatars + "</div>",
+    buildCardFooterPriorityHtml(prioIcon, prClass),
+    "</div>",
+  ].join("");
 }
 
 function buildAssignedAvatarsHtml(task) {
   const list = getAssignedContactsForCard(task);
   if (!list.length) return "";
   const maxAvatars = 5;
-  let html = "";
   const limit = Math.min(list.length, maxAvatars);
-  for (let i = 0; i < limit; i++) {
-    const contact = list[i] || {};
-    const name = String(contact.name || contact.id || "");
-    const initials = getInitials(name);
-    const colorClass = getContactColorClass(contact);
-    html += '<span class="card-avatar ' + escapeHtml(colorClass) +'">' +escapeHtml(initials) +'</span>';
-  }
   const remaining = list.length - maxAvatars;
-  if (remaining > 0) {
-    html +='<span class="card-avatar card-avatar-more">+' + remaining + "</span>";
-  }
-  return html;
+  return buildAvatarListHtml(list, limit) + buildAvatarRemainderHtml(remaining);
 }
 
 function getAssignedContactsForCard(task) {
@@ -175,25 +153,10 @@ function getAssignedContactsForCard(task) {
 }
 
 function resolveAssignedContacts(task) {
-  let assignedArr = [];
-  if (Array.isArray(task.assigned)) assignedArr = task.assigned;
-  else if (task.assigned) assignedArr = [task.assigned];
+  const assignedArr = normalizeAssigned(task.assigned);
   if (!assignedArr.length) return [];
-
-  const contacts =
-    typeof loadContacts === "function" ? loadContacts() : [];
-  const byId = getContactsById(contacts);
-  const byName = getContactsByName(contacts);
-  const result = [];
-
-  for (let i = 0; i < assignedArr.length; i++) {
-    const value = assignedArr[i];
-    const key = String(value || "").trim();
-    if (!key) continue;
-    const contact = byId.get(key) || byName.get(key.toLowerCase());
-    result.push(contact ? contact : { id: key, name: key });
-  }
-  return result;
+  const contacts = typeof loadContacts === "function" ? loadContacts() : [];
+  return resolveAssignedFromContacts(assignedArr, contacts);
 }
 
 function getContactsById(contacts) {
@@ -244,29 +207,89 @@ function getContactColorClass(contact) {
  * @returns {Array<{title:string, done:boolean}>}
  */
 function getTaskSubtasks(task) {
-  if (!task) return [];
-
-  let subs = [];
-
-  if (Array.isArray(task.subtasks)) subs = task.subtasks;
-  else if (task.subtasks && typeof task.subtasks === "object")
-    subs = Object.values(task.subtasks);
-  else if (Array.isArray(task.subtask)) subs = task.subtask;
-  else if (task.subtask && typeof task.subtask === "object")
-    subs = Object.values(task.subtask);
-
+  const subs = getRawSubtasks(task);
   if (!Array.isArray(subs)) return [];
+  return normalizeSubtasks(subs);
+}
 
+function buildCardFooterPriorityHtml(prioIcon, prClass) {
+  let html = '<div class="card-priority">';
+  if (prioIcon) html += buildPriorityIconHtml(prioIcon, prClass);
+  html += "</div>";
+  return html;
+}
+
+function buildPriorityIconHtml(prioIcon, prClass) {
+  return (
+    '<img src="' +
+    prioIcon +
+    '" class="card-priority-icon ' +
+    escapeHtml(prClass) +
+    '" alt="Priority ' +
+    escapeHtml(prClass) +
+    '">'
+  );
+}
+
+function buildAvatarListHtml(list, limit) {
+  let html = "";
+  for (let i = 0; i < limit; i++) {
+    html += buildSingleAvatarHtml(list[i] || {});
+  }
+  return html;
+}
+
+function buildSingleAvatarHtml(contact) {
+  const name = String(contact.name || contact.id || "");
+  const initials = getInitials(name);
+  const colorClass = getContactColorClass(contact);
+  return '<span class="card-avatar ' + escapeHtml(colorClass) + '">' + escapeHtml(initials) + "</span>";
+}
+
+function buildAvatarRemainderHtml(remaining) {
+  if (remaining > 0) return '<span class="card-avatar card-avatar-more">+' + remaining + "</span>";
+  return "";
+}
+
+function normalizeAssigned(assigned) {
+  if (Array.isArray(assigned)) return assigned;
+  if (assigned) return [assigned];
+  return [];
+}
+
+function resolveAssignedFromContacts(assignedArr, contacts) {
+  const byId = getContactsById(contacts);
+  const byName = getContactsByName(contacts);
+  const result = [];
+  for (let i = 0; i < assignedArr.length; i++) {
+    const entry = resolveAssignedEntry(assignedArr[i], byId, byName);
+    if (entry) result.push(entry);
+  }
+  return result;
+}
+
+function resolveAssignedEntry(value, byId, byName) {
+  const key = String(value || "").trim();
+  if (!key) return null;
+  const contact = byId.get(key) || byName.get(key.toLowerCase());
+  return contact ? contact : { id: key, name: key };
+}
+
+function getRawSubtasks(task) {
+  if (!task) return [];
+  if (Array.isArray(task.subtasks)) return task.subtasks;
+  if (task.subtasks && typeof task.subtasks === "object") return Object.values(task.subtasks);
+  if (Array.isArray(task.subtask)) return task.subtask;
+  if (task.subtask && typeof task.subtask === "object") return Object.values(task.subtask);
+  return [];
+}
+
+function normalizeSubtasks(subs) {
   return subs
     .filter(Boolean)
     .map(function (s) {
-      if (typeof s === "string") {
-        return { title: s, done: false };
-      }
-      return {
-        title: s && s.title ? String(s.title) : "",
-        done: !!(s && s.done),
-      };
+      if (typeof s === "string") return { title: s, done: false };
+      return { title: s && s.title ? String(s.title) : "", done: !!(s && s.done) };
     })
     .filter(function (s) {
       return !!s.title;
