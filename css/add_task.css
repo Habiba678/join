@@ -141,6 +141,7 @@
   border: 1px solid gray;
   width: 100%;
   box-sizing: border-box;
+  font-size: 16px;
 }
 
 .form-details input[type="text"],
@@ -172,6 +173,7 @@
   border: 1px solid #ccc;
   box-sizing: border-box;
   padding: 10px;
+  font-size: 16px;
 }
 
 .form-details textarea:focus {
@@ -193,6 +195,12 @@
 .subtasks-input input {
   width: 100%;
   padding-right: 80px;
+  font-size: 16px;
+}
+
+.form-details input::placeholder,
+.form-details textarea::placeholder {
+  font-size: 16px;
 }
 
 .subtasks-add-btn {
@@ -248,7 +256,7 @@
 
 .required-note {
   margin: 40px 0 0;
-  font-size: 12px;
+  font-size: 16px;
   color: #2a3647;
 }
 
@@ -624,7 +632,7 @@ label .label-star {
 
   .required-note {
     margin: 0px 0px 24px 0px;
-    font-size: 12px;
+    font-size: 16px;
     color: #2a3647;
   }
 }
