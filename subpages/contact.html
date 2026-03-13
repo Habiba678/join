@@ -43,7 +43,9 @@
               </div>
 
               <div class="header-right">
-                <a class="header-help" href="./help.html">?</a>
+                <div class="header-help">
+                  <a class="userMenuItem" href="./help.html" role="menuitem">?</a>
+                </div>
 
                 <button class="header-guest" id="headerUserBtn" type="button" aria-label="User menu"
                   aria-expanded="false">
@@ -51,9 +53,9 @@
                 </button>
 
                 <div class="header-dropdown d-none" id="userMenu" role="menu" aria-labelledby="headerUserBtn">
+                  
                   <a class="userMenuItem" href="./legal_notice.html" role="menuitem">Legal notice</a>
                   <a class="userMenuItem" href="./privacy_policy.html" role="menuitem">Privacy Policy</a>
-                  <a class="userMenuItem menu-item--mobile" href="./help.html" role="menuitem">Help</a>
                   <a class="userMenuItem" href="#" onclick="logout()" role="menuitem">Log out</a>
                 </div>
               </div>

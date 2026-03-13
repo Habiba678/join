@@ -310,10 +310,6 @@ body {
 .userMenuItem:hover {
   background: rgba(255, 255, 255, 0.08);
 }
-
-.menu-item--mobile {
-  display: none;
-}
 @media (max-width: 1023px) {
   .layout {
     flex-direction: column;
@@ -332,10 +328,6 @@ body {
   .header-title,
   .header-help {
     display: none !important;
-  }
-
-  .menu-item--mobile {
-    display: block;
   }
 
   .header-logo {
