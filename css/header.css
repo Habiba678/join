@@ -293,12 +293,11 @@ body {
 .userMenuItem {
   display: block;
   width: 100%;
-  text-align: left;
+  text-align: center;
   background: transparent;
   border: 0;
-  color: #fff;
+  color: #a8a8a8;
   text-decoration: none;
-  padding: 8px 12px;
   border-radius: 8px;
   font-size: 15px;
   line-height: 1.2;
