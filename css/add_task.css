@@ -192,10 +192,12 @@
   pointer-events: none;
 }
 
-.subtasks-input input {
+.subtasks-input input[type="text"] {
   width: 100%;
-  padding-right: 80px;
+  padding-left: 10px;
+  padding-right: 96px;
   font-size: 16px;
+  box-sizing: border-box;
 }
 
 .form-details input::placeholder,
@@ -251,6 +253,8 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+  max-height: 100px;
+  overflow-x: auto;
   gap: 6px;
 }
 
@@ -471,22 +475,24 @@
   margin-left: auto;
 }
 
-.kpi-panel-task-footer .primary-btn:hover {
+.kpi-panel-task-footer .primary-btn:not(.--primary-btn-cancel):hover {
   background-color: #29abe2;
   border-color: #29abe2;
 }
 
 .kpi-panel-task-footer .--primary-btn-cancel:hover {
   color: #29abe2;
-  background-color: #ffffff;
-  background-image: url("../assets/icons/iconoir_cancel_blue.svg");
-  background-repeat: no-repeat;
-  background-position: right 11px center;
-  background-size: 23px;
+  border-color: #29abe2;
 }
 
-.kpi-panel-task-footer .primary-btn.--primary-btn-cancel:hover .btn-icon {
-  opacity: 0;
+.kpi-panel-task-footer .--primary-btn-cancel:hover .btn-icon {
+  filter: brightness(0) saturate(100%) invert(53%) sepia(77%) saturate(494%)
+    hue-rotate(161deg) brightness(96%) contrast(92%);
+}
+
+.kpi-panel-task-footer .--primary-btn-cancel:hover {
+  color: #29abe2;
+  background-color: #ffffff;
 }
 
 label .label-star {

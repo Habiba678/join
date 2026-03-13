@@ -76,6 +76,7 @@ body.no-scroll {
 .add-task-overlay #assignedText {
   display: flex;
   justify-content: space-around;
+  color: #999999;
 }
 
 .add-task-overlay .multi-select {
@@ -249,6 +250,7 @@ body.no-scroll {
   border: 1px solid #ccc;
   box-sizing: border-box;
   font-size: 16px;
+  padding: 10px;
 }
 
 .add-task-overlay .form-details textarea:focus {
@@ -330,10 +332,12 @@ body.no-scroll {
   pointer-events: none;
 }
 
-.add-task-overlay .subtasks-input input {
+.add-task-overlay .subtasks-input input[type="text"] {
   width: 100%;
-  padding-right: 80px;
+  padding-left: 10px;
+  padding-right: 96px;
   font-size: 16px;
+  box-sizing: border-box;
 }
 
 .add-task-overlay .form-details input::placeholder,

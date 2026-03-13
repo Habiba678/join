@@ -1,3 +1,8 @@
+/**
+ * Creates the letter separator in the contact list.
+ * @param {string} letter
+ * @returns {string}
+ */
 function letterGroupTemplate(letter) {
   return `
     <div class="letter-group">
@@ -6,6 +11,12 @@ function letterGroupTemplate(letter) {
   `;
 }
 
+/**
+ * Builds the HTML for a single contact list item.
+ * @param {Object} c
+ * @param {boolean} isActive
+ * @returns {string}
+ */
 function contactListItemTemplate(c, isActive) {
   return `
     <div class="contact-item ${isActive ? "active" : ""}" data-id="${c.id}">
@@ -20,6 +31,11 @@ function contactListItemTemplate(c, isActive) {
   `;
 }
 
+/**
+ * Creates the action buttons for a contact.
+ * @param {Object} c
+ * @returns {string}
+ */
 function contactActionsTemplate(c) {
   return `
     <div class="contact-actions">
@@ -35,6 +51,11 @@ function contactActionsTemplate(c) {
   `;
 }
 
+/**
+ * Creates the detailed contact view.
+ * @param {Object} c
+ * @returns {string}
+ */
 function contactDetailsTemplate(c) {
   return `
     <div class="contact-detail-topbar">
@@ -68,6 +89,11 @@ function contactDetailsTemplate(c) {
   `;
 }
 
+/**
+ * Creates the left side of the contact modal.
+ * @param {string} mode
+ * @returns {string}
+ */
 function modalLeftTemplate(mode) {
   return `
     <div class="modal-left">
@@ -80,6 +106,12 @@ function modalLeftTemplate(mode) {
   `;
 }
 
+/**
+ * Creates the avatar section inside the modal.
+ * @param {string} mode
+ * @param {Object} data
+ * @returns {string}
+ */
 function modalAvatarTemplate(mode, data) {
   return String(mode || "").trim().toLowerCase() === "edit"
     ? `
@@ -94,6 +126,12 @@ function modalAvatarTemplate(mode, data) {
     `;
 }
 
+/**
+ * Creates the action buttons inside the modal.
+ * @param {string} mode
+ * @param {Object} data
+ * @returns {string}
+ */
 function modalActionsTemplate(mode, data) {
   return `
     <div class="modal-actions">
@@ -114,47 +152,30 @@ function modalActionsTemplate(mode, data) {
   `;
 }
 
+/**
+ * Creates the form inside the modal.
+ * @param {string} mode
+ * @param {Object} data
+ * @returns {string}
+ */
 function modalFormTemplate(mode, data) {
   return `
     <form id="addContactForm"
           novalidate
           data-mode="${String(mode || "").trim().toLowerCase()}"
           data-edit-id="${(data && data.id) ? data.id : ""}">
-      
-      <div class="input-wrapper">
-        <input id="contactName"
-               type="text"
-               placeholder="Name"
-               required
-               value="${(data && data.name) ? data.name : ""}">
-        <img src="../assets/icons/person.png" class="input-icon" alt="">
-        <div class="input-error-message" id="nameError"></div>
-      </div>
-
-      <div class="input-wrapper">
-        <input id="contactEmail"
-               type="email"
-               placeholder="Email"
-               required
-               value="${(data && data.email) ? data.email : ""}">
-        <img src="../assets/icons/mail.png" class="input-icon" alt="">
-        <div class="input-error-message" id="emailError"></div>
-      </div>
-
-      <div class="input-wrapper">
-        <input id="contactPhone"
-               type="text"
-               placeholder="Phone"
-               value="${(data && data.phone) ? data.phone : ""}">
-        <img src="../assets/icons/call.svg" class="input-icon" alt="">
-        <div class="input-error-message" id="phoneError"></div>
-      </div>
-
+      ...
       ${modalActionsTemplate(mode, data)}
     </form>
   `;
 }
 
+/**
+ * Builds the right side of the modal.
+ * @param {string} mode
+ * @param {Object} data
+ * @returns {string}
+ */
 function modalRightTemplate(mode, data) {
   return `
     <div class="modal-right">
@@ -163,6 +184,13 @@ function modalRightTemplate(mode, data) {
     </div>
   `;
 }
+
+/**
+ * Creates the modal container structure.
+ * @param {string} mode
+ * @param {Object} data
+ * @returns {string}
+ */
 
 function contactModalInnerTemplate(mode, data) {
   return `
@@ -173,6 +201,12 @@ function contactModalInnerTemplate(mode, data) {
   `;
 }
 
+/**
+ * Creates the full modal including backdrop and toast.
+ * @param {string} mode
+ * @param {Object} data
+ * @returns {string}
+ */
 function contactModalTemplate(mode, data) {
   return `
     <div class="modal-backdrop d-none" id="addContactModal">

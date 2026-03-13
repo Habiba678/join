@@ -4,18 +4,30 @@ window.isMobile = function () {
   return window.matchMedia && window.matchMedia(`(max-width: ${MOBILE_BP}px)`).matches;
 };
 
+/**
+ * El.
+ */
 function el(id) {
   return document.getElementById(id);
 }
 
+/**
+ * Menu el.
+ */
 function menuEl() {
   return el("mobileActionsMenu");
 }
 
+/**
+ * Btn el.
+ */
 function btnEl() {
   return el("mobileMenuBtn");
 }
 
+/**
+ * Get selected id.
+ */
 function getSelectedId() {
   try {
     return typeof selectedId !== "undefined" ? selectedId : "";
@@ -24,6 +36,9 @@ function getSelectedId() {
   }
 }
 
+/**
+ * Sync menu ids.
+ */
 function syncMenuIds() {
   const menu = menuEl();
   if (!menu) return;
@@ -86,6 +101,9 @@ window.handleOutsideMobileMenuClick = function (e) {
   if (!insideMenu && !onBtn) window.closeMobileMenu();
 };
 
+/**
+ * Handle mobile buttons click.
+ */
 function handleMobileButtonsClick(e) {
   if (!window.isMobile()) return;
 
@@ -141,10 +159,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!guest || !menu) return;
 
+  /**
+   * Close menu.
+   */
   function closeMenu() {
     menu.classList.add("d-none");
   }
 
+  /**
+   * Toggle menu.
+   */
   function toggleMenu() {
     menu.classList.toggle("d-none");
   }

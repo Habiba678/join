@@ -9,6 +9,9 @@
   let db = null;
   let cache = { tasks: [], contacts: [] };
 
+  /**
+   * Open db.
+   */
   function openDb(){
     return new Promise((resolve, reject) => {
       const req = indexedDB.open(DB_NAME, DB_VERSION);
@@ -22,6 +25,9 @@
     });
   }
 
+  /**
+   * Read all.
+   */
   function readAll(storeName){
     return new Promise((resolve, reject) => {
       if (!db) return resolve([]);
@@ -33,6 +39,9 @@
     });
   }
 
+  /**
+   * Clear store.
+   */
   function clearStore(storeName){
     return new Promise((resolve, reject) => {
       if (!db) return resolve();
@@ -44,6 +53,9 @@
     });
   }
 
+  /**
+   * Put many.
+   */
   function putMany(storeName, items){
     return new Promise((resolve, reject) => {
       if (!db) return resolve();
@@ -59,6 +71,9 @@
     });
   }
 
+  /**
+   * Initialize.
+   */
   async function init(){
     try{
       await openDb();
@@ -72,9 +87,18 @@
 
   const ready = init();
 
+  /**
+   * Get tasks sync.
+   */
   function getTasksSync(){ return Array.isArray(cache.tasks) ? cache.tasks.slice() : []; }
+  /**
+   * Get contacts sync.
+   */
   function getContactsSync(){ return Array.isArray(cache.contacts) ? cache.contacts.slice() : []; }
 
+  /**
+   * Save tasks.
+   */
   async function saveTasks(tasks){
     await ready;
     try{
@@ -84,6 +108,9 @@
     }catch(e){ console.error("saveTasks error:", e); throw e; }
   }
 
+  /**
+   * Save contacts.
+   */
   async function saveContacts(list){
     await ready;
     try{

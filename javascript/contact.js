@@ -1,13 +1,22 @@
-/** Firebase storage key. */
+/** Storage key and Firebase endpoint for contact data. */
 const STORAGE_KEY = "join_contacts_v1", dbTask = "https://join-da53b-default-rtdb.firebaseio.com/";
-let contacts = [], selectedId = null;
+
+/** Array containing all contact objects. */
+let contacts = [];
+
+/** Stores the id of the currently selected contact. */
+let selectedId = null;
+
+/** Regular expressions used for email and phone validation. */
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/, phoneRegex = /^\+?\d+$/;
 
 /** @returns {boolean} */
 function isMobile() { return window.isMobile && window.isMobile(); }
-/** Shows mobile list. */
+
+/** Shows the contact list on mobile devices. */
 function showMobileList() { window.showMobileList && window.showMobileList(); }
-/** Shows mobile details. */
+
+/** Shows the contact details on mobile devices. */
 function showMobileDetails() { window.showMobileDetails && window.showMobileDetails(); }
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -29,8 +38,10 @@ async function init() {
 
 /** @param {string} str */
 function normalize(str) { return (str || "").trim().replace(/\s+/g, " "); }
+
 /** @returns {string} */
 function generateId() { return crypto && crypto.randomUUID ? crypto.randomUUID() : Date.now() + "_" + Math.random().toString(16).slice(2); }
+
 /** @param {string} str */
 function hashString(str) {
   let h = 0, s = String(str || "");
@@ -40,6 +51,7 @@ function hashString(str) {
 
 /** @param {string} seed */
 function colorClassFor(seed) { return "avatar-color-" + (hashString(seed) % 12); }
+
 /** Picks a free avatar color. */
 function pickUniqueColorClass(seed, usedSet) {
   let start = hashString(seed) % 12;
@@ -56,8 +68,10 @@ function getInitials(fullName) {
   let f = (p[0] || "")[0] || "", l = p.length > 1 ? (p[p.length - 1] || "")[0] : (p[0] || "")[1] || "";
   return (f + l).toUpperCase();
 }
-/** Sorts by name. */
+
+/** Sorts contacts by name. */
 function sortContacts(a, b) { return (a.name || "").toLowerCase().localeCompare((b.name || "").toLowerCase()); }
+
 /** @param {string} name */
 function groupKey(name) { return (normalize(name)[0] || "").toUpperCase(); }
 
@@ -91,13 +105,13 @@ function ensureUniqueColors() {
   }
 }
 
-/** Removes modal instantly. */
+/** Removes the modal immediately. */
 function removeModalNow() {
   let m = document.getElementById("addContactModal");
   if (m) m.remove();
 }
 
-/** Adds field validation listeners. */
+/** Adds validation listeners to the form fields. */
 function initValidation() {
   document.getElementById("contactName")?.addEventListener("blur", validateNameField);
   document.getElementById("contactEmail")?.addEventListener("blur", validateEmailField);
@@ -151,7 +165,7 @@ function renderContactsList() {
   list.innerHTML = html;
 }
 
-/** Renders selected contact details. */
+/** Renders the selected contact details. */
 function renderDetails() {
   let d = document.getElementById("contactDetails");
   if (!d) return;
@@ -185,8 +199,10 @@ function clearContactErrors() {
 
 /** @param {string} name */
 function isValidName(name) { return /^[A-Za-zÀ-ÿ\s]+$/.test(name) && name.trim().length >= 2; }
+
 /** @param {string} email */
 function isValidEmail(email) { return emailRegex.test(email); }
+
 /** @param {string} phone */
 function isValidPhone(phone) { return !phone || phoneRegex.test(phone); }
 

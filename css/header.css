@@ -230,6 +230,7 @@ body {
   justify-content: center;
   border: 1.5px solid #d1d1d1;
   color: #a8a8a8;
+  text-decoration: none;
   font-size: 16px;
   font-weight: 600;
   line-height: 1;
@@ -243,6 +244,7 @@ body {
   background: transparent;
 }
 
+.header-user,
 .header-guest {
   width: 56px;
   height: 56px;
@@ -250,10 +252,11 @@ body {
   border: 2px solid #2a3647;
   display: grid;
   place-items: center;
+  font: inherit;
   font-size: 20px;
   font-weight: 700;
   color: #29abe2;
-  background: #fff;
+  background: #ffffff;
   cursor: pointer;
   padding: 0;
   appearance: none;
@@ -261,6 +264,7 @@ body {
   user-select: none;
 }
 
+.header-user:hover,
 .header-guest:hover {
   background-color: #e4e2e2;
 }
@@ -273,43 +277,51 @@ body {
   outline-offset: 3px;
 }
 
-.header-dropdown .userMenuItem:first-child {
-  display: none;
+.header-user-area {
+  position: relative;
 }
 
-.header-dropdown {
+.user-menu {
   position: absolute;
-  right: 4px;
-  top: calc(100% + 6px);
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 170px;
   background: #2a3647;
   border-radius: 16px;
-  padding: 6px;
-  min-width: 170px;
+  padding: 8px 0;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
-  z-index: 100000;
-  transform-origin: top right;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease;
+  z-index: 20;
 }
 
-.userMenuItem {
-  display: block;
-  width: 100%;
-  text-align: left;
-  background: transparent;
-  border: 0;
-  color: #fff;
+.user-menu.is-open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.user-menu-item {
+  padding: 10px 20px;
+  color: #ffffff;
   text-decoration: none;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.2;
+  background: transparent;
+  border: none;
+  text-align: left;
   cursor: pointer;
 }
 
-.userMenuItem:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-.userMenuItem:hover {
-  background: rgba(255, 255, 255, 0.08);
+.user-menu-item:hover {
+  background: rgba(255, 255, 255, 0.12);
 }
 @media (max-width: 1023px) {
   .layout {

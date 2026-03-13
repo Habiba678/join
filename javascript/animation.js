@@ -20,11 +20,17 @@ window.addEventListener("load", () => {
   }
 });
 
+/**
+ * Go to signup.
+ */
 function goToSignup() {
   window.location.href = "./subpages/regist.html";
 }
 
 // addTasks.html Select fild Aniemation
+/**
+ * Select animate.
+ */
 function selectAnimate() {
   const wrapper = document.querySelector(".select-wrapper");
   wrapper.classList.toggle("open");

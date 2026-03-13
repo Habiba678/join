@@ -1,4 +1,7 @@
 // ---------------- Delete confirm ----------------
+/**
+ * Initialize delete confirm.
+ */
 function initDeleteConfirm() {
   const els = getDeleteConfirmEls();
   if (!els) return;
@@ -8,6 +11,9 @@ function initDeleteConfirm() {
   bindDeleteConfirmEsc(els);
 }
 
+/**
+ * Get delete confirm els.
+ */
 function getDeleteConfirmEls() {
   const backdrop = document.getElementById("deleteConfirmBackdrop");
   const okBtn = document.getElementById("deleteConfirmOk");
@@ -20,30 +26,45 @@ function getDeleteConfirmEls() {
   return { backdrop: backdrop, okBtn: okBtn, cancelBtn: cancelBtn, textEl: textEl };
 }
 
+/**
+ * Bind delete confirm ok.
+ */
 function bindDeleteConfirmOk(els) {
   els.okBtn.addEventListener("click", function () {
     handleDeleteConfirmOk();
   });
 }
 
+/**
+ * Bind delete confirm cancel.
+ */
 function bindDeleteConfirmCancel(els) {
   els.cancelBtn.addEventListener("click", function () {
     handleDeleteConfirmCancel();
   });
 }
 
+/**
+ * Bind delete confirm backdrop.
+ */
 function bindDeleteConfirmBackdrop(els) {
   els.backdrop.addEventListener("click", function (e) {
     if (e.target === els.backdrop) closeDeleteConfirm();
   });
 }
 
+/**
+ * Bind delete confirm esc.
+ */
 function bindDeleteConfirmEsc(els) {
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && !els.backdrop.hidden) closeDeleteConfirm();
   });
 }
 
+/**
+ * Open delete confirm.
+ */
 function openDeleteConfirm(id) {
   const task = findTaskById(id);
   if (!task) return;
@@ -52,18 +73,27 @@ function openDeleteConfirm(id) {
   showDeleteConfirm();
 }
 
+/**
+ * Set delete confirm text.
+ */
 function setDeleteConfirmText(task) {
   const el = document.getElementById("deleteConfirmText");
   if (!el) return;
   el.textContent = 'Delete task "' + task.title + '"?';
 }
 
+/**
+ * Show delete confirm.
+ */
 function showDeleteConfirm() {
   const backdrop = document.getElementById("deleteConfirmBackdrop");
   if (!backdrop) return;
   backdrop.hidden = false;
 }
 
+/**
+ * Close delete confirm.
+ */
 function closeDeleteConfirm() {
   const backdrop = document.getElementById("deleteConfirmBackdrop");
   if (!backdrop) return;
@@ -71,6 +101,9 @@ function closeDeleteConfirm() {
   pendingDeleteId = null;
 }
 
+/**
+ * Handle delete confirm ok.
+ */
 function handleDeleteConfirmOk() {
   if (!pendingDeleteId) return closeDeleteConfirm();
   removeTaskById(pendingDeleteId);
@@ -79,15 +112,24 @@ function handleDeleteConfirmOk() {
   renderBoardFromStorage();
 }
 
+/**
+ * Handle delete confirm cancel.
+ */
 function handleDeleteConfirmCancel() {
   closeDeleteConfirm();
 }
 
 // ---------------- Delete / Edit ----------------
+/**
+ * Delete task.
+ */
 function deleteTask(id) {
   openDeleteConfirm(id);
 }
 
+/**
+ * Remove task by id.
+ */
 function removeTaskById(id) {
   const tasks = getTasks();
   const next = [];
@@ -97,6 +139,9 @@ function removeTaskById(id) {
   saveTasks(next);
 }
 
+/**
+ * Find task index by id.
+ */
 function findTaskIndexById(id, tasks) {
   for (let i = 0; i < tasks.length; i++) {
     if (String(tasks[i].id) === String(id)) return i;
@@ -104,6 +149,9 @@ function findTaskIndexById(id, tasks) {
   return -1;
 }
 
+/**
+ * Fill overlay edit form.
+ */
 function fillOverlayEditForm(task) {
   setInputValue("taskEditTitle", task.title || "");
   setInputValue("taskEditDesc", task.description || "");
@@ -114,36 +162,22 @@ function fillOverlayEditForm(task) {
   setOverlaySubtasksFromTask(task);
 }
 
+/**
+ * Save overlay edits.
+ */
 async function saveOverlayEdits(id, els) {
-  const tasks = getTasks();
-  const idx = findTaskIndexById(id, tasks);
-  if (idx === -1) return;
-  const values = readOverlayEditForm();
-  if (!values) return;
-  tasks[idx] = buildEditedTaskFromForm(tasks[idx], values);
-
-  // Persist and ensure storage is updated before reading it again
-  await saveTasks(tasks);
-
-  // Exit edit mode and refresh the overlay view from the saved task
-  try {
-    exitOverlayEditMode(els);
-  } catch (e) {
-    /* ignore if els not provided */
-  }
-
-  const task = tasks[idx];
-  // Update view parts directly so overlay shows current data immediately
-  if (typeof setOverlayCategory === "function") setOverlayCategory(task);
-  if (typeof setOverlayTexts === "function") setOverlayTexts(task);
-  if (typeof setOverlayPriority === "function") setOverlayPriority(task);
-  if (typeof renderOverlayAssigned === "function") renderOverlayAssigned(task);
-  if (typeof renderOverlaySubtasks === "function") renderOverlaySubtasks(task);
-
-  // Refresh board cards
-  if (typeof renderBoardFromStorage === "function") renderBoardFromStorage();
+  const ctx = buildOverlayEditContext(id);
+  if (!ctx) return;
+  applyOverlayEditValues(ctx);
+  await saveTasks(ctx.tasks);
+  exitOverlayEditModeSafe(els);
+  refreshOverlayView(ctx.task);
+  refreshBoardCards();
 }
 
+/**
+ * Read overlay edit form.
+ */
 function readOverlayEditForm() {
   const title = getInputValue("taskEditTitle").trim();
   if (!title) {
@@ -160,11 +194,10 @@ function readOverlayEditForm() {
   };
 }
 
+/**
+ * Build edited task from form.
+ */
 function buildEditedTaskFromForm(t, values) {
-  let assignedValue = "";
-  if (values.assigned.length === 1) assignedValue = values.assigned[0];
-  if (values.assigned.length > 1) assignedValue = values.assigned;
-
   return {
     title: values.title,
     description: values.description,
@@ -174,11 +207,72 @@ function buildEditedTaskFromForm(t, values) {
     priority: values.priority,
     status: t.status,
     subtasks: values.subtasks,
-    assigned: assignedValue,
+    assigned: getAssignedValue(values.assigned),
   };
 }
 
+/**
+ * Build overlay edit context.
+ */
+function buildOverlayEditContext(id) {
+  const tasks = getTasks();
+  const idx = findTaskIndexById(id, tasks);
+  if (idx === -1) return null;
+  const values = readOverlayEditForm();
+  if (!values) return null;
+  return { tasks: tasks, idx: idx, values: values, task: tasks[idx] };
+}
+
+/**
+ * Apply overlay edit values.
+ */
+function applyOverlayEditValues(ctx) {
+  ctx.tasks[ctx.idx] = buildEditedTaskFromForm(ctx.tasks[ctx.idx], ctx.values);
+  ctx.task = ctx.tasks[ctx.idx];
+}
+
+/**
+ * Exit overlay edit mode safe.
+ */
+function exitOverlayEditModeSafe(els) {
+  try {
+    exitOverlayEditMode(els);
+  } catch (e) {
+    /* ignore if els not provided */
+  }
+}
+
+/**
+ * Refresh overlay view.
+ */
+function refreshOverlayView(task) {
+  if (typeof setOverlayCategory === "function") setOverlayCategory(task);
+  if (typeof setOverlayTexts === "function") setOverlayTexts(task);
+  if (typeof setOverlayPriority === "function") setOverlayPriority(task);
+  if (typeof renderOverlayAssigned === "function") renderOverlayAssigned(task);
+  if (typeof renderOverlaySubtasks === "function") renderOverlaySubtasks(task);
+}
+
+/**
+ * Refresh board cards.
+ */
+function refreshBoardCards() {
+  if (typeof renderBoardFromStorage === "function") renderBoardFromStorage();
+}
+
+/**
+ * Get assigned value.
+ */
+function getAssignedValue(assigned) {
+  if (assigned.length === 1) return assigned[0];
+  if (assigned.length > 1) return assigned;
+  return "";
+}
+
 // ---------------- Overlay edit widgets ----------------
+/**
+ * Initialize overlay edit widgets.
+ */
 function initOverlayEditWidgets() {
   initOverlayPriorityButtons();
   initOverlayAssignedDropdown();
@@ -186,6 +280,9 @@ function initOverlayEditWidgets() {
   setOverlayDueMin();
 }
 
+/**
+ * Set overlay due min.
+ */
 function setOverlayDueMin() {
   const dateInput = document.getElementById("taskEditDue");
   if (!dateInput) return;
@@ -197,6 +294,9 @@ function setOverlayDueMin() {
  * Returns today's date in local YYYY-MM-DD format for date inputs.
  * @param {Date} [date]
  */
+/**
+ * Get local date input value.
+ */
 function getLocalDateInputValue(date = new Date()) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -204,6 +304,9 @@ function getLocalDateInputValue(date = new Date()) {
   return `${year}-${month}-${day}`;
 }
 
+/**
+ * Initialize overlay priority buttons.
+ */
 function initOverlayPriorityButtons() {
   const wrap = document.getElementById("taskEditPriority");
   if (!wrap) return;
@@ -216,6 +319,9 @@ function initOverlayPriorityButtons() {
   setOverlayPriorityButtons(overlaySelectedPriority || "medium");
 }
 
+/**
+ * Set overlay priority buttons.
+ */
 function setOverlayPriorityButtons(value) {
   const wrap = document.getElementById("taskEditPriority");
   if (!wrap) return;
@@ -228,70 +334,98 @@ function setOverlayPriorityButtons(value) {
   }
 }
 
+/**
+ * Initialize overlay assigned dropdown.
+ */
 function initOverlayAssignedDropdown() {
+  const els = getOverlayAssignedDropdownEls();
+  if (!els) return;
+  bindOverlayAssignedInput(els);
+  bindOverlayAssignedArrow(els);
+  bindOverlayAssignedOutside(els);
+}
+
+/**
+ * Get overlay assigned dropdown els.
+ */
+function getOverlayAssignedDropdownEls() {
   const input = document.getElementById("taskEditAssignedInput");
   const dropdown = document.getElementById("taskEditAssignedDropdown");
   const arrow = document.getElementById("taskEditDropdownArrow");
-  if (!input || !dropdown || !arrow) return;
+  if (!input || !dropdown || !arrow) return null;
+  return { input: input, dropdown: dropdown, arrow: arrow };
+}
 
-  input.addEventListener("click", function (e) {
+/**
+ * Bind overlay assigned input.
+ */
+function bindOverlayAssignedInput(els) {
+  els.input.addEventListener("click", function (e) {
     e.stopPropagation();
-    dropdown.classList.remove("hidden");
-    arrow.classList.add("open");
-  });
-
-  arrow.addEventListener("click", function (e) {
-    e.stopPropagation();
-    const isHidden = dropdown.classList.contains("hidden");
-    if (isHidden) {
-      dropdown.classList.remove("hidden");
-      arrow.classList.add("open");
-    } else {
-      dropdown.classList.add("hidden");
-      arrow.classList.remove("open");
-    }
-  });
-
-  document.addEventListener("click", function (e) {
-    if (!e.target.closest(".multi-select")) {
-      dropdown.classList.add("hidden");
-      arrow.classList.remove("open");
-    }
+    openOverlayAssignedDropdown(els);
   });
 }
 
+/**
+ * Bind overlay assigned arrow.
+ */
+function bindOverlayAssignedArrow(els) {
+  els.arrow.addEventListener("click", function (e) {
+    e.stopPropagation();
+    toggleOverlayAssignedDropdown(els);
+  });
+}
+
+/**
+ * Bind overlay assigned outside.
+ */
+function bindOverlayAssignedOutside(els) {
+  document.addEventListener("click", function (e) {
+    if (e.target.closest(".multi-select")) return;
+    closeOverlayAssignedDropdown(els);
+  });
+}
+
+/**
+ * Toggle overlay assigned dropdown.
+ */
+function toggleOverlayAssignedDropdown(els) {
+  const isHidden = els.dropdown.classList.contains("hidden");
+  isHidden ? openOverlayAssignedDropdown(els) : closeOverlayAssignedDropdown(els);
+}
+
+/**
+ * Open overlay assigned dropdown.
+ */
+function openOverlayAssignedDropdown(els) {
+  els.dropdown.classList.remove("hidden");
+  els.arrow.classList.add("open");
+}
+
+/**
+ * Close overlay assigned dropdown.
+ */
+function closeOverlayAssignedDropdown(els) {
+  els.dropdown.classList.add("hidden");
+  els.arrow.classList.remove("open");
+}
+
+/**
+ * Populate overlay assigned contacts.
+ */
 function populateOverlayAssignedContacts() {
   const dropdown = document.getElementById("taskEditAssignedDropdown");
   if (!dropdown) return;
-  dropdown.innerHTML = "";
+  resetOverlayAssignedDropdown(dropdown);
   const contacts = loadContacts();
-  const text = document.getElementById("taskEditAssignedText");
-  if (text) text.textContent = "Select contacts to assign";
   for (let i = 0; i < contacts.length; i++) {
-    const c = contacts[i];
-    if (!c || !c.id || !c.name) continue;
-    const colorClass = getOverlayEditContactColorClass(c);
-    const row = document.createElement("div");
-    row.className = "contact-option";
-    row.dataset.id = String(c.id);
-    row.innerHTML =
-      '<div class="contact-avatar ' +
-      colorClass +
-      '">' +
-      getInitials(c.name) +
-      '</div><span>' +
-      c.name +
-      '</span><input type="checkbox" ' +
-      (overlaySelectedContacts.has(String(c.id)) ? "checked" : "") +
-      ">";
-    row.onclick = function (e) {
-      e.stopPropagation();
-      toggleOverlayContact(c.id);
-    };
-    dropdown.appendChild(row);
+    appendOverlayContactRow(dropdown, contacts[i]);
   }
 }
 
+/**
+ * Toggle overlay contact.
+ */
 function toggleOverlayContact(id) {
   const key = String(id);
   overlaySelectedContacts.has(key)
@@ -304,6 +438,9 @@ function toggleOverlayContact(id) {
 /**
  * Updates the checked state of checkboxes in the overlay
  * contacts dropdown without rebuilding all rows.
+ */
+/**
+ * Update overlay assigned checkboxes.
  */
 function updateOverlayAssignedCheckboxes() {
   const dropdown = document.getElementById("taskEditAssignedDropdown");
@@ -318,6 +455,9 @@ function updateOverlayAssignedCheckboxes() {
   });
 }
 
+/**
+ * Render overlay selected contacts.
+ */
 function renderOverlaySelectedContacts() {
   const text = document.getElementById("taskEditAssignedText");
   const avatarsWrap = document.getElementById("taskEditAssignedAvatars");
@@ -325,16 +465,106 @@ function renderOverlaySelectedContacts() {
   if (!avatarsWrap) return;
   avatarsWrap.innerHTML = "";
   if (!overlaySelectedContacts.size) {
-    text.textContent = "Select contacts to assign";
+    setOverlayAssignedText(text);
     return;
   }
+  const view = buildOverlaySelectedContactsView();
+  avatarsWrap.innerHTML = view.avatarsHtml + view.moreHtml;
+  setOverlayAssignedText(text);
+}
+
+/**
+ * Set overlay assigned from task.
+ */
+function setOverlayAssignedFromTask(task) {
+  overlaySelectedContacts.clear();
+  const assignedArr = normalizeAssignedArray(task.assigned);
+  const contacts = loadContacts();
+  const contactsById = buildContactsById(contacts);
+  const byName = buildContactsByNameMap(contacts);
+  applyAssignedSelections(assignedArr, contactsById, byName);
+  populateOverlayAssignedContacts();
+  renderOverlaySelectedContacts();
+}
+
+/**
+ * Reset overlay assigned dropdown.
+ */
+function resetOverlayAssignedDropdown(dropdown) {
+  dropdown.innerHTML = "";
+  const text = document.getElementById("taskEditAssignedText");
+  if (text) setOverlayAssignedText(text);
+}
+
+/**
+ * Append overlay contact row.
+ */
+function appendOverlayContactRow(dropdown, contact) {
+  if (!contact || !contact.id || !contact.name) return;
+  const row = buildOverlayContactRow(contact);
+  dropdown.appendChild(row);
+}
+
+/**
+ * Build overlay contact row.
+ */
+function buildOverlayContactRow(contact) {
+  const row = document.createElement("div");
+  row.className = "contact-option";
+  row.dataset.id = String(contact.id);
+  row.innerHTML = getOverlayContactRowHtml(contact);
+  row.onclick = function (e) {
+    e.stopPropagation();
+    toggleOverlayContact(contact.id);
+  };
+  return row;
+}
+
+/**
+ * Get overlay contact row html.
+ */
+function getOverlayContactRowHtml(contact) {
+  const colorClass = getOverlayEditContactColorClass(contact);
+  const checked = overlaySelectedContacts.has(String(contact.id)) ? "checked" : "";
+  return (
+    '<div class="contact-avatar ' +
+    colorClass +
+    '">' +
+    getInitials(contact.name) +
+    '</div><span>' +
+    contact.name +
+    '</span><input type="checkbox" ' +
+    checked +
+    ">"
+  );
+}
+
+/**
+ * Set overlay assigned text.
+ */
+function setOverlayAssignedText(textEl) {
+  textEl.textContent = "Select contacts to assign";
+}
+
+/**
+ * Build overlay selected contacts view.
+ */
+function buildOverlaySelectedContactsView() {
   const contacts = loadContacts();
   const selectedIds = Array.from(overlaySelectedContacts);
-  const limit = 8;
-  const visibleIds = selectedIds.slice(0, limit);
-  const remaining = selectedIds.length - visibleIds.length;
+  const visible = selectedIds.slice(0, 8);
+  const remaining = selectedIds.length - visible.length;
+  return {
+    avatarsHtml: buildOverlayAvatarsHtml(contacts, visible),
+    moreHtml: buildOverlayMoreHtml(remaining),
+  };
+}
 
-  const avatarsHtml = visibleIds
+/**
+ * Build overlay avatars html.
+ */
+function buildOverlayAvatarsHtml(contacts, ids) {
+  return ids
     .map(function (id) {
       const c = contacts.find(function (x) {
         return String(x.id) === String(id);
@@ -344,129 +574,214 @@ function renderOverlaySelectedContacts() {
       return '<span class="contact-avatar ' + colorClass + '">' + getInitials(c.name) + "</span>";
     })
     .join("");
-
-  let moreHtml = "";
-  if (remaining > 0) {
-    moreHtml = '<span class="contact-avatar contact-avatar-more">+' + remaining + "</span>";
-  }
-
-  avatarsWrap.innerHTML = avatarsHtml + moreHtml;
-
-    text.textContent = "Select contacts to assign";
 }
 
-function setOverlayAssignedFromTask(task) {
-  overlaySelectedContacts.clear();
-  const assignedArr = Array.isArray(task.assigned)
-    ? task.assigned
-    : task.assigned
-    ? [task.assigned]
-    : [];
-  const contacts = loadContacts();
-  const contactsById = buildContactsById(contacts);
+/**
+ * Build overlay more html.
+ */
+function buildOverlayMoreHtml(remaining) {
+  if (remaining <= 0) return "";
+  return '<span class="contact-avatar contact-avatar-more">+' + remaining + "</span>";
+}
+
+/**
+ * Normalize assigned array.
+ */
+function normalizeAssignedArray(assigned) {
+  if (Array.isArray(assigned)) return assigned;
+  if (assigned) return [assigned];
+  return [];
+}
+
+/**
+ * Build contacts by name map.
+ */
+function buildContactsByNameMap(contacts) {
   const byName = new Map();
   for (let i = 0; i < contacts.length; i++) {
     if (contacts[i] && contacts[i].name && contacts[i].id) {
       byName.set(String(contacts[i].name).toLowerCase(), String(contacts[i].id));
     }
   }
+  return byName;
+}
+
+/**
+ * Apply assigned selections.
+ */
+function applyAssignedSelections(assignedArr, contactsById, byName) {
   for (let i = 0; i < assignedArr.length; i++) {
     const key = String(assignedArr[i] || "");
     if (!key) continue;
     if (contactsById.has(key)) overlaySelectedContacts.add(key);
-    else {
-      const matchId = byName.get(key.toLowerCase());
-      if (matchId) overlaySelectedContacts.add(matchId);
-    }
+    else addAssignedByName(key, byName);
   }
-  populateOverlayAssignedContacts();
-  renderOverlaySelectedContacts();
 }
 
+/**
+ * Add assigned by name.
+ */
+function addAssignedByName(key, byName) {
+  const matchId = byName.get(key.toLowerCase());
+  if (matchId) overlaySelectedContacts.add(matchId);
+}
+
+/**
+ * Initialize overlay subtasks.
+ */
 function initOverlaySubtasks() {
+  const els = getOverlaySubtaskEls();
+  if (!els) return;
+  bindOverlaySubtaskInput(els);
+  bindOverlaySubtaskClear(els);
+  bindOverlaySubtaskList(els);
+  syncOverlaySubtaskButtons(els.input);
+}
+
+/**
+ * Get overlay subtask els.
+ */
+function getOverlaySubtaskEls() {
   const input = document.getElementById("taskEditSubtaskInput");
   const btn = document.getElementById("taskEditAddSubtaskBtn");
   const clearBtn = document.getElementById("taskEditClearSubtaskBtn");
   const list = document.getElementById("taskEditSubtasksList");
-
-  const syncSubtaskButtons = () => {
-    if (!input) return;
-    const wrap = input.closest(".subtasks-input");
-    if (!wrap) return;
-    const hasValue = !!input.value.trim();
-    wrap.classList.toggle("is-empty", !hasValue);
-  };
-
-  if (btn && input) {
-    btn.addEventListener("click", addOverlaySubtasksFromInput);
-
-    input.addEventListener("keydown", function (e) {
-      if (e.key !== "Enter") return;
-      e.preventDefault();
-      addOverlaySubtasksFromInput();
-    });
-    input.addEventListener("input", syncSubtaskButtons);
-  }
-
-  if (clearBtn && input) {
-    clearBtn.addEventListener("click", function () {
-      input.value = "";
-      input.focus();
-      syncSubtaskButtons();
-    });
-  }
-
-  syncSubtaskButtons();
-
-  if (list) {
-    list.addEventListener("click", function (e) {
-      const item = e.target.closest(".subtasks-item");
-      if (!item) return;
-
-      const remove = e.target.closest(".subtasks-remove");
-      const edit = e.target.closest(".subtasks-edit");
-      const save = e.target.closest(".subtasks-save-edit");
-      const cancel = e.target.closest(".subtasks-cancel-edit");
-
-      if (remove) {
-        const index = parseInt(remove.dataset.index, 10);
-        if (!isNaN(index)) {
-          overlayPendingSubtasks.splice(index, 1);
-          renderOverlaySubtasksList();
-        }
-        return;
-      }
-
-      if (edit) {
-        const index = parseInt(edit.dataset.index, 10);
-        if (isNaN(index) || !overlayPendingSubtasks[index]) return;
-        const currentTitle = overlayPendingSubtasks[index].title || "";
-        startOverlayInlineSubtaskEdit(item, index, currentTitle);
-        return;
-      }
-
-      if (save) {
-        const index = parseInt(save.dataset.index, 10);
-        if (isNaN(index) || !overlayPendingSubtasks[index]) return;
-        const input = item.querySelector(".subtasks-edit-input");
-        if (!input) return;
-        const trimmed = input.value.trim();
-        if (!trimmed) {
-          renderOverlaySubtasksList();
-          return;
-        }
-        overlayPendingSubtasks[index].title = trimmed;
-        renderOverlaySubtasksList();
-        return;
-      }
-
-      if (cancel) {
-        renderOverlaySubtasksList();
-      }
-    });
-  }
+  if (!input) return null;
+  return { input: input, btn: btn, clearBtn: clearBtn, list: list };
 }
 
+/**
+ * Bind overlay subtask input.
+ */
+function bindOverlaySubtaskInput(els) {
+  if (els.btn) {
+    els.btn.addEventListener("click", addOverlaySubtasksFromInput);
+  }
+  els.input.addEventListener("keydown", function (e) {
+    handleOverlaySubtaskEnter(e);
+  });
+  els.input.addEventListener("input", function () {
+    syncOverlaySubtaskButtons(els.input);
+  });
+}
+
+/**
+ * Handle overlay subtask enter.
+ */
+function handleOverlaySubtaskEnter(e) {
+  if (e.key !== "Enter") return;
+  e.preventDefault();
+  addOverlaySubtasksFromInput();
+}
+
+/**
+ * Bind overlay subtask clear.
+ */
+function bindOverlaySubtaskClear(els) {
+  if (!els.clearBtn) return;
+  els.clearBtn.addEventListener("click", function () {
+    clearOverlaySubtaskInput(els.input);
+  });
+}
+
+/**
+ * Clear overlay subtask input.
+ */
+function clearOverlaySubtaskInput(input) {
+  input.value = "";
+  input.focus();
+  syncOverlaySubtaskButtons(input);
+}
+
+/**
+ * Sync overlay subtask buttons.
+ */
+function syncOverlaySubtaskButtons(input) {
+  const wrap = input.closest(".subtasks-input");
+  if (!wrap) return;
+  const hasValue = !!input.value.trim();
+  wrap.classList.toggle("is-empty", !hasValue);
+}
+
+/**
+ * Bind overlay subtask list.
+ */
+function bindOverlaySubtaskList(els) {
+  if (!els.list) return;
+  els.list.addEventListener("click", function (e) {
+    handleOverlaySubtaskListClick(e);
+  });
+}
+
+/**
+ * Handle overlay subtask list click.
+ */
+function handleOverlaySubtaskListClick(e) {
+  const item = e.target.closest(".subtasks-item");
+  if (!item) return;
+  if (handleSubtaskRemove(e, item)) return;
+  if (handleSubtaskEdit(e, item)) return;
+  if (handleSubtaskSave(e, item)) return;
+  handleSubtaskCancel(e);
+}
+
+/**
+ * Handle subtask remove.
+ */
+function handleSubtaskRemove(e, item) {
+  const remove = e.target.closest(".subtasks-remove");
+  if (!remove) return false;
+  const index = parseInt(remove.dataset.index, 10);
+  if (!isNaN(index)) {
+    overlayPendingSubtasks.splice(index, 1);
+    renderOverlaySubtasksList();
+  }
+  return true;
+}
+
+/**
+ * Handle subtask edit.
+ */
+function handleSubtaskEdit(e, item) {
+  const edit = e.target.closest(".subtasks-edit");
+  if (!edit) return false;
+  const index = parseInt(edit.dataset.index, 10);
+  if (isNaN(index) || !overlayPendingSubtasks[index]) return true;
+  const currentTitle = overlayPendingSubtasks[index].title || "";
+  startOverlayInlineSubtaskEdit(item, index, currentTitle);
+  return true;
+}
+
+/**
+ * Handle subtask save.
+ */
+function handleSubtaskSave(e, item) {
+  const save = e.target.closest(".subtasks-save-edit");
+  if (!save) return false;
+  const index = parseInt(save.dataset.index, 10);
+  if (isNaN(index) || !overlayPendingSubtasks[index]) return true;
+  const input = item.querySelector(".subtasks-edit-input");
+  if (!input) return true;
+  const trimmed = input.value.trim();
+  if (!trimmed) return renderOverlaySubtasksList(), true;
+  overlayPendingSubtasks[index].title = trimmed;
+  renderOverlaySubtasksList();
+  return true;
+}
+
+/**
+ * Handle subtask cancel.
+ */
+function handleSubtaskCancel(e) {
+  const cancel = e.target.closest(".subtasks-cancel-edit");
+  if (!cancel) return false;
+  renderOverlaySubtasksList();
+  return true;
+}
+
+/**
+ * Add overlay subtasks from input.
+ */
 function addOverlaySubtasksFromInput() {
   const input = document.getElementById("taskEditSubtaskInput");
   if (!input || !input.value.trim()) return;
@@ -483,6 +798,9 @@ function addOverlaySubtasksFromInput() {
   renderOverlaySubtasksList();
 }
 
+/**
+ * Render overlay subtasks list.
+ */
 function renderOverlaySubtasksList() {
   const list = document.getElementById("taskEditSubtasksList");
   if (!list) return;
@@ -499,6 +817,9 @@ function renderOverlaySubtasksList() {
   }
 }
 
+/**
+ * Set overlay subtasks from task.
+ */
 function setOverlaySubtasksFromTask(task) {
   overlayPendingSubtasks = Array.isArray(task.subtasks)
     ? task.subtasks.map(function (s) {
@@ -508,6 +829,9 @@ function setOverlaySubtasksFromTask(task) {
   renderOverlaySubtasksList();
 }
 
+/**
+ * Get overlay edit contact color class.
+ */
 function getOverlayEditContactColorClass(contact) {
   if (typeof getContactColorClass === "function") return getContactColorClass(contact);
   if (contact && contact.colorClass) return contact.colorClass;
@@ -515,6 +839,9 @@ function getOverlayEditContactColorClass(contact) {
   return "avatar-color-" + (overlayEditHashString(seed) % 12);
 }
 
+/**
+ * Overlay edit hash string.
+ */
 function overlayEditHashString(str) {
   let h = 0;
   const s = String(str || "");
@@ -529,38 +856,77 @@ function overlayEditHashString(str) {
  * @param {number} index
  * @param {string} title
  */
+/**
+ * Start overlay inline subtask edit.
+ */
 function startOverlayInlineSubtaskEdit(item, index, title) {
   if (!item) return;
   item.innerHTML = "";
+  const input = createOverlaySubtaskEditInput(title);
+  const actions = createOverlaySubtaskEditActions(index);
+  item.appendChild(input);
+  item.appendChild(actions);
+  focusOverlaySubtaskEditInput(input);
+}
 
+/**
+ * Create overlay subtask edit input.
+ */
+function createOverlaySubtaskEditInput(title) {
   const input = document.createElement("input");
   input.type = "text";
   input.className = "subtasks-edit-input";
   input.value = title || "";
+  return input;
+}
 
+/**
+ * Create overlay subtask edit actions.
+ */
+function createOverlaySubtaskEditActions(index) {
   const actions = document.createElement("div");
   actions.className = "subtasks-actions";
+  actions.appendChild(createOverlaySubtaskSaveBtn(index));
+  actions.appendChild(createOverlaySubtaskSeparator());
+  actions.appendChild(createOverlaySubtaskCancelBtn(index));
+  return actions;
+}
 
-  const saveBtn = document.createElement("button");
-  saveBtn.className = "subtasks-save-edit";
-  saveBtn.dataset.index = String(index);
-  saveBtn.innerHTML = '<img src="../assets/icons/check-black.svg" alt="Save subtask">';
+/**
+ * Create overlay subtask save btn.
+ */
+function createOverlaySubtaskSaveBtn(index) {
+  const btn = document.createElement("button");
+  btn.className = "subtasks-save-edit";
+  btn.dataset.index = String(index);
+  btn.innerHTML = '<img src="../assets/icons/check-black.svg" alt="Save subtask">';
+  return btn;
+}
 
+/**
+ * Create overlay subtask separator.
+ */
+function createOverlaySubtaskSeparator() {
   const sep = document.createElement("span");
   sep.className = "subtasks-separator";
+  return sep;
+}
 
-  const cancelBtn = document.createElement("button");
-  cancelBtn.className = "subtasks-cancel-edit";
-  cancelBtn.dataset.index = String(index);
-  cancelBtn.innerHTML = '<img src="../assets/icons/iconoir_cancel.svg" alt="Cancel edit">';
+/**
+ * Create overlay subtask cancel btn.
+ */
+function createOverlaySubtaskCancelBtn(index) {
+  const btn = document.createElement("button");
+  btn.className = "subtasks-cancel-edit";
+  btn.dataset.index = String(index);
+  btn.innerHTML = '<img src="../assets/icons/iconoir_cancel.svg" alt="Cancel edit">';
+  return btn;
+}
 
-  actions.appendChild(saveBtn);
-  actions.appendChild(sep);
-  actions.appendChild(cancelBtn);
-
-  item.appendChild(input);
-  item.appendChild(actions);
-
+/**
+ * Focus overlay subtask edit input.
+ */
+function focusOverlaySubtaskEditInput(input) {
   input.focus();
   const len = input.value.length;
   input.setSelectionRange(len, len);

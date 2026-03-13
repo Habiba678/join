@@ -7,34 +7,90 @@ let urgent_tasks_day = document.getElementById("day");
 let urgent_tasks_year = document.getElementById("year");
 let Todos_urgent = [];
 let nearestUrgentDate = null;
+/**
+ * Go to board.
+ */
 function goToBoard() {window.location.href = BOARD_PAGE_URL;}
 
+/**
+ * Fetch dbnode.
+ */
 async function fetchDBNode(nodeName) {
-  try { const resp = await fetch(DB_TASK_URL + nodeName + ".json"); const data = await resp.json();
-    if (data != null) return data; } catch (e) {}
+  const direct = await tryFetchNode(nodeName);
+  if (direct != null) return direct;
+  return fetchNodeFromRoot(nodeName);
+}
 
-  try {const r = await fetch(DB_TASK_URL + ".json"); const root = await r.json();
+/**
+ * Try fetch node.
+ */
+async function tryFetchNode(nodeName) {
+  try {
+    const resp = await fetch(DB_TASK_URL + nodeName + ".json");
+    const data = await resp.json();
+    return data != null ? data : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+/**
+ * Fetch node from root.
+ */
+async function fetchNodeFromRoot(nodeName) {
+  try {
+    const r = await fetch(DB_TASK_URL + ".json");
+    const root = await r.json();
     if (!root) return null;
- if (Array.isArray(root)) { const entry = root.find((e) => e && e.id === nodeName);
-      if (entry) {const clone = Object.assign({}, entry); delete clone.id;
-        if (clone.hasOwnProperty(nodeName)) return clone[nodeName];
-        const keys = Object.keys(clone);
-        if (keys.length) return clone;}
-    } else if (typeof root === "object") {
-      const vals = Object.values(root);
-      for (let i = 0; i < vals.length; i++) {
-        const e = vals[i];
-        if (e && e.id === nodeName) {const clone = Object.assign({}, e);delete clone.id;
-          if (clone.hasOwnProperty(nodeName)) return clone[nodeName];
-          const keys = Object.keys(clone);
-          if (keys.length) return clone;}}
-      if (root[nodeName] !== undefined) return root[nodeName];
-    }
-  } catch (e) {}
+    return extractNodeFromRoot(root, nodeName);
+  } catch (e) {
+    return null;
+  }
+}
+
+/**
+ * Extract node from root.
+ */
+function extractNodeFromRoot(root, nodeName) {
+  if (Array.isArray(root)) return extractNodeFromArray(root, nodeName);
+  if (typeof root === "object") return extractNodeFromObject(root, nodeName);
   return null;
 }
 
+/**
+ * Extract node from array.
+ */
+function extractNodeFromArray(root, nodeName) {
+  const entry = root.find((e) => e && e.id === nodeName);
+  return entry ? extractNodeFromEntry(entry, nodeName) : null;
+}
 
+/**
+ * Extract node from object.
+ */
+function extractNodeFromObject(root, nodeName) {
+  const vals = Object.values(root);
+  for (let i = 0; i < vals.length; i++) {
+    if (vals[i] && vals[i].id === nodeName) return extractNodeFromEntry(vals[i], nodeName);
+  }
+  return root[nodeName] !== undefined ? root[nodeName] : null;
+}
+
+/**
+ * Extract node from entry.
+ */
+function extractNodeFromEntry(entry, nodeName) {
+  const clone = Object.assign({}, entry);
+  delete clone.id;
+  if (clone.hasOwnProperty(nodeName)) return clone[nodeName];
+  const keys = Object.keys(clone);
+  return keys.length ? clone : null;
+}
+
+
+/**
+ * Sync tasks from db.
+ */
 async function syncTasksFromDB() {
   try {
     const data = await fetchDBNode("tasks");
@@ -52,12 +108,18 @@ async function syncTasksFromDB() {
 }
 
 
+/**
+ * Initialize.
+ */
 async function init() {
   await (window.idbStorage && window.idbStorage.ready ? window.idbStorage.ready : Promise.resolve());
   try { await syncTasksFromDB(); } catch (e) { console.warn("Initial tasks sync failed, continuing with local cache", e); }
   getCokkieCheck(); greetingText(); getTasksTotal(); getTasksDone(); getTasksProgress(); getAwaitFeedback(); getUrgrentTodo();
 }
 
+/**
+ * Greeting text.
+ */
 function greetingText() {
   const el = document.getElementById("greeting-text"); if (!el) return;
   const h = new Date().getHours();
@@ -73,6 +135,9 @@ function greetingText() {
     el.textContent = `${base}, ${name}!`;
   } catch (e) { el.textContent = base + "!"; }
 }
+/**
+ * Get tasks total.
+ */
 function getTasksTotal() {
   const tasks = (window.idbStorage && typeof window.idbStorage.getTasksSync === "function") ? window.idbStorage.getTasksSync() : [];
   let filteredTasks = tasks.filter(task => task.title !== undefined);
@@ -90,6 +155,9 @@ function getTasksTotal() {
 }
 
 
+/**
+ * Get tasks done.
+ */
 function getTasksDone() {
   let done_tasks = document.getElementById("todos-done");
   let Todos_Done = [];
@@ -104,6 +172,9 @@ function getTasksDone() {
 }
 
 
+/**
+ * Get tasks progress.
+ */
 function getTasksProgress() {
   let pogress_tasks = document.getElementById("task-in-pogress");
   let Todos_pogress = [];
@@ -117,6 +188,9 @@ function getTasksProgress() {
 }
 
 
+/**
+ * Get await feedback.
+ */
 function getAwaitFeedback() {
   let feedback_tasks = document.getElementById("task-in-feedback");
   let Todos_feedback = [];
@@ -130,6 +204,9 @@ function getAwaitFeedback() {
 }
 
 
+/**
+ * Get urgrent todo.
+ */
 function getUrgrentTodo() {
   const tasks = (window.idbStorage && typeof window.idbStorage.getTasksSync === "function") ? window.idbStorage.getTasksSync() : [];
   for (let i = 0; i < tasks.length; i++) {

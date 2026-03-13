@@ -276,9 +276,11 @@
   pointer-events: none;
 }
 
-.task-overlay-edit .subtasks-input input {
+.task-overlay-edit .subtasks-input input[type="text"] {
   width: 100%;
-  padding-right: 80px;
+  padding-left: 10px;
+  padding-right: 96px;
+  box-sizing: border-box;
 }
 
 .task-overlay-edit .subtasks-add-btn {
@@ -336,8 +338,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #f6f7f8;
-  border: 1px solid #e0e0e0;
+  background: transparent;
+  border: none;
   border-radius: 6px;
   padding: 6px 10px;
   font-size: 14px;

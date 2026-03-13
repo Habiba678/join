@@ -8,40 +8,81 @@ let info = document.getElementById("noMatsh");
  * @async
  * @returns {Promise<Object|null>} The register data or null if not found.
  */
+/**
+ * Fetch register node.
+ */
 async function fetchRegisterNode() {
-  const db = "https://join-da53b-default-rtdb.firebaseio.com/";
+  const direct = await tryFetchRegisterDirect();
+  if (direct != null) return direct;
+  const root = await tryFetchRootDb();
+  if (!root) return null;
+  return extractRegisterFromRoot(root);
+}
+
+/**
+ * Get login DB URL.
+ */
+function getLoginDbUrl() {
+  return "https://join-da53b-default-rtdb.firebaseio.com/";
+}
+
+/**
+ * Try fetch register direct.
+ */
+async function tryFetchRegisterDirect() {
   try {
-    const r = await (await fetch(db + "register.json")).json();
-    if (r != null) return r;
+    return await (await fetch(getLoginDbUrl() + "register.json")).json();
   } catch (e) {
     console.warn("fetchRegisterNode: failed to fetch /register.json", e);
+    return null;
   }
+}
 
+/**
+ * Try fetch root DB.
+ */
+async function tryFetchRootDb() {
   try {
-    const root = await (await fetch(db + ".json")).json();
-    if (!root) return null;
-
-    const pick = (o) => {
-      const c = Object.assign({}, o);
-      delete c.id;
-      return c.hasOwnProperty("register") ? c.register : c;
-    };
-
-    if (Array.isArray(root)) {
-      const e = root.find((x) => x && x.id === "register");
-      if (e) return pick(e);
-    }
-
-    if (root && typeof root === "object") {
-      const f = Object.values(root).find((x) => x && x.id === "register");
-      if (f) return pick(f);
-      if (root.register !== undefined) return root.register;
-    }
+    return await (await fetch(getLoginDbUrl() + ".json")).json();
   } catch (e) {
     console.warn("fetchRegisterNode: failed to inspect root DB", e);
+    return null;
   }
+}
 
+/**
+ * Extract register from root.
+ */
+function extractRegisterFromRoot(root) {
+  if (Array.isArray(root)) return extractRegisterFromArray(root);
+  if (root && typeof root === "object") return extractRegisterFromObject(root);
   return null;
+}
+
+/**
+ * Extract register from array.
+ */
+function extractRegisterFromArray(root) {
+  const entry = root.find((x) => x && x.id === "register");
+  return entry ? pickRegisterEntry(entry) : null;
+}
+
+/**
+ * Extract register from object.
+ */
+function extractRegisterFromObject(root) {
+  const entry = Object.values(root).find((x) => x && x.id === "register");
+  if (entry) return pickRegisterEntry(entry);
+  return root.register !== undefined ? root.register : null;
+}
+
+/**
+ * Pick register entry.
+ */
+function pickRegisterEntry(o) {
+  const c = Object.assign({}, o);
+  delete c.id;
+  return c.hasOwnProperty("register") ? c.register : c;
 }
 
 /**
@@ -50,6 +91,9 @@ async function fetchRegisterNode() {
  * and redirects to the summary page.
  *
  * @returns {void}
+ */
+/**
+ * Guast login.
  */
 function guastLogin() {
   const payload = encodeURIComponent(JSON.stringify("Guest"));
@@ -71,6 +115,9 @@ function guastLogin() {
  * @param {string} storedSalt - The stored salt value.
  * @returns {Promise<boolean>} True if the password is valid.
  */
+/**
+ * Verify password.
+ */
 async function verifyPassword(inputPassword, storedHash, storedSalt) {
   const result = await hashPasswordWithSalt(inputPassword, storedSalt);
   return result === storedHash;
@@ -84,54 +131,115 @@ async function verifyPassword(inputPassword, storedHash, storedSalt) {
  * @async
  * @returns {Promise<void>}
  */
+/**
+ * Log in.
+ */
 async function logIn() {
   const loginData = await fetchRegisterNode();
+  validateLoginInputsSafe();
+  const users = getLoginUsers(loginData);
+  if (!users.length) return alertNoUsers();
+  const infoEl = document.getElementById("info-no-match");
+  const user = findUserByEmail(users, email?.value || "");
+  if (!user) return handleEmailNotFound(infoEl);
+  const ok = await verifyLoginPassword(user, password?.value || "");
+  if (ok) return handleLoginSuccess(user, infoEl);
+  handlePasswordMismatch(infoEl);
+}
+
+/**
+ * Validate login inputs safe.
+ */
+function validateLoginInputsSafe() {
   try {
     validateEmail(email);
     validatePassword(password);
   } catch (e) {
     console.warn("Validation failed", e);
   }
-  const users = loginData ? Object.values(loginData) : [];
-  if (!users.length) { alert("No users found in database. Please register first."); return;}
-  const infoPasswordElement = document.getElementById("info-no-match");
-  let emailFound = false;
-  for (const user of users) {
-    if ((user.mail || "") === (email.value || "")) {
-      emailFound = true;
-      const hash = await hashPasswordWithSalt(password.value, user.salt);
-      if (hash === user.passwort) {
-        sessionStorage.setItem("loggedInUser", JSON.stringify(user.namen));
-        const payload = encodeURIComponent(JSON.stringify(user.namen || "Guest"));
-        document.cookie = `loggedInUser=${payload}; path=/; max-age=3600`;
-        if (infoPasswordElement) {
-          infoPasswordElement.style.opacity = "0";
-          infoPasswordElement.style.visibility = "hidden";
-        }
-        window.location.href = "./subpages/summary.html";
-        return;
-      }
+}
 
-      if (infoPasswordElement) {
-        infoPasswordElement.style.opacity = "1";
-        infoPasswordElement.style.visibility = "visible";
-      }
+/**
+ * Get login users.
+ */
+function getLoginUsers(loginData) {
+  return loginData ? Object.values(loginData) : [];
+}
 
-      if (typeof password !== "undefined" && password) {
-        password.classList.add("isInvaled");
-        password.classList.remove("isValidate");
-      }
-      return;
-    }
-  }
-  if (infoPasswordElement) {
-    infoPasswordElement.style.opacity = "1";
-    infoPasswordElement.style.visibility = "visible";
-  }
-  if (typeof email !== "undefined" && email) {
-    email.classList.add("isInvaled");
-    email.classList.remove("isValidate");
-  }
+/**
+ * Alert no users.
+ */
+function alertNoUsers() {
+  alert("No users found in database. Please register first.");
+}
+
+/**
+ * Find user by email.
+ */
+function findUserByEmail(users, emailValue) {
+  return users.find((u) => (u.mail || "") === (emailValue || ""));
+}
+
+/**
+ * Verify login password.
+ */
+async function verifyLoginPassword(user, value) {
+  const hash = await hashPasswordWithSalt(value, user.salt);
+  return hash === user.passwort;
+}
+
+/**
+ * Handle login success.
+ */
+function handleLoginSuccess(user, infoEl) {
+  sessionStorage.setItem("loggedInUser", JSON.stringify(user.namen));
+  const payload = encodeURIComponent(JSON.stringify(user.namen || "Guest"));
+  document.cookie = `loggedInUser=${payload}; path=/; max-age=3600`;
+  hideInfoNoMatch(infoEl);
+  window.location.href = "./subpages/summary.html";
+}
+
+/**
+ * Handle password mismatch.
+ */
+function handlePasswordMismatch(infoEl) {
+  showInfoNoMatch(infoEl);
+  markInputInvalid(password);
+}
+
+/**
+ * Handle email not found.
+ */
+function handleEmailNotFound(infoEl) {
+  showInfoNoMatch(infoEl);
+  markInputInvalid(email);
+}
+
+/**
+ * Show info no match.
+ */
+function showInfoNoMatch(infoEl) {
+  if (!infoEl) return;
+  infoEl.style.opacity = "1";
+  infoEl.style.visibility = "visible";
+}
+
+/**
+ * Hide info no match.
+ */
+function hideInfoNoMatch(infoEl) {
+  if (!infoEl) return;
+  infoEl.style.opacity = "0";
+  infoEl.style.visibility = "hidden";
+}
+
+/**
+ * Mark input invalid.
+ */
+function markInputInvalid(input) {
+  if (typeof input === "undefined" || !input) return;
+  input.classList.add("isInvaled");
+  input.classList.remove("isValidate");
 }
 
 /**
@@ -140,7 +248,13 @@ async function logIn() {
  *
  * @returns {void}
  */
+/**
+ * Logout.
+ */
 function logout() {
+  /**
+   * Clear cookie.
+   */
   const clearCookie = (name) => { document.cookie = `${name}=; path=/; max-age=0`;};
   clearCookie("loggedInUser"); clearCookie("session"); clearCookie("sessionId"); clearCookie("accessToken"); clearCookie("auth"); clearCookie("token");
 
@@ -158,6 +272,9 @@ function logout() {
  * Redirects the user to the login page if not.
  *
  * @returns {string|null} The stored username or null.
+ */
+/**
+ * Get cokkie check.
  */
 function getCokkieCheck() {
   const cookies = document.cookie.split(";").reduce((acc, cookie) => {
@@ -180,30 +297,54 @@ function getCokkieCheck() {
  *
  * @returns {string|null} The stored username or null.
  */
+/**
+ * Get cokkie check helper.
+ */
 function getCokkieCheckHelper() {
-  const cookies = document.cookie.split(";").reduce((acc, cookie) => { const [key, value] = cookie.trim().split("="); acc[key] = decodeURIComponent(value || ""); return acc;}, {});
-
-  if (!cookies.loggedInUser) {
-    const hidenNav = document.querySelectorAll("#nav_li");
-    const loginBtn = document.getElementById("login-btn");
-    const buttoMenu = document.getElementById("headerUserBtn");
-    const sidebarFooter = document.querySelector(".sidebar-footer");
-    const menueUl = document.querySelector(".menu ul");
-    
-    if (menueUl) menueUl.style.justifyContent = "flex-start";
-    if (hidenNav) hidenNav.forEach(el => el.style.display = "none");  
-    if (loginBtn) loginBtn.style.display = "block";
-    if (buttoMenu) buttoMenu.style.opacity = "0";
-    if (buttoMenu) buttoMenu.style.cursor = "none";
-    if (sidebarFooter) sidebarFooter.style.display = "flex";
-  } else {
-    const hidenNav = document.querySelectorAll("#nav_li");
-    const loginBtn = document.getElementById("login-btn");
-    if (hidenNav) hidenNav.forEach(el => el.style.display = "block");
-    if (loginBtn) loginBtn.style.display = "none";
-  }
+  const cookies = getCookieMap();
+  if (!cookies.loggedInUser) applyLoggedOutNav();
+  else applyLoggedInNav();
   return cookies.loggedInUser || null;
-}getCokkieCheckHelper();
+}
+getCokkieCheckHelper();
+
+/**
+ * Get cookie map.
+ */
+function getCookieMap() {
+  return document.cookie.split(";").reduce((acc, cookie) => {
+    const [key, value] = cookie.trim().split("=");
+    acc[key] = decodeURIComponent(value || "");
+    return acc;
+  }, {});
+}
+
+/**
+ * Apply logged out nav.
+ */
+function applyLoggedOutNav() {
+  const hidenNav = document.querySelectorAll("#nav_li");
+  const loginBtn = document.getElementById("login-btn");
+  const buttoMenu = document.getElementById("headerUserBtn");
+  const sidebarFooter = document.querySelector(".sidebar-footer");
+  const menueUl = document.querySelector(".menu ul");
+  if (menueUl) menueUl.style.justifyContent = "flex-start";
+  if (hidenNav) hidenNav.forEach(el => el.style.display = "none");
+  if (loginBtn) loginBtn.style.display = "block";
+  if (buttoMenu) buttoMenu.style.opacity = "0";
+  if (buttoMenu) buttoMenu.style.cursor = "none";
+  if (sidebarFooter) sidebarFooter.style.display = "flex";
+}
+
+/**
+ * Apply logged in nav.
+ */
+function applyLoggedInNav() {
+  const hidenNav = document.querySelectorAll("#nav_li");
+  const loginBtn = document.getElementById("login-btn");
+  if (hidenNav) hidenNav.forEach(el => el.style.display = "block");
+  if (loginBtn) loginBtn.style.display = "none";
+}
 
 
 /**
@@ -213,27 +354,18 @@ function getCokkieCheckHelper() {
  * @param {number} [duration=4000] Duration the message is visible in ms.
  * @returns {void}
  */
+/**
+ * Show please login message from query.
+ */
 function showPleaseLoginMessageFromQuery(duration = 4000) {
-  const params = new URLSearchParams(window.location.search);
-  const notice = params.get("notice");
-  
-  if (notice !== "pleaseLogin") return;
-  
+  if (getQueryParam("notice") !== "pleaseLogin") return;
   const el = document.getElementById("login-message");
-  
   if (!el) return;
-  
-  const wrapper = el.closest(".login-message");
-  
-  if (wrapper) { wrapper.classList.add("is-visible"); }
-  
-  el.textContent = "Bitte melden Sie sich an, um fortzufahren.";
-
-  Object.assign(el.style, { display: "block", position: "relative", top: "20%", color: "#d32828", transition: "opacity 0.5s ease", opacity: "1",});
-
-  setTimeout(() => { el.style.opacity = "0";
-  setTimeout(() => { el.style.display = "none"; el.textContent = "";}, 500); }, duration);
-  window.history.replaceState({}, "", window.location.pathname + window.location.hash,);
+  showMessageWrapper(el);
+  setMessageText(el, "Bitte melden Sie sich an, um fortzufahren.");
+  applyPleaseLoginStyles(el);
+  fadeOutMessage(el, duration);
+  replaceUrlState();
 }
 showPleaseLoginMessageFromQuery();
 
@@ -244,24 +376,98 @@ showPleaseLoginMessageFromQuery();
  * @param {number} [duration=4000] Duration the message is visible in ms.
  * @returns {void}
  */
+/**
+ * Show registration message from query.
+ */
 function showRegistrationMessageFromQuery(duration = 4000) {
-  const params = new URLSearchParams(window.location.search);
-  const msg = params.get("msg") || params.get("message");
+  const msg = getQueryParam("msg") || getQueryParam("message");
   if (!msg) return;
-
   const el = document.getElementById("reg-msg");
   if (!el) return;
-
-  const wrapper = el.closest(".login-message");
-  if (wrapper) {wrapper.classList.add("is-visible");}
-
-  el.textContent = decodeURIComponent(msg);
-
-  Object.assign(el.style, {display: "flex",alignItems: "center",justifyContent: "center",margin: "0 auto",color: "#ffffff",height: "55px",width: "320px",borderRadius: "8px",backgroundColor: "rgb(26, 26, 26)",transition: "opacity 0.5s ease",opacity: "1",});
-
-  setTimeout(() => {el.style.opacity = "0";
-  setTimeout(() => {el.style.display = "none"; el.textContent = "";}, 500);}, duration);
-
-  window.history.replaceState({},"", window.location.pathname + window.location.hash,);
+  showMessageWrapper(el);
+  setMessageText(el, decodeURIComponent(msg));
+  applyRegistrationStyles(el);
+  fadeOutMessage(el, duration);
+  replaceUrlState();
 }
 showRegistrationMessageFromQuery();
+
+/**
+ * Get query param.
+ */
+function getQueryParam(key) {
+  return new URLSearchParams(window.location.search).get(key);
+}
+
+/**
+ * Show message wrapper.
+ */
+function showMessageWrapper(el) {
+  const wrapper = el.closest(".login-message");
+  if (wrapper) wrapper.classList.add("is-visible");
+}
+
+/**
+ * Set message text.
+ */
+function setMessageText(el, text) {
+  el.textContent = text;
+}
+
+/**
+ * Apply please login styles.
+ */
+function applyPleaseLoginStyles(el) {
+  Object.assign(el.style, {
+    display: "block",
+    position: "relative",
+    top: "20%",
+    color: "#d32828",
+    transition: "opacity 0.5s ease",
+    opacity: "1",
+  });
+}
+
+/**
+ * Apply registration styles.
+ */
+function applyRegistrationStyles(el) {
+  Object.assign(el.style, {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: "0 auto",
+    color: "#ffffff",
+    height: "55px",
+    width: "320px",
+    borderRadius: "8px",
+    backgroundColor: "rgb(26, 26, 26)",
+    transition: "opacity 0.5s ease",
+    opacity: "1",
+  });
+}
+
+/**
+ * Fade out message.
+ */
+function fadeOutMessage(el, duration) {
+  setTimeout(() => {
+    el.style.opacity = "0";
+    setTimeout(() => clearMessage(el), 500);
+  }, duration);
+}
+
+/**
+ * Clear message.
+ */
+function clearMessage(el) {
+  el.style.display = "none";
+  el.textContent = "";
+}
+
+/**
+ * Replace URL state.
+ */
+function replaceUrlState() {
+  window.history.replaceState({}, "", window.location.pathname + window.location.hash);
+}

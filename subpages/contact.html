@@ -43,18 +43,17 @@
               </div>
 
               <div class="header-right">
-                <div class="header-help">?</div>
-
-                <button class="header-guest" id="headerUserBtn" type="button" aria-label="User menu"
-                  aria-expanded="false">
-
-                </button>
-
-                <div class="header-dropdown d-none" id="userMenu" role="menu" aria-labelledby="headerUserBtn">
-                  <a class="userMenuItem" href="./help.html" role="menuitem">Help</a>
-                  <a class="userMenuItem" href="./legal_notice.html" role="menuitem">Legal notice</a>
-                  <a class="userMenuItem" href="./privacy_policy.html" role="menuitem">Privacy Policy</a>
-                  <a class="userMenuItem" href="#" onclick="logout()" role="menuitem">Log out</a>
+                <a class="header-help" href="./help.html">?</a>
+                <div class="header-user-area">
+                  <button class="header-user" id="headerUserBtn" type="button">
+                    G
+                  </button>
+                  <div class="user-menu" id="userMenu">
+                    <a class="user-menu-item" href="./legal_notice.html">Legal Notice</a>
+                    <a class="user-menu-item" href="./privacy_policy.html">Privacy Policy</a>
+                    <a class="user-menu-item menu-item--mobile" href="./help.html">Help</a>
+                    <a class="user-menu-item" href="#" onclick="logout()">Log out</a>
+                  </div>
                 </div>
               </div>
             </div>
@@ -155,7 +154,7 @@
       </div>
     </div>
 
-    <script src="../javascript/contact_template.js" defer></script>
+    <script src="../javascript/templates/contact_template.js" defer></script>
     <script src="../javascript/idb-storage.js" defer></script>
     <script src="../javascript/user-menu.js"></script>
     <script src="../javascript/contact.js"></script>

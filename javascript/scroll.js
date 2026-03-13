@@ -12,25 +12,40 @@
     let maxScrollTop = 0;
     let thumbHeight = 0;
   
+    /**
+     * Clamp.
+     */
     function clamp(v, min, max) {
       return Math.max(min, Math.min(max, v));
     }
   
+    /**
+     * Get client y.
+     */
     function getClientY(e) {
       if (e.touches && e.touches.length) return e.touches[0].clientY;
       return e.clientY;
     }
   
+    /**
+     * Get thumb top.
+     */
     function getThumbTop() {
       const tr = thumb.style.transform || "";
       const m = tr.match(/translateY\(([-0-9.]+)px\)/);
       return m ? parseFloat(m[1]) : 0;
     }
   
+    /**
+     * Set thumb top.
+     */
     function setThumbTop(top) {
       thumb.style.transform = "translateY(" + top + "px)";
     }
   
+    /**
+     * Update thumb from scroll.
+     */
     function updateThumbFromScroll() {
       if (maxScrollTop <= 0) {
         setThumbTop(0);
@@ -41,35 +56,86 @@
       setThumbTop(top);
     }
   
+    /**
+     * Update scroll from thumb top.
+     */
     function updateScrollFromThumbTop(top) {
       if (maxThumbTop <= 0) return;
       const progress = top / maxThumbTop;
       scrollEl.scrollTop = progress * maxScrollTop;
     }
   
+    /**
+     * Recalc.
+     */
     function recalc() {
-      const trackHeight = track.clientHeight;
-      const viewHeight = scrollEl.clientHeight;
-      const contentHeight = scrollEl.scrollHeight;
-  
-      maxScrollTop = Math.max(0, contentHeight - viewHeight);
-  
-      if (trackHeight <= 0 || contentHeight <= viewHeight) {
-        thumb.style.display = "none";
-        return;
-      }
-  
-      thumb.style.display = "block";
-  
-      const ratio = viewHeight / contentHeight;
-      thumbHeight = Math.max(32, Math.round(trackHeight * ratio));
-      thumb.style.height = thumbHeight + "px";
-  
-      maxThumbTop = Math.max(0, trackHeight - thumbHeight);
-  
+      const metrics = getScrollMetrics();
+      maxScrollTop = calcMaxScrollTop(metrics);
+      if (shouldHideThumb(metrics)) return hideThumb();
+      showThumb();
+      updateThumbSize(metrics);
+      maxThumbTop = calcMaxThumbTop(metrics);
       updateThumbFromScroll();
     }
+
+    /**
+     * Get scroll metrics.
+     */
+    function getScrollMetrics() {
+      return {
+        trackHeight: track.clientHeight,
+        viewHeight: scrollEl.clientHeight,
+        contentHeight: scrollEl.scrollHeight,
+      };
+    }
+
+    /**
+     * Calc max scroll top.
+     */
+    function calcMaxScrollTop(metrics) {
+      return Math.max(0, metrics.contentHeight - metrics.viewHeight);
+    }
+
+    /**
+     * Should hide thumb.
+     */
+    function shouldHideThumb(metrics) {
+      return metrics.trackHeight <= 0 || metrics.contentHeight <= metrics.viewHeight;
+    }
+
+    /**
+     * Hide thumb.
+     */
+    function hideThumb() {
+      thumb.style.display = "none";
+    }
+
+    /**
+     * Show thumb.
+     */
+    function showThumb() {
+      thumb.style.display = "block";
+    }
+
+    /**
+     * Update thumb size.
+     */
+    function updateThumbSize(metrics) {
+      const ratio = metrics.viewHeight / metrics.contentHeight;
+      thumbHeight = Math.max(32, Math.round(metrics.trackHeight * ratio));
+      thumb.style.height = thumbHeight + "px";
+    }
+
+    /**
+     * Calc max thumb top.
+     */
+    function calcMaxThumbTop(metrics) {
+      return Math.max(0, metrics.trackHeight - thumbHeight);
+    }
   
+    /**
+     * On down.
+     */
     function onDown(e) {
       dragging = true;
       startY = getClientY(e);
@@ -82,6 +148,9 @@
       e.preventDefault();
     }
   
+    /**
+     * On move.
+     */
     function onMove(e) {
       if (!dragging) return;
   
@@ -95,6 +164,9 @@
       e.preventDefault();
     }
   
+    /**
+     * On up.
+     */
     function onUp() {
       dragging = false;
       document.documentElement.style.userSelect = "";

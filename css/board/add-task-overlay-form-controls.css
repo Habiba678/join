@@ -32,25 +32,40 @@ border: 1px solid #5ec0e9;
 }
 
 .add-task-overlay .kpi-panel-task-footer {
-  display: flex;
-  justify-content: space-around;
+  display: grid;
+  align-items: center;
+  justify-content: flex-start;
   width: 100%;
-  margin-top: 8px;
+  height: 170px;
+  grid-template-columns: 1fr auto;
+  padding-left: 80px;
+  padding-right: 28px;
 }
 
 .add-task-overlay .create-task-button {
   display: flex;
   flex-direction: row;
   gap: 35px;
+  margin-left: auto;
 }
-.add-task-overlay .create-task-button .primary-btn:hover {
+.add-task-overlay .create-task-button .primary-btn:not(.--primary-btn-cancel):hover {
   background-color: #29abe2;
   border-color: #29abe2;
   color: #ffffff;
 }
 
-.add-task-overlay .create-task-button .primary-btn:hover .btn-icon {
+.add-task-overlay .create-task-button .primary-btn:not(.--primary-btn-cancel):hover .btn-icon {
   filter: brightness(0) invert(1);
+}
+
+.add-task-overlay .--primary-btn-cancel:hover {
+  color: #29abe2;
+  border-color: #29abe2;
+}
+
+.add-task-overlay .--primary-btn-cancel:hover .btn-icon {
+  filter: brightness(0) saturate(100%) invert(53%) sepia(77%) saturate(494%)
+    hue-rotate(161deg) brightness(96%) contrast(92%);
 }
 .create-task-button .primary-btn {
   display: flex;
@@ -79,21 +94,34 @@ border: 1px solid #5ec0e9;
   transition: 0.8s ease-in-out;
 }
 
-.add-task-overlay .primary-btn-cancel {
+.add-task-overlay .primary-btn-cancel,
+.add-task-overlay .--primary-btn-cancel {
   width: auto;
+  height: 56px;
   background-color: #fffefe;
   border: 1px solid grey;
   color: #000;
+  font-size: 21px;
+  font-family: Inter, Arial, sans-serif;
   font-weight: 400;
+  line-height: 120%;
+  letter-spacing: 0;
+  border-radius: 8px;
   width: 110px;
 }
 
-.add-task-overlay .create-task-button .primary-btn-cancel:hover {
-  background-color: #29abe2;
-  border-color: #29abe2;
-  color: #ffffff;
+.add-task-overlay .kpi-panel-task-footer .--primary-btn-cancel:hover {
+  color: #29abe2;
+  background-color: #ffffff;
 }
 
-.add-task-overlay .primary-btn-cancel:hover .btn-icon {
- filter: brightness(0) invert(1);
+.add-task-overlay .required-note {
+  margin: 40px 0 0;
+  font-size: 16px;
+  color: #2a3647;
+}
+
+.add-task-overlay .required-note .label-star {
+  margin-right: 4px;
+  color: #ff3d00;
 }

@@ -1,3 +1,6 @@
+/**
+ * Letter group template.
+ */
 function letterGroupTemplate(letter) {
   return `
     <div class="letter-group">
@@ -6,6 +9,9 @@ function letterGroupTemplate(letter) {
   `;
 }
 
+/**
+ * Contact list item template.
+ */
 function contactListItemTemplate(c, isActive) {
   return `
     <div class="contact-item ${isActive ? "active" : ""}" data-id="${c.id}">
@@ -20,6 +26,9 @@ function contactListItemTemplate(c, isActive) {
   `;
 }
 
+/**
+ * Contact actions template.
+ */
 function contactActionsTemplate(c) {
   return `
     <div class="contact-actions">
@@ -35,7 +44,21 @@ function contactActionsTemplate(c) {
   `;
 }
 
+/**
+ * Contact details template.
+ */
 function contactDetailsTemplate(c) {
+  return [
+    contactDetailsTopbarTemplate(),
+    contactDetailsHeaderTemplate(c),
+    contactDetailsInfoTemplate(c),
+  ].join("");
+}
+
+/**
+ * Contact details topbar template.
+ */
+function contactDetailsTopbarTemplate() {
   return `
     <div class="contact-detail-topbar">
       <button class="mobile-back-btn" id="mobileBackBtn" type="button">
@@ -43,7 +66,14 @@ function contactDetailsTemplate(c) {
       </button>
       <div class="contact-detail-topbar-spacer"></div>
     </div>
+  `;
+}
 
+/**
+ * Contact details header template.
+ */
+function contactDetailsHeaderTemplate(c) {
+  return `
     <div class="contact-detail-header">
       <div class="avatar big ${c.colorClass}">
         ${c.initials}
@@ -53,7 +83,14 @@ function contactDetailsTemplate(c) {
         ${contactActionsTemplate(c)}
       </div>
     </div>
+  `;
+}
 
+/**
+ * Contact details info template.
+ */
+function contactDetailsInfoTemplate(c) {
+  return `
     <div class="contact-info">
       <h3>Contact Information</h3>
       <p>
@@ -68,13 +105,20 @@ function contactDetailsTemplate(c) {
   `;
 }
 
+/**
+ * Modal left template.
+ */
 function modalLeftTemplate(mode) {
   return `
     <div class="modal-left">
       <button class="modal-close" id="closeAddContact" type="button">×</button>
       <img src="../assets/icons/logo-white.svg" class="modal-logo" alt="">
       <h2 class="modal-title">${
-        String(mode || "").trim().toLowerCase() === "edit" ? "Edit contact" : "Add contact"
+        String(mode || "")
+          .trim()
+          .toLowerCase() === "edit"
+          ? "Edit contact"
+          : "Add contact"
       }</h2>
       <p class="modal-subtitle">Tasks are better with a team!</p>
       <div class="modal-line"></div>
@@ -82,11 +126,16 @@ function modalLeftTemplate(mode) {
   `;
 }
 
+/**
+ * Modal avatar template.
+ */
 function modalAvatarTemplate(mode, data) {
-  return String(mode || "").trim().toLowerCase() === "edit"
+  return String(mode || "")
+    .trim()
+    .toLowerCase() === "edit"
     ? `
-      <div class="modal-person ${(data && data.colorClass) ? data.colorClass : ""}">
-        <span class="modal-initials">${(data && data.initials) ? data.initials : ""}</span>
+      <div class="modal-person ${data && data.colorClass ? data.colorClass : ""}">
+        <span class="modal-initials">${data && data.initials ? data.initials : ""}</span>
       </div>
     `
     : `
@@ -96,62 +145,129 @@ function modalAvatarTemplate(mode, data) {
     `;
 }
 
-function modalActionsTemplate(mode) {
-  return `
-    <div class="modal-actions">
-      <button type="button"
-              class="btn-cancel"
-              id="modalSecondaryBtn"
-              data-action="${String(mode || "").trim().toLowerCase() === "edit" ? "delete" : "cancel"}">
-        ${String(mode || "").trim().toLowerCase() === "edit" ? "Delete" : "Cancel"}
-        <img src="../assets/icons/${String(mode || "").trim().toLowerCase() === "edit" ? "delete.svg" : "iconoir_cancel.svg"}" alt="">
-      </button>
+/**
+ * Modal actions template.
+ */
+function modalActionsTemplate(mode, data) {
+  const view = buildModalActionsView(mode, data);
+  return [
+    '<div class="modal-actions">',
+    buildModalSecondaryAction(view),
+    buildModalPrimaryAction(view),
+    "</div>",
+  ].join("");
+}
 
-      <button type="submit" class="btn-create">
-        ${String(mode || "").trim().toLowerCase() === "edit" ? "Save" : "Create contact"}
-        <img src="../assets/icons/check-white.svg" alt="">
-      </button>
+/**
+ * Build modal actions view.
+ */
+function buildModalActionsView(mode, data) {
+  const edit = isEditMode(mode);
+  return { edit: edit, id: edit && data ? data.id : "" };
+}
+
+/**
+ * Build modal secondary action.
+ */
+function buildModalSecondaryAction(view) {
+  return `
+    <button type="button"
+            class="${view.edit ? "btn-cancel contact-action" : "btn-cancel"}"
+            id="${view.edit ? "modalSecondaryBtn" : "closeAddContact"}"
+            data-action="${view.edit ? "delete" : "cancel"}"
+            data-id="${view.id}">
+      ${view.edit ? "Delete" : "Cancel"}
+      <img src="../assets/icons/${view.edit ? "delete.svg" : "iconoir_cancel.svg"}" alt="">
+    </button>
+  `;
+}
+
+/**
+ * Build modal primary action.
+ */
+function buildModalPrimaryAction(view) {
+  return `
+    <button type="submit" class="btn-create">
+      ${view.edit ? "Save" : "Create contact"}
+      <img src="../assets/icons/check-white.svg" alt="">
+    </button>
+  `;
+}
+
+/**
+ * Modal form template.
+ */
+function modalFormTemplate(mode, data) {
+  const modeValue = normalizeMode(mode);
+  const editId = data && data.id ? data.id : "";
+  return [
+    `<form id="addContactForm" novalidate data-mode="${modeValue}" data-edit-id="${editId}">`,
+    modalNameFieldTemplate(data),
+    modalEmailFieldTemplate(data),
+    modalPhoneFieldTemplate(data),
+    modalActionsTemplate(mode, data),
+    "</form>",
+  ].join("");
+}
+
+/**
+ * Modal name field template.
+ */
+function modalNameFieldTemplate(data) {
+  return `
+    <div class="input-wrapper">
+      <input id="contactName" type="text" placeholder="Name" required value="${data?.name || ""}">
+      <img src="../assets/icons/person.png" class="input-icon" alt="">
+      <div class="input-error-message" id="nameError"></div>
     </div>
   `;
 }
 
-function modalFormTemplate(mode, data) {
+/**
+ * Modal email field template.
+ */
+function modalEmailFieldTemplate(data) {
   return `
-    <form id="addContactForm"
-          data-mode="${String(mode || "").trim().toLowerCase()}"
-          data-edit-id="${(data && data.id) ? data.id : ""}">
-      
-      <div class="input-wrapper">
-        <input id="contactName"
-               type="text"
-               placeholder="Name"
-               required
-               value="${(data && data.name) ? data.name : ""}">
-        <img src="../assets/icons/person.png" class="input-icon" alt="">
-      </div>
-
-      <div class="input-wrapper">
-        <input id="contactEmail"
-               type="email"
-               placeholder="Email"
-               required
-               value="${(data && data.email) ? data.email : ""}">
-        <img src="../assets/icons/mail.png" class="input-icon" alt="">
-      </div>
-
-      <div class="input-wrapper">
-        <input id="contactPhone"
-               type="text"
-               placeholder="Phone"
-               value="${(data && data.phone) ? data.phone : ""}">
-        <img src="../assets/icons/call.svg" class="input-icon" alt="">
-      </div>
-
-      ${modalActionsTemplate(mode)}
-    </form>
+    <div class="input-wrapper">
+      <input id="contactEmail" type="email" placeholder="Email" required value="${data?.email || ""}">
+      <img src="../assets/icons/mail.png" class="input-icon" alt="">
+      <div class="input-error-message" id="emailError"></div>
+    </div>
   `;
 }
 
+/**
+ * Modal phone field template.
+ */
+function modalPhoneFieldTemplate(data) {
+  return `
+    <div class="input-wrapper">
+      <input id="contactPhone" type="text" placeholder="Phone" value="${data?.phone || ""}">
+      <img src="../assets/icons/call.svg" class="input-icon" alt="">
+      <div class="input-error-message" id="phoneError"></div>
+    </div>
+  `;
+}
+
+/**
+ * Normalize mode.
+ */
+function normalizeMode(mode) {
+  return String(mode || "")
+    .trim()
+    .toLowerCase();
+}
+
+/**
+ * Check edit mode.
+ */
+function isEditMode(mode) {
+  return normalizeMode(mode) === "edit";
+}
+
+/**
+ * Modal right template.
+ */
 function modalRightTemplate(mode, data) {
   return `
     <div class="modal-right">
@@ -161,6 +277,9 @@ function modalRightTemplate(mode, data) {
   `;
 }
 
+/**
+ * Contact modal inner template.
+ */
 function contactModalInnerTemplate(mode, data) {
   return `
     <div class="modal">
@@ -170,10 +289,16 @@ function contactModalInnerTemplate(mode, data) {
   `;
 }
 
+/**
+ * Contact modal template.
+ */
 function contactModalTemplate(mode, data) {
   return `
     <div class="modal-backdrop d-none" id="addContactModal">
       ${contactModalInnerTemplate(mode, data || {})}
+    </div>
+    <div id="contactSuccessToast" class="contact-toast d-none">
+      Contact successfully created
     </div>
   `;
 }
