@@ -869,8 +869,8 @@ async function createTask() {
   const task = buildTaskPayload(values);
   await trySaveTaskRemote(task);
   const tasks = await fetchTasksFromRemoteSafe();
-  if (!tasks) return;
-  await saveTasks(tasks);
+  if (!tasks) return await saveTaskLocally(task);
+  await saveTasksToStorage(tasks);
   refreshBoardIfPresent();
   finalizeCreateTask();
 }
@@ -934,6 +934,49 @@ function buildTaskPayload(values) {
  */
 function getTaskId() {
   return Date.now().toString();
+}
+
+/**
+ * Save task locally when remote fetch fails.
+ */
+async function saveTaskLocally(task) {
+  const local = await loadTasksFromStorageSafe();
+  const next = mergeTaskIntoList(local, task);
+  await saveTasksToStorage(next);
+  finalizeCreateTask();
+}
+
+/**
+ * Load tasks from storage safe.
+ */
+async function loadTasksFromStorageSafe() {
+  try {
+    if (window.idbStorage && typeof window.idbStorage.loadTasks === "function") {
+      return await window.idbStorage.loadTasks();
+    }
+  } catch (e) {
+    console.error("Failed to load local tasks", e);
+  }
+  return [];
+}
+
+/**
+ * Save tasks to storage.
+ */
+async function saveTasksToStorage(tasks) {
+  if (window.idbStorage && typeof window.idbStorage.saveTasks === "function") {
+    return await window.idbStorage.saveTasks(tasks);
+  }
+  console.warn("idbStorage not available; tasks not persisted");
+}
+
+/**
+ * Merge task into list.
+ */
+function mergeTaskIntoList(list, task) {
+  const items = Array.isArray(list) ? list.slice() : [];
+  items.push(task);
+  return items;
 }
 
 /**
