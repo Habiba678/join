@@ -17,6 +17,11 @@ let pendingSubtasks = [];
  * @type {Set<string>}
  */
 const selectedContacts = new Set();
+/**
+ * Cached contacts list for assigned UI.
+ * @type {Array}
+ */
+let cachedContacts = [];
 
 // ------------------ INIT ------------------
 
@@ -440,7 +445,33 @@ function resetAssignedDropdown(dropdown) {
  */
 async function getContactsListFromStorage() {
   const data = await loadContactsFromStorage();
-  return Array.isArray(data) ? data : Object.values(data || {});
+  const list = Array.isArray(data) ? data : Object.values(data || {});
+  syncCachedContacts(list);
+  return list;
+}
+
+/**
+ * Sync cached contacts.
+ */
+function syncCachedContacts(list) {
+  if (!Array.isArray(list)) return;
+  if (list.length || !cachedContacts.length) cachedContacts = list;
+}
+
+/**
+ * Get cached contacts list.
+ */
+function getCachedContactsList() {
+  return Array.isArray(cachedContacts) ? cachedContacts : [];
+}
+
+/**
+ * Get contacts list for avatars.
+ */
+async function getContactsListForAvatars() {
+  const cached = getCachedContactsList();
+  if (cached.length) return cached;
+  return await getContactsListFromStorage();
 }
 
 /**
@@ -471,10 +502,10 @@ function buildAssignedContactRow(contact) {
  */
 function getAssignedContactRowHtml(contact) {
   const name = getContactLabel(contact);
-  const colorClass = getContactColorClass(contact);
+  const colorClass = addTaskGetContactColorClass(contact);
   const checked = selectedContacts.has(normalizeContactId(contact.id)) ? "checked" : "";
   return (
-    `<div class="contact-avatar ${colorClass}">${getInitials(name)}</div>` +
+    `<div class="contact-avatar ${colorClass}">${addTaskGetInitials(name)}</div>` +
     `<span>${name}</span>` +
     `<input type="checkbox" ${checked}>`
   );
@@ -539,12 +570,12 @@ function setAssignedPlaceholder(text) {
  * Build selected contacts view.
  */
 async function buildSelectedContactsView() {
-  const list = await getContactsListFromStorage();
+  const list = await getContactsListForAvatars();
   const selectedIds = Array.from(selectedContacts);
   const visible = selectedIds.slice(0, 8);
   const remaining = selectedIds.length - visible.length;
   return {
-    avatarsHtml: buildContactAvatarsHtml(list, visible),
+    avatarsHtml: addTaskBuildContactAvatarsHtml(list, visible),
     moreHtml: buildMoreAvatarsHtml(remaining),
   };
 }
@@ -552,21 +583,21 @@ async function buildSelectedContactsView() {
 /**
  * Build contact avatars HTML.
  */
-function buildContactAvatarsHtml(list, ids) {
+function addTaskBuildContactAvatarsHtml(list, ids) {
   return ids
-    .map((id) => buildSingleAvatarHtml(list, id))
+    .map((id) => addTaskBuildSingleAvatarHtml(list, id))
     .join("");
 }
 
 /**
  * Build single avatar HTML.
  */
-function buildSingleAvatarHtml(list, id) {
+function addTaskBuildSingleAvatarHtml(list, id) {
   const c = findContactById(list, id);
   if (!c) return "";
-  const colorClass = getContactColorClass(c || {});
+  const colorClass = addTaskGetContactColorClass(c || {});
   const label = getContactLabel(c);
-  return `<span class="contact-avatar ${colorClass}">${getInitials(label)}</span>`;
+  return `<span class="contact-avatar ${colorClass}">${addTaskGetInitials(label)}</span>`;
 }
 
 /**
@@ -588,7 +619,7 @@ function findContactById(list, id) {
  * Get contact label.
  */
 function getContactLabel(contact) {
-  return contact?.name || contact?.email || contact?.id || "";
+  return contact?.name || contact?.namen || contact?.email || contact?.mail || contact?.id || "";
 }
 
 /**
@@ -1104,8 +1135,27 @@ function extractContactsFromEntry(entry) {
  * Normalize contacts payload.
  */
 function normalizeContactsPayload(data) {
-  if (Array.isArray(data)) return data.filter(Boolean);
-  return Object.values(data || {});
+  if (Array.isArray(data)) return data.filter(Boolean).map(ensureContactId);
+  return Object.entries(data || {}).map(([key, val]) => withContactId(val, key));
+}
+
+/**
+ * Ensure contact id.
+ */
+function ensureContactId(contact, index = 0) {
+  if (!contact) return contact;
+  if (contact.id) return contact;
+  const fallback = contact.email || contact.mail || contact.name || contact.namen || String(index);
+  return { ...contact, id: String(fallback) };
+}
+
+/**
+ * With contact id.
+ */
+function withContactId(val, key) {
+  const c = { ...(val || {}) };
+  if (!c.id) c.id = key;
+  return c;
 }
 
 // ------------------ HELPERS ------------------
@@ -1118,8 +1168,8 @@ function normalizeContactsPayload(data) {
 /**
  * Get initials.
  */
-function getInitials(name) {
-  return name
+function addTaskGetInitials(name) {
+  return String(name || "")
     .split(" ")
     .map((n) => n[0])
     .join("")
@@ -1135,7 +1185,7 @@ function getInitials(name) {
 /**
  * Hash string.
  */
-function hashString(str) {
+function addTaskHashString(str) {
   let h = 0;
   const s = String(str || "");
 
@@ -1152,8 +1202,8 @@ function hashString(str) {
 /**
  * Color class for.
  */
-function colorClassFor(seed) {
-  return "avatar-color-" + (hashString(seed) % 12);
+function addTaskColorClassFor(seed) {
+  return "avatar-color-" + (addTaskHashString(seed) % 12);
 }
 
 /**
@@ -1164,11 +1214,11 @@ function colorClassFor(seed) {
 /**
  * Get contact color class.
  */
-function getContactColorClass(contact) {
+function addTaskGetContactColorClass(contact) {
   if (contact && contact.colorClass) return contact.colorClass;
 
-  const seed = contact?.id || contact?.email || contact?.name || "";
-  return colorClassFor(seed);
+  const seed = contact?.id || contact?.email || contact?.mail || contact?.name || contact?.namen || "";
+  return addTaskColorClassFor(seed);
 }
 
 // ------------------ CLEAR ------------------

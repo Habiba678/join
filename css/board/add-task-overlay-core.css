@@ -76,6 +76,7 @@ body.no-scroll {
 .add-task-overlay #assignedText {
   display: flex;
   justify-content: space-around;
+  color: #999999;
 }
 
 .add-task-overlay .multi-select {

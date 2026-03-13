@@ -281,36 +281,36 @@
 
                 <div class="kpi-panel-task">
                     <div class="form_1">
-                        <form class="form-details" onsubmit="return false;">
-                            <p for="titel">Title <span class="label-star">*</span></p>
-                            <input type="text" id="titel" placeholder="Enter a title">
+                        <form class="form-details">
+                            <label for="title">Title <span class="label-star">*</span></label>
+                            <input type="text" name="title" id="title" placeholder="Enter a title">
 
-                            <p for="description">Description</p>
-                            <textarea id="description" placeholder="Enter a description"></textarea>
+                            <label for="description">Description</label>
+                            <textarea id="description" name="description" placeholder="Enter a description"></textarea>
 
-                            <p for="date">Due date <span class="label-star">*</span></p>
-                            <input type="date" id="date">
+                            <label for="date">Due date <span class="label-star">*</span></label>
+                            <input type="date" name="date" id="date">
                         </form>
                     </div>
 
                     <span class="form-separator"></span>
 
                     <div class="form_2">
-                        <form class="form-details" onsubmit="return false;">
+                        <form class="form-details">
                             <p>Priority</p>
                             <div class="priority-section">
-                                <li class="priority-btn urgent">
-                                    Urgent <img class="btn-icon" src="../assets/icons/Prio alta.svg" alt="">
+                                <li name="priority" value="urgent" class="priority-btn urgent">
+                                    <span>Urgent</span> <img class="btn-icon" src="../assets/icons/Prio alta.svg" alt="">
                                 </li>
                                 <li class="priority-btn medium">
-                                    Medium <img class="btn-icon" src="../assets/icons/Prio media.svg" alt="">
+                                    <span>Medium</span> <img class="btn-icon" src="../assets/icons/Prio media.svg" alt="">
                                 </li>
                                 <li class="priority-btn low">
-                                    Low <img class="btn-icon" src="../assets/icons/Prio baja.svg" alt="">
+                                    <span>Low</span> <img class="btn-icon" src="../assets/icons/Prio baja.svg" alt="">
                                 </li>
                             </div>
 
-                            <p for="assigned">Assigned to</p>
+                            <p>Assigned to</p>
                             <div class="multi-select">
                                 <div class="multi-select-input" id="assignedInput">
                                     <span id="assignedText">Select contacts to assign</span>
@@ -319,7 +319,7 @@
 
                                 <div class="multi-select-dropdown hidden" id="assignedDropdown"></div>
                             </div>
-                            <p for="category">Category <span class="label-star">*</span></p>
+                            <label for="category">Category <span class="label-star">*</span></label>
                             <div class="multi-select category-select">
                                 <div class="multi-select-input" id="categoryInput">
                                     <span id="categoryText">Select task category</span>
@@ -331,32 +331,31 @@
                                 </div>
                             </div>
                             <input type="hidden" id="category" value="">
-                                <p for="subtasks">Subtasks</p>
-                                <div class="subtasks-input">
-                                    <input type="text" id="subtasks" placeholder="Add new subtask">
-                                    <button type="button" id="clearSubtaskBtn" class="subtasks-clear-btn"
-                                        aria-label="Clear subtask input">
-                                        <img src="../assets/icons/iconoir_cancel.svg" alt="">
-                                    </button>
-                                    <button type="button" id="addSubtaskBtn" class="subtasks-add-btn"
-                                        aria-label="Add subtask">
-                                        <img src="../assets/icons/check.svg" alt="">
-                                    </button>
-                                </div>
-                                <ul id="subtasksList" class="subtasks-list"></ul>
+                            <label for="subtasks">Subtasks</label>
+                            <div class="subtasks-input">
+                                <input type="text" id="subtasks" placeholder="Add new subtask" aria-label="Subtask input" size="50">
+                                <button type="button" id="clearSubtaskBtn" class="subtasks-clear-btn"
+                                    aria-label="Clear subtask input">
+                                    <img src="../assets/icons/iconoir_cancel.svg" alt="">
+                                </button>
+                                <button type="button" id="addSubtaskBtn" class="subtasks-add-btn"
+                                    aria-label="Add subtask">
+                                    <img src="../assets/icons/check.svg" alt="">
+                                </button>
+                            </div>
+                            <ul id="subtasksList" class="subtasks-list"></ul>
                         </form>
                     </div>
                 </div>
 
                 <div class="kpi-panel-task-footer">
-                    <span><span class="label-star">*</span>This field is required</span>
-
-                    <div class="content-footer-buttons create-task-button">
-                        <button type="button" class="primary-btn primary-btn-cancel" onclick="clearForm()">
+                    <p class="required-note"><span class="label-star">*</span>This field is required</p>
+                    <div class="create-task-button">
+                        <button type="button" class="primary-btn --primary-btn-cancel">
                             Clear <img class="btn-icon" src="../assets/icons/iconoir_cancel.svg" alt="">
                         </button>
 
-                        <button type="button" id="createTaskBtn" class="create-task-button primary-btn">
+                        <button type="button" id="createTaskBtn" class="primary-btn">
                             Create Task <img class="btn-icon" src="../assets/icons/check.svg" alt="">
                         </button>
                     </div>

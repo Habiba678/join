@@ -38,12 +38,13 @@
     background: #ffffff;
     z-index: 2;
     margin-bottom: 0;
-    padding: 12px 0;
+    padding: 12px 20px;
+    display: flex;
+    flex-direction: column;
   }
 
-  .add-task-overlay .kpi-panel-task-footer > span {
-    display: block;
-    margin-bottom: 8px;
+  .add-task-overlay .required-note {
+    margin: 0 0 24px 0;
   }
 
   .add-task-overlay .kpi-panel-task {
@@ -69,6 +70,10 @@
     margin-top: 0;
   }
 
+  .add-task-overlay .create-task-button {
+    margin-left: 0;
+  }
+
   .add-task-overlay .create-task-button .primary-btn {
     width: auto;
     font-weight: 500;
@@ -76,7 +81,8 @@
     height: 55px;
   }
 
-  .add-task-overlay .primary-btn-cancel {
+  .add-task-overlay .primary-btn-cancel,
+  .add-task-overlay .--primary-btn-cancel {
     width: auto;
     background-color: #fffefe;
     border: 1px solid grey;
@@ -169,7 +175,7 @@
     height: 16px;
   }
 
-  .content-footer-buttons {
+  .add-task-overlay .create-task-button {
     margin-top: 15px;
   }
 
@@ -179,7 +185,8 @@
     gap: 15px;
   }
 
-  .add-task-overlay .primary-btn-cancel {
+  .add-task-overlay .primary-btn-cancel,
+  .add-task-overlay .--primary-btn-cancel {
     width: auto;
     background-color: #fffefe;
     border: 1px solid grey;
@@ -195,7 +202,8 @@
     height: 55px;
   }
 
-  .add-task-overlay .primary-btn-cancel {
+  .add-task-overlay .primary-btn-cancel,
+  .add-task-overlay .--primary-btn-cancel {
     width: auto;
     background-color: #fffefe;
     border: 1px solid grey;
@@ -217,7 +225,8 @@
     font-size: 16px;
   }
 
-  .add-task-overlay .primary-btn-cancel {
+  .add-task-overlay .primary-btn-cancel,
+  .add-task-overlay .--primary-btn-cancel {
     width: auto;
     background-color: #fffefe;
     border: 1px solid grey;
