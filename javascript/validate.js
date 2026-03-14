@@ -14,7 +14,6 @@ let iconImgMail = document.getElementById("email-icon");
 let iconImg = document.getElementById("lock-icon");
 let passwordToggleIcon = document.getElementById("password-toggle");
 let confirmPasswordToggleIcon = document.getElementById("confirm-password-toggle");
-
 /**
  * Set info state.
  */
@@ -26,7 +25,6 @@ function setInfoState(el, visible) {
 if (full_name) {
   full_name.addEventListener("blur", validateFullname);
 }
-
 /**
  * Get icon base.
  */
@@ -37,7 +35,6 @@ function getIconBase(icon) {
   }
   return window.location.pathname.includes("/subpages/") ? "../assets/icons/" : "./assets/icons/";
 }
-
 /**
  * Set icon src.
  */
@@ -45,7 +42,6 @@ function setIconSrc(icon, filename) {
   if (!icon) return;
   icon.src = getIconBase(icon) + filename;
 }
-
 /**
  * Is signup form valid.
  */
@@ -58,7 +54,6 @@ function isSignupFormValid() {
   const okCheckbox = isAccept.checked;
   return okName && okEmail && okPass && okConfirm && okCheckbox;
 }
-
 /**
  * Sync signup button state.
  */
@@ -68,7 +63,6 @@ function syncSignupButtonState() {
   singupButton.disabled = !ok;
   singupButton.classList.toggle("disebles-singup-button", !ok);
 }
-
 /**
  * Initialize signup button state syncing.
  */
@@ -82,9 +76,6 @@ function syncSignupButtonState() {
   isAccept.addEventListener("change", syncSignupButtonState);
   syncSignupButtonState();
 })();
-/**
- * Input  Name prüfen
- */
 /**
  * Validate fullname.
  */
@@ -104,10 +95,7 @@ function validateFullname() {
   return ok;
 }
 /**
- * Akzeptiert einen String und gibt true/false zurück
- */
-/**
- * Validate email reg ex.
+ * Validate email reg ex./ Akzeptiert einen String und gibt true/false zurück
  */
 function validateEmailRegEx(emailInput) {
   const value =
@@ -115,9 +103,6 @@ function validateEmailRegEx(emailInput) {
   const pattern =  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return pattern.test(String(value).toLowerCase());
 }
-/**
- * Email prüfen
- */
 /**
  * Validate email.
  */
@@ -127,7 +112,6 @@ function validateEmail() {
   applyEmailValidationState(isValid);
   return isValid;
 }
-
 /**
  * Ensure email icon.
  */
@@ -137,7 +121,6 @@ function ensureEmailIcon() {
   iconImgMail.id = "email-icon";
   email.appendChild(iconImgMail);
 }
-
 /**
  * Apply email validation state.
  */
@@ -145,7 +128,6 @@ function applyEmailValidationState(isValid) {
   if (isValid) return markEmailValid();
   markEmailInvalid();
 }
-
 /**
  * Mark email valid.
  */
@@ -154,7 +136,6 @@ function markEmailValid() {
   email.classList.add("isValidate");
   setInfoState(infoEmail, false);
 }
-
 /**
  * Mark email invalid.
  */
@@ -164,10 +145,7 @@ function markEmailInvalid() {
   setInfoState(infoEmail, true);
 }
 /**
- * Password prüfen
- */
-/**
- * Update password icon.
+ *  Update password icon.
  */
 function updatePasswordIcon() {
   if (password.value.length === 0) {
@@ -181,7 +159,6 @@ function updatePasswordIcon() {
     password.type === "text" ? "visibility.svg" : "visibility_off.svg",
   );
 }
-
 /**
  * Update signup toggle icons.
  */
@@ -199,48 +176,76 @@ function updateSignupToggleIcons() {
     );
   }
 }
-
 // Initial prüfen
-(function() {
+(function initPasswordIcons() {
+  if (!password) return;
   toggleIconState();
   password.addEventListener("input", toggleIconState);
-  password.addEventListener("click", (e) => {
-    if (!password.value) return;
-    const clickOnIcon = e.offsetX > password.offsetWidth - 35;
-    if (!clickOnIcon) return;
-    password.type = password.type === "password" ? "text" : "password";
-    password.classList.toggle("show-password");
-    updatePasswordIcon();
-    updateSignupToggleIcons();
-  });
+  password.addEventListener("click", onPasswordClick);
   if (!confirmPassword) return;
   confirmPassword.addEventListener("input", toggleIconState);
-  confirmPassword.addEventListener("click", (e) => {
-    if (!confirmPassword.value) return;
-
-    const clickOnIcon = e.offsetX > confirmPassword.offsetWidth - 35;
-    if (!clickOnIcon) return;
-    const hidden2 = confirmPassword.type === "password";
-    confirmPassword.type = hidden2 ? "text" : "password";
-    confirmPassword.classList.toggle("show-password", hidden2);
-    updateSignupToggleIcons();
-  });
-
-  /**
-   * Toggle icon state.
-   */
-  function toggleIconState() {
-    if (password.value.length === 0) {
-      password.classList.add("password-empty");
-      password.type = "password";
-      password.classList.remove("show-password");
-    } else {
-      password.classList.remove("password-empty");
-    }
-    updatePasswordIcon();
-    updateSignupToggleIcons();
-  }
+  confirmPassword.addEventListener("click", onConfirmPasswordClick);
 })();
+
+/**
+ * Handle password click on icon area.
+ */
+function onPasswordClick(e) {
+  if (!password.value) return;
+  if (!isClickOnIcon(password, e)) return;
+  togglePasswordVisibility();
+}
+
+/**
+ * Handle confirm password click on icon area.
+ */
+function onConfirmPasswordClick(e) {
+  if (!confirmPassword.value) return;
+  if (!isClickOnIcon(confirmPassword, e)) return;
+  toggleConfirmPasswordVisibility();
+}
+
+/**
+ * Check if click was on the visibility icon.
+ */
+function isClickOnIcon(field, e) {
+  return e.offsetX > field.offsetWidth - 35;
+}
+
+/**
+ * Toggle main password visibility and icons.
+ */
+function togglePasswordVisibility() {
+  password.type = password.type === "password" ? "text" : "password";
+  password.classList.toggle("show-password");
+  updatePasswordIcon();
+  updateSignupToggleIcons();
+}
+
+/**
+ * Toggle confirm password visibility and icons.
+ */
+function toggleConfirmPasswordVisibility() {
+  const hidden = confirmPassword.type === "password";
+  confirmPassword.type = hidden ? "text" : "password";
+  confirmPassword.classList.toggle("show-password", hidden);
+  updateSignupToggleIcons();
+}
+
+/**
+ * Toggle icon state.
+ */
+function toggleIconState() {
+  if (password.value.length === 0) {
+    password.classList.add("password-empty");
+    password.type = "password";
+    password.classList.remove("show-password");
+  } else {
+    password.classList.remove("password-empty");
+  }
+  updatePasswordIcon();
+  updateSignupToggleIcons();
+}
 
 if (passwordToggleIcon && password) {
   passwordToggleIcon.addEventListener("click", (e) => {
@@ -263,8 +268,6 @@ if (confirmPasswordToggleIcon && confirmPassword) {
     confirmPassword.focus();
   });
 }
-
-
 /**
  * Validate password.
  */
@@ -273,7 +276,6 @@ function validatePassword() {
   applyPasswordValidationState(ok);
   return ok;
 }
-
 /**
  * Apply password validation state.
  */
@@ -281,7 +283,6 @@ function applyPasswordValidationState(ok) {
   if (ok) return markPasswordValid();
   markPasswordInvalid();
 }
-
 /**
  * Mark password valid.
  */
@@ -290,7 +291,6 @@ function markPasswordValid() {
   password.classList.remove("isInvaled");
   setInfoState(infoPassword, false);
 }
-
 /**
  * Mark password invalid.
  */
@@ -300,7 +300,6 @@ function markPasswordInvalid() {
   password.classList.remove("isValidate");
   resetPasswordIcon();
 }
-
 /**
  * Reset password icon.
  */
@@ -308,9 +307,6 @@ function resetPasswordIcon() {
   if (iconImg) setIconSrc(iconImg, "lock.png");
   updatePasswordIcon();
 }
-/**
- *  Confirm Password prüfen
- */
 /**
  * Validate confirm password.
  */
@@ -320,7 +316,6 @@ function validateConfirmPassword() {
   applyConfirmPasswordState(ok);
   return ok;
 }
-
 /**
  * Apply confirm password state.
  */
@@ -328,7 +323,6 @@ function applyConfirmPasswordState(ok) {
   if (ok) return markConfirmPasswordValid();
   markConfirmPasswordInvalid();
 }
-
 /**
  * Mark confirm password valid.
  */
@@ -338,7 +332,6 @@ function markConfirmPasswordValid() {
   setInfoState(infoPassword, false);
   setInfoState(infoConfirmPassword, false);
 }
-
 /**
  * Mark confirm password invalid.
  */
@@ -348,7 +341,6 @@ function markConfirmPasswordInvalid() {
   confirmPassword.classList.add("isInvaled");
   confirmPassword.classList.remove("isValidate");
 }
-
 /**
  * Validate checkbox.
  */
@@ -364,10 +356,8 @@ function validateCheckbox() {
     document.getElementById("singup-button").classList.add("disebles-singup-button");
     showAcceptTooltip();
   }
-
   return ok;
 }
-
 /**
  * Show accept tooltip.
  */
@@ -382,10 +372,6 @@ function showAcceptTooltip() {
   }, 2000);
 }
 /**
- *  Formular Validierung - Alle Felder prüfen
- *  Gibt true zurück, wenn alle Felder gültig sind
- */
-/**
  * Validate sing up form.
  */
 function validateSingUpForm() {
@@ -395,7 +381,6 @@ function validateSingUpForm() {
   isAcceptPolice.classList.add("accept-police");
   return true;
 }
-
 /**
  * Validate signup fields.
  */
@@ -407,7 +392,6 @@ function validateSignupFields() {
   const okConfirm = validateConfirmPassword();
   return okCheckbox && okName && okEmail && okPass && okConfirm;
 }
-
 /**
  * Disable signup button.
  */
@@ -419,7 +403,6 @@ function disableSignupButton() {
   }
   return false;
 }
-
 /**
  * Enable signup button.
  */
