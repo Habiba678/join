@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: board.overlay-view.js</title>
+    <title>JSDoc: Source: board.render.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: board.overlay-view.js</h1>
+    <h1 class="page-title">Source: board.render.js</h1>
 
     
 
@@ -26,250 +26,325 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/** @typedef {{overlay: HTMLElement|null, backdrop: HTMLElement|null, top: HTMLElement|null, closeBtn: HTMLElement|null, delBtn: HTMLElement|null, editBtn: HTMLElement|null, saveBtn: HTMLElement|null, view: HTMLElement|null, editForm: HTMLElement|null}} OverlayViewElements */
-/** @typedef {{id?: string|number, name?: string, email?: string, colorClass?: string}} OverlayViewContact */
+            <pre class="prettyprint source linenums"><code>/** @typedef {{title: string, done: boolean}} BoardSubtask */
 
-// ---------------- Overlay events ----------------
-/** Initializes task-overlay listeners and edit widgets. @returns {void} */
-function initOverlayEvents() {
-  const els = getOverlayElements();
-  if (!els) return;
-  toggleOverlayEditState(els, false);
-  bindOverlayClose(els);
-  bindOverlayBackdrop(els);
-  bindOverlayEsc(els);
-  bindOverlayDelete(els);
-  bindOverlayEdit(els);
-  bindOverlaySave(els);
-  bindOverlayEditForm(els);
-  initOverlayEditWidgets();
-  bindOverlayOpenByCard();
+// ---------------- Render board ----------------
+/** Renders the full board from cached storage. @returns {void} */
+function renderBoardFromStorage() {
+  clearAllCards();
+  const filtered = getFilteredTasks();
+  renderAllTasks(filtered);
+  updateSearchEmptyState(filtered);
+  updateEmptyStates();
 }
-
-/** @returns {OverlayViewElements|null} Required overlay element references. */
-function getOverlayElements() {
-  const els = collectOverlayElements();
-  if (!els.backdrop || !els.closeBtn) {
-    warnOverlayMissing();
-    return null;
-  }
-  return els;
-}
-
-/** @returns {OverlayViewElements} All known task-overlay element references. */
-function collectOverlayElements() {
-  return {
-    overlay: document.querySelector(".task-overlay"),
-    backdrop: document.getElementById("taskOverlayBackdrop"),
-    top: document.querySelector(".task-overlay-top"),
-    closeBtn: document.getElementById("taskOverlayClose"),
-    delBtn: document.getElementById("taskOverlayDelete"),
-    editBtn: document.getElementById("taskOverlayEdit"),
-    saveBtn: document.getElementById("taskOverlaySave"),
-    view: document.getElementById("taskOverlayView"),
-    editForm: document.getElementById("taskOverlayEditForm"),
+/** @returns {(value: string) => string} Search normalization function. */
+function getNormalizeSearchFn() {
+  if (typeof normalizeSearchQuery === "function") return normalizeSearchQuery;
+  return function (value) {
+    return String(value || "")
+      .trim()
+      .toLowerCase();
   };
 }
-
-/** Logs a warning when critical overlay elements are missing. @returns {void} */
-function warnOverlayMissing() {
-  console.warn("Overlay elements not found (taskOverlayBackdrop/taskOverlayClose).");
-}
-
-/** @param {OverlayViewElements} els Overlay element references. @returns {void} */
-function bindOverlayClose(els) {
-  els.closeBtn.addEventListener("click", function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    closeTaskOverlay();
-  });
-}
-
-/** @param {OverlayViewElements} els Overlay element references. @returns {void} */
-function bindOverlayBackdrop(els) {
-  els.backdrop.addEventListener("click", function (e) {
-    if (e.target === els.backdrop) closeTaskOverlay();
-  });
-}
-
-/** @param {OverlayViewElements} els Overlay element references. @returns {void} */
-function bindOverlayEsc(els) {
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" &amp;&amp; !els.backdrop.hidden) closeTaskOverlay();
-  });
-}
-
-/** @param {OverlayViewElements} els Overlay element references. @returns {void} */
-function bindOverlayDelete(els) {
-  if (!els.delBtn) return;
-  els.delBtn.addEventListener("click", function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!openedTaskId) return;
-    deleteTask(openedTaskId);
-  });
-}
-
-/** @param {OverlayViewElements} els Overlay element references. @returns {void} */
-function bindOverlayEdit(els) {
-  if (!els.editBtn) return;
-  els.editBtn.addEventListener("click", function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!openedTaskId) return;
-    enterOverlayEditMode(openedTaskId, els);
-  });
-}
-
-/** @param {OverlayViewElements} els Overlay element references. @returns {void} */
-function bindOverlaySave(els) {
-  if (!els.saveBtn) return;
-  els.saveBtn.addEventListener("click", function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!openedTaskId) return;
-    saveOverlayEdits(openedTaskId, els);
-  });
-}
-
-/** @param {OverlayViewElements} els Overlay element references. @returns {void} */
-function bindOverlayEditForm(els) {
-  if (!els.editForm) return;
-  els.editForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-  });
-}
-
-/** Opens the task overlay when a board card is clicked. @returns {void} */
-function bindOverlayOpenByCard() {
-  document.addEventListener("click", function (e) {
-    if (isDragging) return;
-    if (e.target.closest(".task-overlay")) return;
-    const card = e.target.closest(".card");
-    if (!card) return;
-    openTaskOverlay(card.dataset.id);
-  });
-}
-
-// ---------------- Open overlay ----------------
-/** @param {string|number} id Task ID to open. @returns {void} */
-function openTaskOverlay(id) {
-  const task = findTaskById(id);
-  if (!task) return;
-  openedTaskId = String(id);
-  resetOverlayEditMode();
-  setOverlayCategory(task);
-  setOverlayTexts(task);
-  setOverlayPriority(task);
-  renderOverlayAssigned(task);
-  renderOverlaySubtasks(task);
-  showOverlay();
-}
-
-/** @param {string|number} id Task ID to find. @returns {BoardTask|null} Matching task or `null`. */
-function findTaskById(id) {
-  const tasks = getTasks();
-  for (let i = 0; i &lt; tasks.length; i++) {
-    if (String(tasks[i].id) === String(id)) return tasks[i];
+/** @returns {string} Current normalized search query. */
+function getActiveSearchQuery() {
+  if (typeof activeSearchQuery !== "undefined") return activeSearchQuery;
+  if (
+    typeof window !== "undefined" &amp;&amp;
+    typeof window.activeSearchQuery !== "undefined"
+  ) {
+    return window.activeSearchQuery;
   }
-  return null;
+  return "";
 }
-
-/** @param {BoardTask} task Task to reflect in the category chip. @returns {void} */
-function setOverlayCategory(task) {
-  const chip = document.getElementById("taskOverlayCategory");
-  if (!chip) return;
-  const isTech = task.category === "tech";
-  chip.textContent = isTech ? "Technical Task" : "User Story";
-  chip.classList.remove("user", "tech");
-  chip.classList.add(isTech ? "tech" : "user");
+/** Removes all currently rendered cards from every board column. @returns {void} */
+function clearAllCards() {
+  const cardsLists = document.querySelectorAll(".column .cards");
+  for (let i = 0; i &lt; cardsLists.length; i++) {
+    cardsLists[i].innerHTML = "";
+  }
 }
-
-/** @param {BoardTask} task Task to reflect in title, description, and due date. @returns {void} */
-function setOverlayTexts(task) {
-  setText("taskOverlayTitle", task.title || "");
-  setText("taskOverlayDesc", task.description || "");
-  setText("taskOverlayDue", formatDate(task.dueDate || task.due || ""));
-}
-
-/** @param {BoardTask} task Task to reflect in the priority row. @returns {void} */
-function setOverlayPriority(task) {
-  const prioEl = document.getElementById("taskOverlayPrio");
-  if (!prioEl) return;
-  const pr = getTaskPriority(task);
-  resetOverlayPriorityEl(prioEl, pr);
-  appendOverlayPriorityText(prioEl, pr);
-  appendOverlayPriorityIcon(prioEl, task, pr);
-}
-
-/** @param {BoardTask} task Task whose assignees should be rendered. @returns {void} */
-function renderOverlayAssigned(task) {
-  const assignedWrap = document.getElementById("taskOverlayAssigned");
-  if (!assignedWrap) return;
-  assignedWrap.innerHTML = "";
-  const list = getAssignedList(task);
+/** @param {BoardTask[]} [tasks] Tasks to render. Falls back to cached tasks. @returns {void} */
+function renderAllTasks(tasks) {
+  const list = Array.isArray(tasks) ? tasks : getTasks();
   for (let i = 0; i &lt; list.length; i++) {
-    assignedWrap.appendChild(createPersonRow(list[i], i));
+    renderTaskCard(list[i]);
   }
 }
-
-/** @param {BoardTask} task Task whose assignees should be normalized. @returns {OverlayViewContact[]} Overlay-ready contact list. */
-function getAssignedList(task) {
-  if (typeof resolveAssignedContacts === "function") return resolveAssignedContacts(task);
-  const list = resolveAssignedList(task);
-  return list.map(function (name) {
-    const s = String(name || "");
-    return { id: s, name: s };
-  });
+/** @returns {BoardTask[]} Tasks filtered by the active search query. */
+function getFilteredTasks() {
+  const tasks = getTasks();
+  const normalize = getNormalizeSearchFn();
+  const query = normalize(getActiveSearchQuery());
+  if (!query) return tasks;
+  const filtered = [];
+  for (let i = 0; i &lt; tasks.length; i++) {
+    if (taskMatchesQuery(tasks[i], query)) filtered.push(tasks[i]);
+  }
+  return filtered;
 }
-
-/** @param {OverlayViewContact|string} item Contact-like value to render. @param {number} index Fallback position for color hashing. @returns {HTMLDivElement} Assignee row element. */
-function createPersonRow(item, index) {
-  const contact = normalizeOverlayContact(item);
-  const row = document.createElement("div");
-  row.className = "task-overlay-person";
-  row.appendChild(createPersonBadge(contact, index));
-  row.appendChild(createPersonText(contact));
-  return row;
+/** @param {BoardTask[]} tasks Filtered task list. @returns {void} */
+function updateSearchEmptyState(tasks) {
+  const el = document.getElementById("boardSearchEmpty");
+  if (!el) return;
+  const list = Array.isArray(tasks) ? tasks : [];
+  const show = !!getActiveSearchQuery() &amp;&amp; list.length === 0;
+  el.style.display = show ? "block" : "none";
 }
-
-/** @param {OverlayViewContact} contact Contact-like object. @param {number} index Fallback position for color hashing. @returns {HTMLDivElement} Avatar badge element. */
-function createPersonBadge(contact, index) {
-  const badge = document.createElement("div");
-  const colorClass = getOverlayViewContactColorClass(contact, index);
-  badge.className = "task-overlay-badge " + colorClass;
-  badge.textContent = getInitials(String(contact.name || contact.id || ""));
-  return badge;
+/** @param {BoardTask} task Task to test. @param {string} query Normalized search query. @returns {boolean} `true` when the task matches. */
+function taskMatchesQuery(task, query) {
+  const title = buildTaskSearchTitle(task);
+  return title.includes(query);
 }
-
-/** @param {OverlayViewContact} contact Contact-like object. @returns {HTMLDivElement} Assignee name element. */
-function createPersonText(contact) {
-  const text = document.createElement("div");
-  text.textContent = String(contact.name || contact.id || "");
-  return text;
+/** @param {BoardTask} task Task to extract searchable text from. @returns {string} Normalized title string. */
+function buildTaskSearchTitle(task) {
+  const normalize = getNormalizeSearchFn();
+  return normalize(task &amp;&amp; task.title ? task.title : "");
 }
-
-/** @param {OverlayViewContact|string} item Raw assignee value. @returns {OverlayViewContact} Normalized contact-like object. */
-function normalizeOverlayContact(item) {
-  if (item &amp;&amp; typeof item === "object") return item;
-  const s = String(item || "");
-  return { id: s, name: s };
+/** @param {BoardTask} task Task to render as a card. @returns {void} */
+function renderTaskCard(task) {
+  const cardsContainer = getCardsContainer(task.status);
+  if (!cardsContainer) return;
+  const card = createCardElement(task);
+  card.innerHTML = buildCardHtml(task);
+  cardsContainer.appendChild(card);
 }
-
-/** @param {OverlayViewContact} contact Contact-like object. @param {number} index Fallback position for color hashing. @returns {string} Avatar color class. */
-function getOverlayViewContactColorClass(contact, index) {
-  if (typeof getContactColorClass === "function") return getContactColorClass(contact);
-  if (contact &amp;&amp; contact.colorClass) return contact.colorClass;
-  const seed = contact?.id || contact?.email || contact?.name || String(index || "");
-  return "avatar-color-" + (overlayViewHashString(seed) % 12);
+/** @param {string} status Target board status. @returns {HTMLElement|null} Matching column cards container. */
+function getCardsContainer(status) {
+  const selector = '.column[data-status="' + status + '"] .cards';
+  return document.querySelector(selector);
 }
-
+/** @param {BoardTask} task Task to wrap in a card element. @returns {HTMLDivElement} Empty card element. */
+function createCardElement(task) {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.draggable = true;
+  card.dataset.id = String(task.id);
+  return card;
+}
+/** @param {BoardTask} task Task to render. @returns {string} Card markup. */
+function buildCardHtml(task) {
+  const labelText = getLabelText(task);
+  const labelClass = getLabelClass(task);
+  let html = "";
+  html += '&lt;div class="card-content">';
+  html += '&lt;div class="label ' + labelClass + '">' + labelText + "&lt;/div>";
+  html += '&lt;div class="title">' + escapeHtml(task.title || "") + "&lt;/div>";
+  html += '&lt;div class="desc">' + escapeHtml(task.description || "") + "&lt;/div>";
+  html += "&lt;/div>";
+  html += '&lt;div class="card-bottom">';
+  html += buildCardSubtaskProgressHtml(task);
+  html += buildCardFooterHtml(task);
+  html += "&lt;/div>";
+  return html;
+}
+/** @param {BoardTask} task Task to inspect. @returns {string} Human-readable category label. */
+function getLabelText(task) {
+  return task.category === "tech" ? "Technical Task" : "User Story";
+}
+/** @param {BoardTask} task Task to inspect. @returns {string} Category CSS modifier class. */
+function getLabelClass(task) {
+  return task.category === "tech" ? "tech" : "user";
+}
+/** @param {BoardTask} task Task to inspect. @returns {string} Subtask progress markup. */
+function buildCardSubtaskProgressHtml(task) {
+  const subs = getTaskSubtasks(task);
+  const total = subs.length;
+  if (!total) return "";
+  const done = countDoneSubtasks(subs);
+  const percent = Math.round((done / total) * 100);
+  let html = "";
+  html += '&lt;div class="card-progress">';
+  html += '&lt;div class="card-progress-bar">';
+  html +=
+    '&lt;div class="card-progress-fill" style="width:' + percent + '%">&lt;/div>';
+  html += "&lt;/div>";
+  html += '&lt;div class="card-progress-text">' + done + "/" + total + "&lt;/div>";
+  html += "&lt;/div>";
+  return html;
+}
+/** @param {BoardTask} task Task to inspect. @returns {string} Card footer markup. */
+function buildCardFooterHtml(task) {
+  const avatars = buildAssignedAvatarsHtml(task);
+  const prioIcon = getPriorityIcon(task);
+  const prClass = prioIcon ? getPriorityText(task) : "";
+  return [
+    '&lt;div class="card-footer">',
+    '&lt;div class="card-contacts">' + avatars + "&lt;/div>",
+    buildCardFooterPriorityHtml(prioIcon, prClass),
+    "&lt;/div>",
+  ].join("");
+}
+/** @param {BoardTask} task Task to inspect. @returns {string} Assigned-avatar markup. */
+function buildAssignedAvatarsHtml(task) {
+  const list = getAssignedContactsForCard(task);
+  if (!list.length) return "";
+  const maxAvatars = 5;
+  const limit = Math.min(list.length, maxAvatars);
+  const remaining = list.length - maxAvatars;
+  return buildAvatarListHtml(list, limit) + buildAvatarRemainderHtml(remaining);
+}
+/** @param {BoardTask} task Task to inspect. @returns {BoardContact[]} Resolved assigned contacts. */
+function getAssignedContactsForCard(task) {
+  return resolveAssignedContacts(task);
+}
+/** @param {BoardTask} task Task to inspect. @returns {BoardContact[]} Resolved assigned contacts. */
+function resolveAssignedContacts(task) {
+  const assignedArr = normalizeAssigned(task.assigned);
+  if (!assignedArr.length) return [];
+  const contacts = typeof loadContacts === "function" ? loadContacts() : [];
+  return resolveAssignedFromContacts(assignedArr, contacts);
+}
+/** @param {BoardContact[]} contacts Contact list. @returns {Map&lt;string, BoardContact>} Contacts keyed by ID. */
+function getContactsById(contacts) {
+  if (typeof buildContactsById === "function")
+    return buildContactsById(contacts);
+  const map = new Map();
+  for (let i = 0; i &lt; contacts.length; i++) {
+    const c = contacts[i];
+    if (c &amp;&amp; c.id) map.set(String(c.id), c);
+  }
+  return map;
+}
+/** @param {BoardContact[]} contacts Contact list. @returns {Map&lt;string, BoardContact>} Contacts keyed by lowercase name. */
+function getContactsByName(contacts) {
+  const map = new Map();
+  for (let i = 0; i &lt; contacts.length; i++) {
+    const c = contacts[i];
+    const name = String(c &amp;&amp; c.name ? c.name : "").trim();
+    if (!name) continue;
+    const key = name.toLowerCase();
+    if (!map.has(key)) map.set(key, c);
+  }
+  return map;
+}
 /** @param {string} str Seed string. @returns {number} Stable positive hash value. */
-function overlayViewHashString(str) {
+function hashStringLocal(str) {
   let h = 0;
   const s = String(str || "");
   for (let i = 0; i &lt; s.length; i++) h = ((h &lt;&lt; 5) - h + s.charCodeAt(i)) | 0;
   return Math.abs(h);
+}
+/** @param {string} seed Seed string. @returns {string} Avatar color CSS class. */
+function colorClassForSeed(seed) {
+  return "avatar-color-" + (hashStringLocal(seed) % 12);
+}
+/** @param {BoardContact|{id?:string,email?:string,name?:string,colorClass?:string}} contact Contact-like object. @returns {string} Avatar color CSS class. */
+function getContactColorClass(contact) {
+  if (contact &amp;&amp; contact.colorClass) return contact.colorClass;
+  const seed = contact?.id || contact?.email || contact?.name || "";
+  return colorClassForSeed(seed);
+}
+/**
+ * Returns a normalized subtasks array for a task.
+ * Supports both array and object map shapes and
+ * also falls back to possible legacy keys.
+ *
+ * @param {Object} task
+ * @returns {Array&lt;{title:string, done:boolean}>}
+ */
+function getTaskSubtasks(task) {
+  const subs = getRawSubtasks(task);
+  if (!Array.isArray(subs)) return [];
+  return normalizeSubtasks(subs);
+}
+/** @param {string} prioIcon Icon URL. @param {string} prClass Priority CSS/text class. @returns {string} Priority markup for the card footer. */
+function buildCardFooterPriorityHtml(prioIcon, prClass) {
+  let html = '&lt;div class="card-priority">';
+  if (prioIcon) html += buildPriorityIconHtml(prioIcon, prClass);
+  html += "&lt;/div>";
+  return html;
+}
+/** @param {string} prioIcon Icon URL. @param {string} prClass Priority CSS/text class. @returns {string} Priority icon markup. */
+function buildPriorityIconHtml(prioIcon, prClass) {
+  return ( '&lt;img src="' + prioIcon + '" class="card-priority-icon ' + escapeHtml(prClass) + '" alt="Priority ' + escapeHtml(prClass) + '">');
+}
+/** @param {BoardContact[]} list Resolved assigned contacts. @param {number} limit Number of avatars to render. @returns {string} Avatar-list markup. */
+function buildAvatarListHtml(list, limit) {
+  let html = "";
+  for (let i = 0; i &lt; limit; i++) { html += buildSingleAvatarHtml(list[i] || {}); }
+  return html;
+}
+/** @param {BoardContact} contact Contact to render. @returns {string} Single avatar markup. */
+function buildSingleAvatarHtml(contact) {
+  const name = String(contact.name || contact.id || "");
+  const initials = getInitials(name);
+  const colorClass = getContactColorClass(contact);
+  return ( '&lt;span class="card-avatar ' + escapeHtml(colorClass) + '">' + escapeHtml(initials) + "&lt;/span>" );
+}
+/** @param {number} remaining Number of hidden avatars. @returns {string} Overflow avatar markup. */
+function buildAvatarRemainderHtml(remaining) {
+  if (remaining > 0)
+    return ('&lt;span class="card-avatar card-avatar-more">+' + remaining + "&lt;/span>");
+  return "";
+}
+/** @param {string|string[]|undefined} assigned Raw assigned value. @returns {string[]} Normalized assigned array. */
+function normalizeAssigned(assigned) {
+  if (Array.isArray(assigned)) return assigned;
+  if (assigned) return [assigned];
+  return [];
+}
+/** @param {string[]} assignedArr Normalized assigned values. @param {BoardContact[]} contacts Contact list. @returns {BoardContact[]} Resolved contact list. */
+function resolveAssignedFromContacts(assignedArr, contacts) {
+  const byId = getContactsById(contacts);
+  const byName = getContactsByName(contacts);
+  const result = [];
+  for (let i = 0; i &lt; assignedArr.length; i++) {
+    const entry = resolveAssignedEntry(assignedArr[i], byId, byName);
+    if (entry) result.push(entry);
+  }
+  return result;
+}
+/** @param {string} value Raw assigned entry. @param {Map&lt;string, BoardContact>} byId Contacts keyed by ID. @param {Map&lt;string, BoardContact>} byName Contacts keyed by lowercase name. @returns {BoardContact|null} Resolved contact or fallback object. */
+function resolveAssignedEntry(value, byId, byName) {
+  const key = String(value || "").trim();
+  if (!key) return null;
+  const contact = byId.get(key) || byName.get(key.toLowerCase());
+  return contact ? contact : { id: key, name: key };
+}
+/** @param {BoardTask} task Task to inspect. @returns {Array&lt;BoardSubtask|string|Object>} Raw subtask collection in any supported format. */
+function getRawSubtasks(task) {
+  if (!task) return [];
+  if (Array.isArray(task.subtasks)) return task.subtasks;
+  if (task.subtasks &amp;&amp; typeof task.subtasks === "object")
+    return Object.values(task.subtasks);
+  if (Array.isArray(task.subtask)) return task.subtask;
+  if (task.subtask &amp;&amp; typeof task.subtask === "object")
+    return Object.values(task.subtask);
+  return [];
+}
+/** @param {Array&lt;BoardSubtask|string|Object>} subs Raw subtasks. @returns {BoardSubtask[]} Normalized subtasks. */
+function normalizeSubtasks(subs) {
+  return subs
+    .filter(Boolean)
+    .map(function (s) {
+      if (typeof s === "string") return { title: s, done: false };
+      return {
+        title: s &amp;&amp; s.title ? String(s.title) : "",
+        done: !!(s &amp;&amp; s.done),
+      };
+    })
+    .filter(function (s) {
+      return !!s.title;
+    });
+}
+/** @param {BoardSubtask[]} subs Normalized subtasks. @returns {number} Completed subtask count. */
+function countDoneSubtasks(subs) {
+  let done = 0;
+  for (let i = 0; i &lt; subs.length; i++) { if (subs[i] &amp;&amp; subs[i].done) done += 1; }
+  return done;
+}
+/** @param {BoardTask} task Task to inspect. @returns {string} Normalized priority value. */
+function getPriorityText(task) {
+  return String(task.priority || task.prio || "").toLowerCase();
+}
+/** @param {BoardTask} task Task to inspect. @returns {string} Priority icon path or an empty string. */
+function getPriorityIcon(task) {
+  const pr = getPriorityText(task);
+  if (pr === "urgent") return "../assets/icons/urgent.svg";
+  if (pr === "medium") return "../assets/icons/medium.png";
+  if (pr === "low") return "../assets/icons/low.svg";
+  return "";
 }
 </code></pre>
         </article>

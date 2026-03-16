@@ -1,5 +1,4 @@
 let info = document.getElementById("noMatsh");
-
 /**
  * Fetches the "register" node from the Firebase Realtime Database.
  * First tries to load /register.json directly. If that fails,
@@ -8,9 +7,6 @@ let info = document.getElementById("noMatsh");
  * @async
  * @returns {Promise<Object|null>} The register data or null if not found.
  */
-/**
- * Fetch register node.
- */
 async function fetchRegisterNode() {
   const direct = await tryFetchRegisterDirect();
   if (direct != null) return direct;
@@ -18,14 +14,12 @@ async function fetchRegisterNode() {
   if (!root) return null;
   return extractRegisterFromRoot(root);
 }
-
 /**
  * Get login DB URL.
  */
 function getLoginDbUrl() {
   return "https://join-da53b-default-rtdb.firebaseio.com/";
 }
-
 /**
  * Try fetch register direct.
  */
@@ -37,7 +31,6 @@ async function tryFetchRegisterDirect() {
     return null;
   }
 }
-
 /**
  * Try fetch root DB.
  */
@@ -58,7 +51,6 @@ function extractRegisterFromRoot(root) {
   if (root && typeof root === "object") return extractRegisterFromObject(root);
   return null;
 }
-
 /**
  * Extract register from array.
  */
@@ -66,7 +58,6 @@ function extractRegisterFromArray(root) {
   const entry = root.find((x) => x && x.id === "register");
   return entry ? pickRegisterEntry(entry) : null;
 }
-
 /**
  * Extract register from object.
  */
@@ -75,7 +66,6 @@ function extractRegisterFromObject(root) {
   if (entry) return pickRegisterEntry(entry);
   return root.register !== undefined ? root.register : null;
 }
-
 /**
  * Pick register entry.
  */
@@ -84,16 +74,12 @@ function pickRegisterEntry(o) {
   delete c.id;
   return c.hasOwnProperty("register") ? c.register : c;
 }
-
 /**
  * Logs in a guest user.
  * Stores a temporary user in cookies and sessionStorage
  * and redirects to the summary page.
  *
  * @returns {void}
- */
-/**
- * Guast login.
  */
 function guastLogin() {
   const payload = encodeURIComponent(JSON.stringify("Guest"));
@@ -105,7 +91,6 @@ function guastLogin() {
 
   window.location.href = "./subpages/summary.html";
 }
-
 /**
  * Verifies whether the entered password matches the stored hash.
  *
@@ -115,14 +100,10 @@ function guastLogin() {
  * @param {string} storedSalt - The stored salt value.
  * @returns {Promise<boolean>} True if the password is valid.
  */
-/**
- * Verify password.
- */
 async function verifyPassword(inputPassword, storedHash, storedSalt) {
   const result = await hashPasswordWithSalt(inputPassword, storedSalt);
   return result === storedHash;
 }
-
 /**
  * Handles the user login process.
  * Validates the input, compares credentials with the database,
@@ -130,9 +111,6 @@ async function verifyPassword(inputPassword, storedHash, storedSalt) {
  *
  * @async
  * @returns {Promise<void>}
- */
-/**
- * Log in.
  */
 async function logIn() {
   const loginData = await fetchRegisterNode();
@@ -146,7 +124,6 @@ async function logIn() {
   if (ok) return handleLoginSuccess(user, infoEl);
   handlePasswordMismatch(infoEl);
 }
-
 /**
  * Validate login inputs safe.
  */
@@ -158,28 +135,24 @@ function validateLoginInputsSafe() {
     console.warn("Validation failed", e);
   }
 }
-
 /**
  * Get login users.
  */
 function getLoginUsers(loginData) {
   return loginData ? Object.values(loginData) : [];
 }
-
 /**
  * Alert no users.
  */
 function alertNoUsers() {
   alert("No users found in database. Please register first.");
 }
-
 /**
  * Find user by email.
  */
 function findUserByEmail(users, emailValue) {
   return users.find((u) => (u.mail || "") === (emailValue || ""));
 }
-
 /**
  * Verify login password.
  */
@@ -187,7 +160,6 @@ async function verifyLoginPassword(user, value) {
   const hash = await hashPasswordWithSalt(value, user.salt);
   return hash === user.passwort;
 }
-
 /**
  * Handle login success.
  */
@@ -198,7 +170,6 @@ function handleLoginSuccess(user, infoEl) {
   hideInfoNoMatch(infoEl);
   window.location.href = "./subpages/summary.html";
 }
-
 /**
  * Handle password mismatch.
  */
@@ -206,7 +177,6 @@ function handlePasswordMismatch(infoEl) {
   showInfoNoMatch(infoEl);
   markInputInvalid(password);
 }
-
 /**
  * Handle email not found.
  */
@@ -214,7 +184,6 @@ function handleEmailNotFound(infoEl) {
   showInfoNoMatch(infoEl);
   markInputInvalid(email);
 }
-
 /**
  * Show info no match.
  */
@@ -223,7 +192,6 @@ function showInfoNoMatch(infoEl) {
   infoEl.style.opacity = "1";
   infoEl.style.visibility = "visible";
 }
-
 /**
  * Hide info no match.
  */
@@ -232,7 +200,6 @@ function hideInfoNoMatch(infoEl) {
   infoEl.style.opacity = "0";
   infoEl.style.visibility = "hidden";
 }
-
 /**
  * Mark input invalid.
  */
@@ -266,15 +233,11 @@ function logout() {
 
   window.location.href = "../index.html";
 }
-
 /**
  * Checks whether a login cookie exists.
  * Redirects the user to the login page if not.
  *
  * @returns {string|null} The stored username or null.
- */
-/**
- * Get cokkie check.
  */
 function getCokkieCheck() {
   const cookies = document.cookie.split(";").reduce((acc, cookie) => {
@@ -290,15 +253,11 @@ function getCokkieCheck() {
 
   return cookies.loggedInUser || null;
 }
-
 /**
  * Checks whether a login cookie exists.
  * changes the navigation and login button visibility based on the login state.
  *
  * @returns {string|null} The stored username or null.
- */
-/**
- * Get cokkie check helper.
  */
 function getCokkieCheckHelper() {
   const cookies = getCookieMap();
@@ -318,7 +277,6 @@ function getCookieMap() {
     return acc;
   }, {});
 }
-
 /**
  * Apply logged out nav.
  */
@@ -335,7 +293,6 @@ function applyLoggedOutNav() {
   if (buttoMenu) buttoMenu.style.cursor = "none";
   if (sidebarFooter) sidebarFooter.style.display = "flex";
 }
-
 /**
  * Apply logged in nav.
  */
@@ -345,17 +302,12 @@ function applyLoggedInNav() {
   if (hidenNav) hidenNav.forEach(el => el.style.display = "block");
   if (loginBtn) loginBtn.style.display = "none";
 }
-
-
 /**
  * Displays a login reminder message if the URL contains
  * the query parameter ?notice=pleaseLogin.
  *
  * @param {number} [duration=4000] Duration the message is visible in ms.
  * @returns {void}
- */
-/**
- * Show please login message from query.
  */
 function showPleaseLoginMessageFromQuery(duration = 4000) {
   if (getQueryParam("notice") !== "pleaseLogin") return;
@@ -368,16 +320,12 @@ function showPleaseLoginMessageFromQuery(duration = 4000) {
   replaceUrlState();
 }
 showPleaseLoginMessageFromQuery();
-
 /**
  * Displays a registration message from the URL query parameters.
  * Supports ?msg= or ?message=.
  *
  * @param {number} [duration=4000] Duration the message is visible in ms.
  * @returns {void}
- */
-/**
- * Show registration message from query.
  */
 function showRegistrationMessageFromQuery(duration = 4000) {
   const msg = getQueryParam("msg") || getQueryParam("message");
@@ -391,7 +339,6 @@ function showRegistrationMessageFromQuery(duration = 4000) {
   replaceUrlState();
 }
 showRegistrationMessageFromQuery();
-
 /**
  * Get query param.
  */
@@ -399,24 +346,16 @@ function getQueryParam(key) {
   return new URLSearchParams(window.location.search).get(key);
 }
 
-/**
- * Show message wrapper.
- */
+/*** Show message wrapper.*/
 function showMessageWrapper(el) {
   const wrapper = el.closest(".login-message");
   if (wrapper) wrapper.classList.add("is-visible");
 }
-
-/**
- * Set message text.
- */
+/** * Set message text.*/
 function setMessageText(el, text) {
   el.textContent = text;
 }
-
-/**
- * Apply please login styles.
- */
+/** * Apply please login styles.*/
 function applyPleaseLoginStyles(el) {
   Object.assign(el.style, {
     display: "block",
@@ -427,10 +366,7 @@ function applyPleaseLoginStyles(el) {
     opacity: "1",
   });
 }
-
-/**
- * Apply registration styles.
- */
+/** * Apply registration styles.*/
 function applyRegistrationStyles(el) {
   Object.assign(el.style, {
     display: "flex",
@@ -446,28 +382,19 @@ function applyRegistrationStyles(el) {
     opacity: "1",
   });
 }
-
-/**
- * Fade out message.
- */
+/** * Fade out message.*/
 function fadeOutMessage(el, duration) {
   setTimeout(() => {
     el.style.opacity = "0";
     setTimeout(() => clearMessage(el), 500);
   }, duration);
 }
-
-/**
- * Clear message.
- */
+/** * Clear message.*/
 function clearMessage(el) {
   el.style.display = "none";
   el.textContent = "";
 }
-
-/**
- * Replace URL state.
- */
+/*** Replace URL state.*/
 function replaceUrlState() {
   window.history.replaceState({}, "", window.location.pathname + window.location.hash);
 }

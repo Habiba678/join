@@ -1,7 +1,7 @@
+/** @typedef {{title: string, done: boolean}} BoardSubtask */
+
 // ---------------- Render board ----------------
-/**
- * Render board from storage.
- */
+/** Renders the full board from cached storage. @returns {void} */
 function renderBoardFromStorage() {
   clearAllCards();
   const filtered = getFilteredTasks();
@@ -9,9 +9,7 @@ function renderBoardFromStorage() {
   updateSearchEmptyState(filtered);
   updateEmptyStates();
 }
-/**
- * Get normalize search fn.
- */
+/** @returns {(value: string) => string} Search normalization function. */
 function getNormalizeSearchFn() {
   if (typeof normalizeSearchQuery === "function") return normalizeSearchQuery;
   return function (value) {
@@ -20,9 +18,7 @@ function getNormalizeSearchFn() {
       .toLowerCase();
   };
 }
-/**
- * Get active search query.
- */
+/** @returns {string} Current normalized search query. */
 function getActiveSearchQuery() {
   if (typeof activeSearchQuery !== "undefined") return activeSearchQuery;
   if (
@@ -33,27 +29,21 @@ function getActiveSearchQuery() {
   }
   return "";
 }
-/**
- * Clear all cards.
- */
+/** Removes all currently rendered cards from every board column. @returns {void} */
 function clearAllCards() {
   const cardsLists = document.querySelectorAll(".column .cards");
   for (let i = 0; i < cardsLists.length; i++) {
     cardsLists[i].innerHTML = "";
   }
 }
-/**
- * Render all tasks.
- */
+/** @param {BoardTask[]} [tasks] Tasks to render. Falls back to cached tasks. @returns {void} */
 function renderAllTasks(tasks) {
   const list = Array.isArray(tasks) ? tasks : getTasks();
   for (let i = 0; i < list.length; i++) {
     renderTaskCard(list[i]);
   }
 }
-/**
- * Get filtered tasks.
- */
+/** @returns {BoardTask[]} Tasks filtered by the active search query. */
 function getFilteredTasks() {
   const tasks = getTasks();
   const normalize = getNormalizeSearchFn();
@@ -65,9 +55,7 @@ function getFilteredTasks() {
   }
   return filtered;
 }
-/**
- * Update search empty state.
- */
+/** @param {BoardTask[]} tasks Filtered task list. @returns {void} */
 function updateSearchEmptyState(tasks) {
   const el = document.getElementById("boardSearchEmpty");
   if (!el) return;
@@ -75,23 +63,17 @@ function updateSearchEmptyState(tasks) {
   const show = !!getActiveSearchQuery() && list.length === 0;
   el.style.display = show ? "block" : "none";
 }
-/**
- * Task matches query.
- */
+/** @param {BoardTask} task Task to test. @param {string} query Normalized search query. @returns {boolean} `true` when the task matches. */
 function taskMatchesQuery(task, query) {
   const title = buildTaskSearchTitle(task);
   return title.includes(query);
 }
-/**
- * Build task search title.
- */
+/** @param {BoardTask} task Task to extract searchable text from. @returns {string} Normalized title string. */
 function buildTaskSearchTitle(task) {
   const normalize = getNormalizeSearchFn();
   return normalize(task && task.title ? task.title : "");
 }
-/**
- * Render task card.
- */
+/** @param {BoardTask} task Task to render as a card. @returns {void} */
 function renderTaskCard(task) {
   const cardsContainer = getCardsContainer(task.status);
   if (!cardsContainer) return;
@@ -99,16 +81,12 @@ function renderTaskCard(task) {
   card.innerHTML = buildCardHtml(task);
   cardsContainer.appendChild(card);
 }
-/**
- * Get cards container.
- */
+/** @param {string} status Target board status. @returns {HTMLElement|null} Matching column cards container. */
 function getCardsContainer(status) {
   const selector = '.column[data-status="' + status + '"] .cards';
   return document.querySelector(selector);
 }
-/**
- * Create card element.
- */
+/** @param {BoardTask} task Task to wrap in a card element. @returns {HTMLDivElement} Empty card element. */
 function createCardElement(task) {
   const card = document.createElement("div");
   card.className = "card";
@@ -116,9 +94,7 @@ function createCardElement(task) {
   card.dataset.id = String(task.id);
   return card;
 }
-/**
- * Build card html.
- */
+/** @param {BoardTask} task Task to render. @returns {string} Card markup. */
 function buildCardHtml(task) {
   const labelText = getLabelText(task);
   const labelClass = getLabelClass(task);
@@ -134,21 +110,15 @@ function buildCardHtml(task) {
   html += "</div>";
   return html;
 }
-/**
- * Get label text.
- */
+/** @param {BoardTask} task Task to inspect. @returns {string} Human-readable category label. */
 function getLabelText(task) {
   return task.category === "tech" ? "Technical Task" : "User Story";
 }
-/**
- * Get label class.
- */
+/** @param {BoardTask} task Task to inspect. @returns {string} Category CSS modifier class. */
 function getLabelClass(task) {
   return task.category === "tech" ? "tech" : "user";
 }
-/**
- * Build card subtask progress html.
- */
+/** @param {BoardTask} task Task to inspect. @returns {string} Subtask progress markup. */
 function buildCardSubtaskProgressHtml(task) {
   const subs = getTaskSubtasks(task);
   const total = subs.length;
@@ -165,9 +135,7 @@ function buildCardSubtaskProgressHtml(task) {
   html += "</div>";
   return html;
 }
-/**
- * Build card footer html.
- */
+/** @param {BoardTask} task Task to inspect. @returns {string} Card footer markup. */
 function buildCardFooterHtml(task) {
   const avatars = buildAssignedAvatarsHtml(task);
   const prioIcon = getPriorityIcon(task);
@@ -179,9 +147,7 @@ function buildCardFooterHtml(task) {
     "</div>",
   ].join("");
 }
-/**
- * Build assigned avatars html.
- */
+/** @param {BoardTask} task Task to inspect. @returns {string} Assigned-avatar markup. */
 function buildAssignedAvatarsHtml(task) {
   const list = getAssignedContactsForCard(task);
   if (!list.length) return "";
@@ -190,24 +156,18 @@ function buildAssignedAvatarsHtml(task) {
   const remaining = list.length - maxAvatars;
   return buildAvatarListHtml(list, limit) + buildAvatarRemainderHtml(remaining);
 }
-/**
- * Get assigned contacts for card.
- */
+/** @param {BoardTask} task Task to inspect. @returns {BoardContact[]} Resolved assigned contacts. */
 function getAssignedContactsForCard(task) {
   return resolveAssignedContacts(task);
 }
-/**
- * Resolve assigned contacts.
- */
+/** @param {BoardTask} task Task to inspect. @returns {BoardContact[]} Resolved assigned contacts. */
 function resolveAssignedContacts(task) {
   const assignedArr = normalizeAssigned(task.assigned);
   if (!assignedArr.length) return [];
   const contacts = typeof loadContacts === "function" ? loadContacts() : [];
   return resolveAssignedFromContacts(assignedArr, contacts);
 }
-/**
- * Get contacts by id.
- */
+/** @param {BoardContact[]} contacts Contact list. @returns {Map<string, BoardContact>} Contacts keyed by ID. */
 function getContactsById(contacts) {
   if (typeof buildContactsById === "function")
     return buildContactsById(contacts);
@@ -218,9 +178,7 @@ function getContactsById(contacts) {
   }
   return map;
 }
-/**
- * Get contacts by name.
- */
+/** @param {BoardContact[]} contacts Contact list. @returns {Map<string, BoardContact>} Contacts keyed by lowercase name. */
 function getContactsByName(contacts) {
   const map = new Map();
   for (let i = 0; i < contacts.length; i++) {
@@ -232,24 +190,18 @@ function getContactsByName(contacts) {
   }
   return map;
 }
-/**
- * Hash string local.
- */
+/** @param {string} str Seed string. @returns {number} Stable positive hash value. */
 function hashStringLocal(str) {
   let h = 0;
   const s = String(str || "");
   for (let i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
   return Math.abs(h);
 }
-/**
- * Color class for seed.
- */
+/** @param {string} seed Seed string. @returns {string} Avatar color CSS class. */
 function colorClassForSeed(seed) {
   return "avatar-color-" + (hashStringLocal(seed) % 12);
 }
-/**
- * Get contact color class.
- */
+/** @param {BoardContact|{id?:string,email?:string,name?:string,colorClass?:string}} contact Contact-like object. @returns {string} Avatar color CSS class. */
 function getContactColorClass(contact) {
   if (contact && contact.colorClass) return contact.colorClass;
   const seed = contact?.id || contact?.email || contact?.name || "";
@@ -268,57 +220,43 @@ function getTaskSubtasks(task) {
   if (!Array.isArray(subs)) return [];
   return normalizeSubtasks(subs);
 }
-/**
- * Build card footer priority html.
- */
+/** @param {string} prioIcon Icon URL. @param {string} prClass Priority CSS/text class. @returns {string} Priority markup for the card footer. */
 function buildCardFooterPriorityHtml(prioIcon, prClass) {
   let html = '<div class="card-priority">';
   if (prioIcon) html += buildPriorityIconHtml(prioIcon, prClass);
   html += "</div>";
   return html;
 }
-/**
- * Build priority icon html.
- */
+/** @param {string} prioIcon Icon URL. @param {string} prClass Priority CSS/text class. @returns {string} Priority icon markup. */
 function buildPriorityIconHtml(prioIcon, prClass) {
   return ( '<img src="' + prioIcon + '" class="card-priority-icon ' + escapeHtml(prClass) + '" alt="Priority ' + escapeHtml(prClass) + '">');
 }
-/**
- * Build avatar list html.
- */
+/** @param {BoardContact[]} list Resolved assigned contacts. @param {number} limit Number of avatars to render. @returns {string} Avatar-list markup. */
 function buildAvatarListHtml(list, limit) {
   let html = "";
   for (let i = 0; i < limit; i++) { html += buildSingleAvatarHtml(list[i] || {}); }
   return html;
 }
-/**
- * Build single avatar html.
- */
+/** @param {BoardContact} contact Contact to render. @returns {string} Single avatar markup. */
 function buildSingleAvatarHtml(contact) {
   const name = String(contact.name || contact.id || "");
   const initials = getInitials(name);
   const colorClass = getContactColorClass(contact);
   return ( '<span class="card-avatar ' + escapeHtml(colorClass) + '">' + escapeHtml(initials) + "</span>" );
 }
-/**
- * Build avatar remainder html.
- */
+/** @param {number} remaining Number of hidden avatars. @returns {string} Overflow avatar markup. */
 function buildAvatarRemainderHtml(remaining) {
   if (remaining > 0)
     return ('<span class="card-avatar card-avatar-more">+' + remaining + "</span>");
   return "";
 }
-/**
- * Normalize assigned.
- */
+/** @param {string|string[]|undefined} assigned Raw assigned value. @returns {string[]} Normalized assigned array. */
 function normalizeAssigned(assigned) {
   if (Array.isArray(assigned)) return assigned;
   if (assigned) return [assigned];
   return [];
 }
-/**
- * Resolve assigned from contacts.
- */
+/** @param {string[]} assignedArr Normalized assigned values. @param {BoardContact[]} contacts Contact list. @returns {BoardContact[]} Resolved contact list. */
 function resolveAssignedFromContacts(assignedArr, contacts) {
   const byId = getContactsById(contacts);
   const byName = getContactsByName(contacts);
@@ -329,18 +267,14 @@ function resolveAssignedFromContacts(assignedArr, contacts) {
   }
   return result;
 }
-/**
- * Resolve assigned entry.
- */
+/** @param {string} value Raw assigned entry. @param {Map<string, BoardContact>} byId Contacts keyed by ID. @param {Map<string, BoardContact>} byName Contacts keyed by lowercase name. @returns {BoardContact|null} Resolved contact or fallback object. */
 function resolveAssignedEntry(value, byId, byName) {
   const key = String(value || "").trim();
   if (!key) return null;
   const contact = byId.get(key) || byName.get(key.toLowerCase());
   return contact ? contact : { id: key, name: key };
 }
-/**
- * Get raw subtasks.
- */
+/** @param {BoardTask} task Task to inspect. @returns {Array<BoardSubtask|string|Object>} Raw subtask collection in any supported format. */
 function getRawSubtasks(task) {
   if (!task) return [];
   if (Array.isArray(task.subtasks)) return task.subtasks;
@@ -351,9 +285,7 @@ function getRawSubtasks(task) {
     return Object.values(task.subtask);
   return [];
 }
-/**
- * Normalize subtasks.
- */
+/** @param {Array<BoardSubtask|string|Object>} subs Raw subtasks. @returns {BoardSubtask[]} Normalized subtasks. */
 function normalizeSubtasks(subs) {
   return subs
     .filter(Boolean)
@@ -368,23 +300,17 @@ function normalizeSubtasks(subs) {
       return !!s.title;
     });
 }
-/**
- * Count done subtasks.
- */
+/** @param {BoardSubtask[]} subs Normalized subtasks. @returns {number} Completed subtask count. */
 function countDoneSubtasks(subs) {
   let done = 0;
   for (let i = 0; i < subs.length; i++) { if (subs[i] && subs[i].done) done += 1; }
   return done;
 }
-/**
- * Get priority text.
- */
+/** @param {BoardTask} task Task to inspect. @returns {string} Normalized priority value. */
 function getPriorityText(task) {
   return String(task.priority || task.prio || "").toLowerCase();
 }
-/**
- * Get priority icon.
- */
+/** @param {BoardTask} task Task to inspect. @returns {string} Priority icon path or an empty string. */
 function getPriorityIcon(task) {
   const pr = getPriorityText(task);
   if (pr === "urgent") return "../assets/icons/urgent.svg";
