@@ -34,6 +34,8 @@ https://join-2486.developerakademie.net/join/index.html
 ## Contributors
 
 This project was developed as a group project during the Developer Akademie web development training program.
+small repository update
+
 
 Developed in collaboration with:
 
