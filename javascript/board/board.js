@@ -39,7 +39,7 @@ const CONTACTS_STORAGE_KEY = "join_contacts_v1";
  * Firebase Realtime Database base URL for board data.
  * @type {string}
  */
-const DB_TASK_URL = typeof window.getFirebaseDbUrl === "function" ? window.getFirebaseDbUrl() : "";
+const DB_TASK_URL = "https://join-da53b-default-rtdb.firebaseio.com/";
 
 // Expose for other modules that need to call the DB
 window.DB_TASK_URL = DB_TASK_URL;

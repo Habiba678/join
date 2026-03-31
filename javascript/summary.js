@@ -1,4 +1,4 @@
-const DB_TASK_URL = window.DB_TASK_URL || (typeof window.getFirebaseDbUrl === "function" ? window.getFirebaseDbUrl() : "");
+const DB_TASK_URL = window.DB_TASK_URL || "https://join-da53b-default-rtdb.firebaseio.com/";
 const BOARD_PAGE_URL = "./board.html";
 const months = ["January","February","March","April", "May","June","July","August","September","October","November","December",];
 const urgent_tasks = document.getElementById("todo-status-urgent");
