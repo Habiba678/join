@@ -18,6 +18,32 @@ It helps users organize tasks, manage contacts, and track progress in a clear an
 - JavaScript  
 - Firebase Realtime Database  
 
+## Configuration
+
+To connect the app to a Firebase Realtime Database, create a local config file.
+
+1. Create the file `javascript/app.config.js`.
+2. Add your Firebase database URL in `FIREBASE_DB_URL`.
+3. Make sure the file name is exactly `app.config.js`.
+
+Example:
+
+```js
+(function (global) {
+	const defaultConfig = {FIREBASE_DB_URL: "https://YOUR-PROJECT-default-rtdb.firebaseio.com/",};
+
+	global.APP_CONFIG = Object.assign({}, defaultConfig, global.APP_CONFIG || {});
+
+	global.getFirebaseDbUrl = function () {
+		const rawUrl = (global.APP_CONFIG && global.APP_CONFIG.FIREBASE_DB_URL) || "";
+		if (!rawUrl) return "";
+		return rawUrl.endsWith("/") ? rawUrl : rawUrl + "/";
+	};
+})(window);
+```
+
+Note: The repository ignores `javascript/app.config.js`, so each developer must create this file locally.
+
 ## Project Structure
 
 - index.html – Main entry page  
