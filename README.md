@@ -24,7 +24,12 @@ It helps users organize tasks, manage contacts, and track progress in a clear an
 - style.css – Styling of the application  
 - script.js – Main application logic  
 - javascript/ – Additional JavaScript files  
-- subpages/ – Additional pages of the application  
+- subpages/ – Additional pages of the application
+
+  
+You can view the project here:  
+https://join-2486.developerakademie.net/join/index.html
+
 
 ## Contributors
 
