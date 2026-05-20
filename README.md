@@ -26,7 +26,7 @@ It helps users organize tasks, manage contacts, and track progress in a clear an
 - javascript/ – Additional JavaScript files  
 - subpages/ – Additional pages of the application
 
-Live Demo  
+## Live Demo  
 You can view the project here:  
 https://join-2486.developerakademie.net/join/index.html
 
