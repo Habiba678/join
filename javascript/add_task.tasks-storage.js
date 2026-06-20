@@ -1,5 +1,4 @@
 // ------------------ TASK CREATE ------------------
-
 /**
  * Creates a new task and saves it to Firebase.
  * Also reloads tasks from the database and updates the board.
@@ -150,7 +149,7 @@ async function putTaskRemote(task) {
  * Get DB task URL.
  */
 function getDbTaskUrl() {
-  return "https://join-da53b-default-rtdb.firebaseio.com/";
+  return window.API_URL;
 }
 
 /**
